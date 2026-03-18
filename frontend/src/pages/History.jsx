@@ -10,7 +10,7 @@ export default function History() {
     try {
       const response = await api.get('/triage/history');
       setCases(response.data);
-    } catch (err) {
+    } catch {
       setError("Impossible de charger l'historique.");
     } finally {
       setLoading(false);
