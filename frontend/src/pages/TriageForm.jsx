@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
+import { generateTiragePDF } from '../utils/generatePDF';
+import { FileDown, UserPlus, AlertTriangle } from 'lucide-react';
 
 export default function TriageForm() {
   const [form, setForm] = useState({
@@ -53,6 +55,12 @@ export default function TriageForm() {
     }
   };
 
+  // Dérive le code couleur à partir du niveau ESI (le backend ne le renvoie pas)
+  const getColorCode = (level) => {
+    const map = { 1: 'Rouge', 2: 'Orange', 3: 'Jaune', 4: 'Vert', 5: 'Bleu' };
+    return map[level] || 'Bleu';
+  };
+
   const getColorClass = (code) => {
     const colors = {
       'Rouge': 'bg-red-600 border-red-700 text-white',
@@ -68,33 +76,44 @@ export default function TriageForm() {
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Résultat - Affichage en mode Popup (Modal) */}
-      {result && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className={`w-full max-w-lg p-8 rounded-3xl shadow-2xl border-4 ${getColorClass(result.color_code)} transform transition-all scale-100 animate-in zoom-in-95 duration-300`}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-4xl font-black tracking-tight">Niveau ESI : {result.esi_level}</h3>
-              <span className="text-3xl font-black uppercase tracking-widest opacity-90">{result.color_code}</span>
-            </div>
-            <p className="text-xl font-medium opacity-95 leading-relaxed">{result.esi_explanation}</p>
-            <div className="mt-8">
-              <button 
-                onClick={() => {
-                  setResult(null); 
-                  setForm({...form, patient_identifier:'', symptoms_description:'', consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 });
-                }} 
-                className="w-full bg-white/20 hover:bg-white/30 text-current font-bold py-4 px-6 rounded-xl backdrop-blur-sm transition-colors border border-white/30 text-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-white/50"
-              >
-                Commencer un nouveau patient
-              </button>
+      {result && (() => {
+        const colorCode = getColorCode(result.esi_level);
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className={`w-full max-w-lg p-8 rounded-3xl shadow-2xl border-4 ${getColorClass(colorCode)} transform transition-all scale-100 animate-in zoom-in-95 duration-300`}>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-4xl font-black tracking-tight">Niveau ESI : {result.esi_level}</h3>
+                <span className="text-3xl font-black uppercase tracking-widest opacity-90">{colorCode}</span>
+              </div>
+              <p className="text-xl font-medium opacity-95 leading-relaxed">{result.esi_explanation}</p>
+              <div className="mt-8 space-y-3">
+                <button
+                  onClick={() => generateTiragePDF({ ...result, color_code: colorCode }, form)}
+                  className="w-full bg-white/90 hover:bg-white text-slate-800 font-bold py-3 px-6 rounded-xl transition-colors border border-white/50 text-base shadow-sm flex items-center justify-center gap-2"
+                >
+                  <FileDown className="h-5 w-5" />
+                  Télécharger la Fiche PDF
+                </button>
+                <button 
+                  onClick={() => {
+                    setResult(null); 
+                    setForm({...form, patient_identifier:'', symptoms_description:'', consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 });
+                  }} 
+                  className="w-full bg-white/20 hover:bg-white/30 text-current font-bold py-3 px-6 rounded-xl backdrop-blur-sm transition-colors border border-white/30 text-base shadow-sm flex items-center justify-center gap-2"
+                >
+                  <UserPlus className="h-5 w-5" />
+                  Commencer un nouveau patient
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
         <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
           <span className="bg-blue-100 text-blue-700 p-2 rounded-lg mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <AlertTriangle className="h-6 w-6" />
           </span>
           Évaluation Médicale Initiale
         </h2>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import api from '../api';
+import { ShieldX, Loader2, Users, PieChart as PieIcon } from 'lucide-react';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -29,26 +30,33 @@ export default function Dashboard() {
       </div>
 
       {error ? (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-2xl font-bold flex items-center justify-center h-48 shadow-sm">
-          <span className="text-xl">🛑 {error}</span>
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-2xl font-bold flex items-center justify-center gap-3 h-48 shadow-sm">
+          <ShieldX className="h-8 w-8 flex-shrink-0" />
+          <span className="text-lg">{error}</span>
         </div>
       ) : loading ? (
         <div className="text-center py-20 flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-800 mb-4"></div>
+          <Loader2 className="animate-spin h-12 w-12 text-slate-600 mb-4" />
           <p className="font-medium text-slate-500">Analyse des données en cours...</p>
         </div>
       ) : stats ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Total KPI */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center justify-center transition hover:-translate-y-1">
-            <h3 className="text-xl font-bold text-slate-500 mb-2 uppercase tracking-wider">Total des Patients Évalués</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="h-5 w-5 text-slate-400" />
+              <h3 className="text-xl font-bold text-slate-500 uppercase tracking-wider">Total des Patients Évalués</h3>
+            </div>
             <div className="text-8xl font-black text-blue-600 my-4 drop-shadow-sm">{stats.total_cases}</div>
             <p className="text-slate-400 font-medium bg-slate-50 px-4 py-1 rounded-full">Depuis l'initialisation du service</p>
           </div>
 
           {/* Graphique de Répartition */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 h-96 flex flex-col transition hover:-translate-y-1">
-            <h3 className="text-lg font-bold text-slate-500 mb-4 text-center uppercase tracking-wider">Répartition de la Gravité (Algorithme ESI)</h3>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <PieIcon className="h-5 w-5 text-slate-400" />
+              <h3 className="text-lg font-bold text-slate-500 uppercase tracking-wider">Répartition de la Gravité (ESI)</h3>
+            </div>
             <div className="flex-grow w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>

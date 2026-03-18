@@ -50,12 +50,46 @@ def evaluate_patient(
 # ⚠️ ROUTE PROTÉGÉE : Réservée aux Superviseurs médicaux
 @router.get("/history", response_model=List[schemas.TriageCaseResponse])
 def get_history(
-    skip: int = 0, limit: int = 50,
+    skip: int = 0, limit: int = 100,
+    sort_by: str = "date",    # "date", "esi_level"
+    order: str = "desc",       # "asc" ou "desc"
+    filter_level: int = 0,     # 0 = tous, 1-5 = filtrer par niveau
     db: Session = Depends(get_db),
     current_user: models.Operator = Depends(get_current_supervisor)
 ):
-    cases = db.query(models.TriageCase).order_by(models.TriageCase.created_at.desc()).offset(skip).limit(limit).all()
-    return cases
+    query = db.query(models.TriageCase)
+    if filter_level and 1 <= filter_level <= 5:
+        query = query.filter(models.TriageCase.esi_level == filter_level)
+    
+    col = models.TriageCase.esi_level if sort_by == "esi_level" else models.TriageCase.created_at
+    query = query.order_by(col.asc() if order == "asc" else col.desc())
+    
+    return query.offset(skip).limit(limit).all()
+
+# ⚠️ SUPERVISEUR REQUIS : Supprimer UN cas
+@router.delete("/{case_id}")
+def delete_case(
+    case_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.Operator = Depends(get_current_supervisor)
+):
+    case = db.query(models.TriageCase).filter(models.TriageCase.id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Cas introuvable.")
+    db.delete(case)
+    db.commit()
+    return {"message": f"Cas #{case_id} supprimé avec succès."}
+
+# ⚠️ SUPERVISEUR REQUIS : Supprimer TOUT l'historique
+@router.delete("/all/clear")
+def delete_all_cases(
+    db: Session = Depends(get_db),
+    current_user: models.Operator = Depends(get_current_supervisor)
+):
+    count = db.query(models.TriageCase).count()
+    db.query(models.TriageCase).delete()
+    db.commit()
+    return {"message": f"{count} cas supprimés avec succès."}
 
 # ⚠️ ROUTE PROTÉGÉE : Statistiques pour le Tableau de Bord
 @router.get("/stats")

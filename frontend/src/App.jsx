@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import TriageForm from './pages/TriageForm';
 import History from './pages/History';
 import Dashboard from './pages/Dashboard';
+import { Phone, Clock, BarChart2, LogOut, ShieldCheck, UserCircle } from 'lucide-react';
 
 // Composant pour protéger les routes Superviseur
 const RequireSupervisor = ({ children }) => {
@@ -36,27 +37,37 @@ function App() {
                 <span className="text-3xl font-black tracking-tight text-blue-500">SAMU</span>
                 <span className="text-xl font-bold text-slate-200 uppercase tracking-widest border-l-2 border-slate-700 pl-3">Triage</span>
                 {role === 'supervisor' ? (
-                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide shadow-sm">Médecin Superviseur</span>
+                  <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide shadow-sm">
+                    <ShieldCheck className="h-3.5 w-3.5" /> Médecin Superviseur
+                  </span>
                 ) : (
-                  <span className="bg-slate-700 text-slate-300 text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide">Opérateur</span>
+                  <span className="inline-flex items-center gap-1.5 bg-slate-700 text-slate-300 text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide">
+                    <UserCircle className="h-3.5 w-3.5" /> Opérateur
+                  </span>
                 )}
               </div>
               
-              <nav className="flex flex-wrap justify-center gap-2 md:gap-6 text-sm font-semibold items-center">
-                <a href="/triage" className="hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">Faire un Appel</a>
+              <nav className="flex flex-wrap justify-center gap-2 md:gap-3 text-sm font-semibold items-center">
+                <a href="/triage" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
+                  <Phone className="h-4 w-4" /> Faire un Appel
+                </a>
                 
                 {role === 'supervisor' && (
                   <>
-                    <a href="/historique" className="hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">Historique global</a>
-                    <a href="/dashboard" className="hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">Statistiques</a>
+                    <a href="/historique" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
+                      <Clock className="h-4 w-4" /> Historique
+                    </a>
+                    <a href="/dashboard" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
+                      <BarChart2 className="h-4 w-4" /> Statistiques
+                    </a>
                   </>
                 )}
                 
                 <button 
                   onClick={() => { localStorage.clear(); window.location.href='/login' }} 
-                  className="text-red-400 hover:text-white hover:bg-red-500 transition px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 ml-2"
+                  className="inline-flex items-center gap-2 text-red-400 hover:text-white hover:bg-red-500 transition px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 ml-2"
                 >
-                  Déconnexion
+                  <LogOut className="h-4 w-4" /> Déconnexion
                 </button>
               </nav>
             </div>
