@@ -3,8 +3,9 @@ import api from '../api';
 import { generateTiragePDF } from '../utils/generatePDF';
 import {
   RefreshCw, Trash2, FileDown, AlertTriangle, ClipboardList,
-  Loader2, ArrowDownUp, Filter
+  Loader2, ArrowDownUp, Filter, Search
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ESI_COLORS = {
   1: { bar: 'border-red-500',    bg: 'bg-red-50',     badge: 'bg-red-600 text-white',    text: 'text-red-800',     label: 'Rouge' },
@@ -21,20 +22,26 @@ export default function History() {
   const [sortBy, setSortBy] = useState('date');
   const [order, setOrder] = useState('desc');
   const [filterLevel, setFilterLevel] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null); // null | 'all' | <case_id>
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
     try {
-      const params = { sort_by: sortBy, order, filter_level: filterLevel };
+      const params = { 
+        sort_by: sortBy, 
+        order, 
+        filter_level: filterLevel,
+        search: searchTerm || undefined 
+      };
       const response = await api.get('/triage/history', { params });
       setCases(response.data);
     } catch (err) {
-      setError("Accès refusé ou impossible de charger l'historique.");
+      toast.error("Accès refusé ou impossible de charger l'historique.");
     } finally {
       setLoading(false);
     }
-  }, [sortBy, order, filterLevel]);
+  }, [sortBy, order, filterLevel, searchTerm]);
 
   useEffect(() => { fetchHistory(); }, [fetchHistory]);
 
@@ -43,7 +50,8 @@ export default function History() {
       await api.delete(`/triage/${id}`);
       setCases(prev => prev.filter(c => c.id !== id));
       setDeleteConfirm(null);
-    } catch { setError("Erreur lors de la suppression."); }
+      toast.success("Cas supprimé avec succès");
+    } catch { toast.error("Erreur lors de la suppression."); }
   };
 
   const handleDeleteAll = async () => {
@@ -51,7 +59,8 @@ export default function History() {
       await api.delete('/triage/all/clear');
       setCases([]);
       setDeleteConfirm(null);
-    } catch { setError("Erreur lors de la suppression de l'historique."); }
+      toast.success("Historique vidé avec succès");
+    } catch { toast.error("Erreur lors de la suppression de l'historique."); }
   };
 
   const handleExportCase = (c) => {
@@ -133,6 +142,18 @@ export default function History() {
               <option value={4}>🟢 ESI 4 - Faible</option>
               <option value={5}>🔵 ESI 5 - Minimal</option>
             </select>
+          </div>
+          <div className="flex items-center gap-2 flex-grow md:max-w-xs">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Chercher un patient..." 
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition"
+              />
+            </div>
           </div>
         </div>
       </div>

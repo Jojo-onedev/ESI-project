@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import api from '../api';
-import { ShieldX, Loader2, Users, PieChart as PieIcon } from 'lucide-react';
+import { ShieldX, Loader2, Users, PieChart as PieIcon, Activity, Zap } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -14,6 +15,7 @@ export default function Dashboard() {
         const response = await api.get('/triage/stats');
         setStats(response.data);
       } catch (err) {
+        toast.error('Accès non autorisé aux statistiques.');
         setError('Accès non autorisé. Seul un médecin superviseur peut consulter ces données.');
       } finally {
         setLoading(false);
@@ -40,18 +42,29 @@ export default function Dashboard() {
           <p className="font-medium text-slate-500">Analyse des données en cours...</p>
         </div>
       ) : stats ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Total KPI */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center justify-center transition hover:-translate-y-1">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="h-5 w-5 text-slate-400" />
-              <h3 className="text-xl font-bold text-slate-500 uppercase tracking-wider">Total des Patients Évalués</h3>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* KPI 1: Total Patients */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center justify-center transition hover:-translate-y-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="h-5 w-5 text-slate-400" />
+                <h3 className="text-xl font-bold text-slate-500 uppercase tracking-wider text-center">Volume Total</h3>
+              </div>
+              <div className="text-7xl font-black text-blue-600 my-4 drop-shadow-sm">{stats.total_cases}</div>
+              <p className="text-slate-400 font-medium bg-slate-50 px-4 py-1 rounded-full whitespace-nowrap text-sm">Depuis le début</p>
             </div>
-            <div className="text-8xl font-black text-blue-600 my-4 drop-shadow-sm">{stats.total_cases}</div>
-            <p className="text-slate-400 font-medium bg-slate-50 px-4 py-1 rounded-full">Depuis l'initialisation du service</p>
+
+            {/* KPI 2: Critical 24h */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center justify-center transition hover:-translate-y-1 border-b-red-500 border-b-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="h-5 w-5 text-red-500" />
+                <h3 className="text-xl font-bold text-slate-500 uppercase tracking-wider text-center">Urgences Vitales (24h)</h3>
+              </div>
+              <div className="text-7xl font-black text-red-600 my-4 drop-shadow-sm">{stats.critical_24h}</div>
+              <p className="text-red-600/60 font-medium bg-red-50 px-4 py-1 rounded-full whitespace-nowrap text-sm">Niveaux ESI 1 & 2 cumulés</p>
+            </div>
           </div>
 
-          {/* Graphique de Répartition */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 h-96 flex flex-col transition hover:-translate-y-1">
             <div className="flex items-center justify-center gap-2 mb-4">
               <PieIcon className="h-5 w-5 text-slate-400" />

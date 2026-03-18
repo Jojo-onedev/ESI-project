@@ -4,6 +4,7 @@ import TriageForm from './pages/TriageForm';
 import History from './pages/History';
 import Dashboard from './pages/Dashboard';
 import { Phone, Clock, BarChart2, LogOut, ShieldCheck, UserCircle } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 // Composant pour protéger les routes Superviseur
 const RequireSupervisor = ({ children }) => {
@@ -30,6 +31,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+        <Toaster position="top-right" reverseOrder={false} />
         {token && (
           <header className="bg-slate-900 text-white p-4 shadow-md sticky top-0 z-10 select-none">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">

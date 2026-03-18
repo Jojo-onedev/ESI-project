@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 import sys
 
@@ -48,12 +48,44 @@ def get_current_supervisor(current_user: models.Operator = Depends(get_current_u
 @router.post("/login", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.Operator).filter(models.Operator.username == form_data.username).first()
-    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+    
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    # 🛡️ Vérification du verrouillage (Phase 7)
+    if user.lockout_until and user.lockout_until > datetime.utcnow():
+        retry_after = int((user.lockout_until - datetime.utcnow()).total_seconds() / 60)
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Compte verrouillé suite à trop d'échecs. Réessayez dans {retry_after} minute(s)."
+        )
+
+    if not auth.verify_password(form_data.password, user.hashed_password):
+        user.failed_login_attempts += 1
+        if user.failed_login_attempts >= 5:
+            user.lockout_until = datetime.utcnow() + timedelta(minutes=15)
+            user.failed_login_attempts = 0
+            db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Compte verrouillé pour 15 minutes suite à 5 tentatives infructueuses."
+            )
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Identifiants incorrects ({5 - user.failed_login_attempts} tentatives restantes)",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Réinitialisation après succès
+    user.failed_login_attempts = 0
+    user.lockout_until = None
+    db.commit()
+
     access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     # Intégrer le rôle directement dans la réponse du login

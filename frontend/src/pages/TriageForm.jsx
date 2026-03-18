@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import { generateTiragePDF } from '../utils/generatePDF';
 import { FileDown, UserPlus, AlertTriangle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function TriageForm() {
   const [form, setForm] = useState({
@@ -21,7 +22,10 @@ export default function TriageForm() {
   useEffect(() => {
     const saved = localStorage.getItem('triage_draft');
     if (saved) {
-      try { setForm(JSON.parse(saved)); } catch (e) {}
+      try { 
+        setForm(JSON.parse(saved)); 
+        toast.success("Brouillon récupéré automatiquement", { icon: '📝' });
+      } catch (e) {}
     }
   }, []);
 
@@ -44,12 +48,11 @@ export default function TriageForm() {
       const response = await api.post('/triage/evaluate', form);
       setResult(response.data);
       localStorage.removeItem('triage_draft'); 
+      toast.success("Évaluation terminée avec succès !");
     } catch (err) {
-      if (err.response?.status === 401) {
-        setError('Session expirée, veuillez vous reconnecter.');
-      } else {
-        setError("Erreur réseau: impossible de joindre le serveur de décision ESI.");
-      }
+      const msg = err.response?.data?.detail || "Erreur réseau: impossible de joindre le serveur de décision ESI.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

@@ -11,6 +11,10 @@ class Operator(Base):
     hashed_password = Column(String)
     role = Column(String, default="operator")  # "operator" ou "supervisor"
     
+    # 🛡️ Protection (Phase 7)
+    failed_login_attempts = Column(Integer, default=0)
+    lockout_until = Column(DateTime, nullable=True)
+    
     cases = relationship("TriageCase", back_populates="operator")
 
 class TriageCase(Base):

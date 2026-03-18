@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import api from '../api';
+import toast from 'react-hot-toast';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -29,6 +30,8 @@ export default function Login() {
       const decoded = jwtDecode(token);
       localStorage.setItem('role', decoded.role);
       
+      toast.success(`Bienvenue, ${username} !`);
+      
       // Redirection dynamique basée sur le rôle
       if (decoded.role === 'supervisor') {
         window.location.href = '/dashboard';
@@ -36,7 +39,9 @@ export default function Login() {
         window.location.href = '/triage';
       }
     } catch (err) {
-      setError('Accès refusé. Identifiants invalides.');
+      const msg = err.response?.data?.detail || 'Identifiants invalides.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

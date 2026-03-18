@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from typing import List
+from typing import List, Optional
 import os
 import sys
+from datetime import datetime, timedelta
 
 # Ajouter le parent au path pour les imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -54,10 +55,16 @@ def get_history(
     sort_by: str = "date",    # "date", "esi_level"
     order: str = "desc",       # "asc" ou "desc"
     filter_level: int = 0,     # 0 = tous, 1-5 = filtrer par niveau
+    search: Optional[str] = None, # 🔍 Recherche par identifiant
     db: Session = Depends(get_db),
     current_user: models.Operator = Depends(get_current_supervisor)
 ):
     query = db.query(models.TriageCase)
+    
+    # 🔍 Filtre de recherche (Phase 7)
+    if search:
+        query = query.filter(models.TriageCase.patient_identifier.ilike(f"%{search}%"))
+        
     if filter_level and 1 <= filter_level <= 5:
         query = query.filter(models.TriageCase.esi_level == filter_level)
     
@@ -114,7 +121,15 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_user: models.Oper
         {"name": "ESI 5 (Bleu)", "value": levels_data[5], "level": 5, "fill": "#0ea5e9"}
     ]
     
+    # 📊 KPI avancés (Phase 7)
+    yesterday = datetime.utcnow() - timedelta(hours=24)
+    critical_24h = db.query(models.TriageCase).filter(
+        models.TriageCase.esi_level <= 2,
+        models.TriageCase.created_at >= yesterday
+    ).count()
+    
     return {
         "total_cases": total_cases,
+        "critical_24h": critical_24h,
         "distribution": result
     }
