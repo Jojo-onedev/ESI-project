@@ -25,7 +25,7 @@ export default function TriageForm() {
       try { 
         setForm(JSON.parse(saved)); 
         toast.success("Brouillon récupéré automatiquement", { icon: '📝' });
-      } catch (e) {}
+      } catch { /* ignore invalid draft */ }
     }
   }, []);
 

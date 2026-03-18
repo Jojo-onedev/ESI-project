@@ -18,7 +18,7 @@ const ESI_COLORS = {
 export default function History() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [order, setOrder] = useState('desc');
   const [filterLevel, setFilterLevel] = useState(0);
@@ -36,7 +36,7 @@ export default function History() {
       };
       const response = await api.get('/triage/history', { params });
       setCases(response.data);
-    } catch (err) {
+    } catch {
       toast.error("Accès refusé ou impossible de charger l'historique.");
     } finally {
       setLoading(false);
