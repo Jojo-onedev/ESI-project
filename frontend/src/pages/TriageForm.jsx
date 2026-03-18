@@ -19,7 +19,7 @@ export default function TriageForm() {
   useEffect(() => {
     const saved = localStorage.getItem('triage_draft');
     if (saved) {
-      try { setForm(JSON.parse(saved)); } catch (e) {}
+      try { setForm(JSON.parse(saved)); } catch { /* ignore invalid JSON */ }
     }
   }, []);
 

@@ -12,7 +12,7 @@ export default function Dashboard() {
       try {
         const response = await api.get('/triage/stats');
         setStats(response.data);
-      } catch (err) {
+      } catch {
         setError('Accès non autorisé. Seul un médecin superviseur peut consulter ces données.');
       } finally {
         setLoading(false);
@@ -62,7 +62,7 @@ export default function Dashboard() {
                     outerRadius={120}
                     paddingAngle={3}
                     stroke="none"
-                    label={({name, value}) => value > 0 ? `${value}` : ''}
+                    label={({value}) => value > 0 ? `${value}` : ''}
                   >
                     {stats.distribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} className="hover:opacity-80 transition cursor-pointer" />
