@@ -17,6 +17,7 @@ export default function TriageForm() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [startTime, setStartTime] = useState(null); // ⏱️ Phase 8
 
   // Cache local
   useEffect(() => {
@@ -35,6 +36,9 @@ export default function TriageForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Démarrer le chrono au premier changement (si pas déjà fait)
+    if (!startTime && value.length > 0) setStartTime(Date.now());
+    
     setForm(prev => ({ ...prev, [name]: name === 'estimated_resources' ? parseInt(value) : value }));
   };
 
@@ -45,9 +49,11 @@ export default function TriageForm() {
     setResult(null);
 
     try {
-      const response = await api.post('/triage/evaluate', form);
+      const duration = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
+      const response = await api.post('/triage/evaluate', { ...form, duration_seconds: duration });
       setResult(response.data);
       localStorage.removeItem('triage_draft'); 
+      setStartTime(null); // Reset pour le prochain
       toast.success("Évaluation terminée avec succès !");
     } catch (err) {
       const msg = err.response?.data?.detail || "Erreur réseau: impossible de joindre le serveur de décision ESI.";
@@ -101,6 +107,7 @@ export default function TriageForm() {
                   onClick={() => {
                     setResult(null); 
                     setForm({...form, patient_identifier:'', symptoms_description:'', consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 });
+                    setStartTime(null);
                   }} 
                   className="w-full bg-white/20 hover:bg-white/30 text-current font-bold py-3 px-6 rounded-xl backdrop-blur-sm transition-colors border border-white/30 text-base shadow-sm flex items-center justify-center gap-2"
                 >

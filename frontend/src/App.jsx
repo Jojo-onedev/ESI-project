@@ -1,9 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import Login from './pages/Login';
 import TriageForm from './pages/TriageForm';
 import History from './pages/History';
 import Dashboard from './pages/Dashboard';
-import { Phone, Clock, BarChart2, LogOut, ShieldCheck, UserCircle } from 'lucide-react';
+import Profile from './pages/Profile';
+import UsersManagement from './pages/UsersManagement';
+import { Phone, Clock, BarChart2, LogOut, ShieldCheck, UserCircle, User, Users } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 
 // Composant pour protéger les routes Superviseur
@@ -33,13 +35,13 @@ function App() {
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
         <Toaster position="top-right" reverseOrder={false} />
         {token && (
-          <header className="bg-slate-900 text-white p-4 shadow-md sticky top-0 z-10 select-none">
+          <header className="bg-slate-900 text-white p-4 shadow-md sticky top-0 z-50 select-none">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
               <div className="flex items-center space-x-3">
-                <span className="text-3xl font-black tracking-tight text-blue-500">SAMU</span>
+                <span className="text-3xl font-black tracking-tight text-blue-500 font-outfit">SAMU</span>
                 <span className="text-xl font-bold text-slate-200 uppercase tracking-widest border-l-2 border-slate-700 pl-3">Triage</span>
                 {role === 'supervisor' ? (
-                  <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide shadow-sm">
+                  <span className="inline-flex items-center gap-1.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white text-xs px-3 py-1 font-bold ml-2 rounded-full uppercase tracking-wide shadow-sm">
                     <ShieldCheck className="h-3.5 w-3.5" /> Médecin Superviseur
                   </span>
                 ) : (
@@ -49,25 +51,32 @@ function App() {
                 )}
               </div>
               
-              <nav className="flex flex-wrap justify-center gap-2 md:gap-3 text-sm font-semibold items-center">
-                <a href="/triage" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
-                  <Phone className="h-4 w-4" /> Faire un Appel
-                </a>
-                
+              <nav className="flex flex-row items-center gap-1.5 md:gap-2 text-sm font-semibold">
                 {role === 'supervisor' && (
                   <>
-                    <a href="/historique" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
-                      <Clock className="h-4 w-4" /> Historique
-                    </a>
-                    <a href="/dashboard" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg">
-                      <BarChart2 className="h-4 w-4" /> Statistiques
-                    </a>
+                    <Link to="/dashboard" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl">
+                      <BarChart2 className="h-4 w-4" /> Tableaux de bord
+                    </Link>
+                    <Link to="/users" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl">
+                      <Users className="h-4 w-4" /> Équipes
+                    </Link>
                   </>
                 )}
+                <Link to="/triage" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl">
+                  <Phone className="h-4 w-4" /> Appel
+                </Link>
+                
+                <Link to="/historique" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl">
+                  <Clock className="h-4 w-4" /> Historique
+                </Link>
+                <Link to="/profil" className="inline-flex items-center gap-2 hover:text-blue-400 transition bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl">
+                  <User className="h-4 w-4" /> Profil
+                </Link>
+                
                 
                 <button 
                   onClick={() => { localStorage.clear(); window.location.href='/login' }} 
-                  className="inline-flex items-center gap-2 text-red-400 hover:text-white hover:bg-red-500 transition px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 ml-2"
+                  className="inline-flex items-center gap-2 text-red-100 hover:text-white hover:bg-red-600 transition px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20"
                 >
                   <LogOut className="h-4 w-4" /> Déconnexion
                 </button>
@@ -76,7 +85,7 @@ function App() {
           </header>
         )}
         
-        <main className="flex-grow p-4 md:p-6 pb-20">
+        <main className="grow p-4 md:p-6 pb-20">
           <Routes>
             <Route path="/login" element={<Login />} />
             
@@ -86,13 +95,23 @@ function App() {
             
             <Route path="/historique" element={
               <RequireAuth>
-                <RequireSupervisor><History /></RequireSupervisor>
+                <History />
               </RequireAuth>
             } />
             
             <Route path="/dashboard" element={
               <RequireAuth>
                 <RequireSupervisor><Dashboard /></RequireSupervisor>
+              </RequireAuth>
+            } />
+
+            <Route path="/profil" element={
+              <RequireAuth><Profile /></RequireAuth>
+            } />
+
+            <Route path="/users" element={
+              <RequireAuth>
+                <RequireSupervisor><UsersManagement /></RequireSupervisor>
               </RequireAuth>
             } />
             

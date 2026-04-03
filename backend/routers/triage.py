@@ -2,17 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List, Optional
-import os
-import sys
-from datetime import datetime, timedelta
-
-# Ajouter le parent au path pour les imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from datetime import datetime, timedelta, timezone
 
 from database import get_db
 import models
 import schemas
 from routers.auth import get_current_user, get_current_supervisor
+from auth import log_audit
 from esi_logic import calculate_esi
 
 router = APIRouter(prefix="/api/triage", tags=["triage"])
@@ -35,16 +31,17 @@ def evaluate_patient(
         bleeding=form.bleeding,
         estimated_resources=form.estimated_resources,
         esi_level=result.esi_level,
-        esi_explanation=result.esi_explanation
+        esi_explanation=result.esi_explanation,
+        duration_seconds=form.duration_seconds # ⏱️ Phase 8
     )
     
     db.add(new_case)
+    
+    # 📝 Audit: Évaluation médicale
+    log_audit(db, current_user.id, "EVALUATE", f"Patient: {form.patient_identifier} (ESI {result.esi_level})")
+    
     db.commit()
     db.refresh(new_case)
-    
-    # Injection du color_code non persistant
-    response_data = new_case.__dict__
-    response_data["color_code"] = result.color_code
     
     return new_case
 
@@ -57,9 +54,13 @@ def get_history(
     filter_level: int = 0,     # 0 = tous, 1-5 = filtrer par niveau
     search: Optional[str] = None, # 🔍 Recherche par identifiant
     db: Session = Depends(get_db),
-    current_user: models.Operator = Depends(get_current_supervisor)
+    current_user: models.Operator = Depends(get_current_user)
 ):
     query = db.query(models.TriageCase)
+    
+    # 🕵️ Isolation des données (Phase 11: Workspaces)
+    if current_user.role != "supervisor":
+        query = query.filter(models.TriageCase.operator_id == current_user.id)
     
     # 🔍 Filtre de recherche (Phase 7)
     if search:
@@ -83,6 +84,10 @@ def delete_case(
     case = db.query(models.TriageCase).filter(models.TriageCase.id == case_id).first()
     if not case:
         raise HTTPException(status_code=404, detail="Cas introuvable.")
+    
+    # 📝 Audit: Suppression
+    log_audit(db, current_user.id, "DELETE", f"Suppression du cas #{case_id} ({case.patient_identifier})")
+    
     db.delete(case)
     db.commit()
     return {"message": f"Cas #{case_id} supprimé avec succès."}
@@ -94,6 +99,10 @@ def delete_all_cases(
     current_user: models.Operator = Depends(get_current_supervisor)
 ):
     count = db.query(models.TriageCase).count()
+    
+    # 📝 Audit: Vidage historique
+    log_audit(db, current_user.id, "CLEAR_HISTORY", f"Suppression massive de {count} cas")
+    
     db.query(models.TriageCase).delete()
     db.commit()
     return {"message": f"{count} cas supprimés avec succès."}
@@ -107,6 +116,9 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_user: models.Oper
     ).group_by(models.TriageCase.esi_level).all()
     
     total_cases = db.query(models.TriageCase).count()
+    
+    # ⏱️ Performance Moyenne (Phase 8)
+    avg_duration = db.query(func.avg(models.TriageCase.duration_seconds)).scalar() or 0
     
     # Formatage pour Recharts (Frontend)
     levels_data = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
@@ -122,14 +134,30 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_user: models.Oper
     ]
     
     # 📊 KPI avancés (Phase 7)
-    yesterday = datetime.utcnow() - timedelta(hours=24)
+    yesterday = datetime.now(timezone.utc) - timedelta(hours=24)
     critical_24h = db.query(models.TriageCase).filter(
         models.TriageCase.esi_level <= 2,
         models.TriageCase.created_at >= yesterday
     ).count()
+
+    total_cases_24h = db.query(models.TriageCase).filter(
+        models.TriageCase.created_at >= yesterday
+    ).count()
     
     return {
-        "total_cases": total_cases,
+        "total_cases": total_cases_24h, # On peut aussi garder le total absolu si besoin
+        "total_cases_all": total_cases,
+        "total_cases_24h": total_cases_24h,
         "critical_24h": critical_24h,
+        "avg_duration": round(float(avg_duration), 1),
         "distribution": result
     }
+
+# ⚠️ ROUTE PROTÉGÉE : Liste des logs d'audit pour superviseur
+@router.get("/audit", response_model=List[schemas.AuditLog])
+def get_audit_logs(
+    limit: int = 50,
+    db: Session = Depends(get_db),
+    current_user: models.Operator = Depends(get_current_supervisor)
+):
+    return db.query(models.AuditLog).order_by(models.AuditLog.created_at.desc()).limit(limit).all()

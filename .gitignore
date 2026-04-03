@@ -1,0 +1,16 @@
+# Backend
+backend/*.db
+backend/virtual_env/
+backend/__pycache__/
+
+# Environment
+**/.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
