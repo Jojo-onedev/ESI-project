@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY", "b8f2c8d23e59a11fc387bfca30c822e18501e5dfdc29f0e13768395561b36fa2")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "480"))
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 import bcrypt
 
@@ -29,3 +29,15 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def log_audit(db, operator_id: int, action: str, details: str = None):
+    import models
+    from datetime import datetime
+    new_log = models.AuditLog(
+        operator_id=operator_id,
+        action=action,
+        details=details,
+        created_at=datetime.utcnow()
+    )
+    db.add(new_log)
+    db.commit()

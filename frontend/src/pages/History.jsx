@@ -3,7 +3,7 @@ import api from '../api';
 import { generateTiragePDF } from '../utils/generatePDF';
 import {
   RefreshCw, Trash2, FileDown, AlertTriangle, ClipboardList,
-  Loader2, ArrowDownUp, Filter, Search
+  Loader2, ArrowDownUp, Filter, Search, Eye, EyeOff, Timer
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -23,6 +23,7 @@ export default function History() {
   const [order, setOrder] = useState('desc');
   const [filterLevel, setFilterLevel] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [privacyMode, setPrivacyMode] = useState(false); // 👁️ Phase 8
   const [deleteConfirm, setDeleteConfirm] = useState(null); // null | 'all' | <case_id>
 
   const fetchHistory = useCallback(async () => {
@@ -155,6 +156,14 @@ export default function History() {
               />
             </div>
           </div>
+          <button 
+            onClick={() => setPrivacyMode(!privacyMode)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold border transition shadow-sm ${privacyMode ? 'bg-blue-600 text-white border-blue-700' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
+            title="Mode Confidentialité (floute les noms)"
+          >
+            {privacyMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            <span className="hidden sm:inline">Confidentialité</span>
+          </button>
         </div>
       </div>
 
@@ -189,9 +198,13 @@ export default function History() {
                   {/* Infos patient */}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-3 mb-1">
-                      <span className="font-black text-slate-800 text-lg truncate">{c.patient_identifier}</span>
+                      <span className={`font-black text-slate-800 text-lg truncate transition-all duration-300 ${privacyMode ? 'blur-md select-none' : ''}`}>
+                        {c.patient_identifier}
+                      </span>
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${col.badge}`}>{col.label}</span>
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+                        <Timer className="h-3.5 w-3.5" /> {c.duration_seconds || '0'}s
+                        <span className="mx-1">•</span>
                         {new Date(c.created_at).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}
                       </span>
                     </div>
