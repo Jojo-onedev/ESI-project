@@ -1,0 +1,1449 @@
+\documentclass[a4paper,12pt,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{amsmath}
+\geometry{a4paper, margin=1in}
+\usepackage{tocloft}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+\usepackage{indentfirst}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+
+\definecolor{bitblue}{RGB}{0, 70, 127}
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  language=Python
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=cyan
+}
+
+\onehalfspacing
+
+\setlength{\headheight}{13.6pt}
+\fancyhf{}
+\pagestyle{fancy}
+\fancyhead[L]{\small\textit{Use of AI for the Analysis of Facial Expressions}}
+\fancyhead[R]{\small\textit{of Internally Displaced Children}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[L]{\small\textbf{SILGA Patricia} \quad Promotion: 2023--2026}
+\fancyfoot[R]{\small Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\renewcommand{\thepage}{\roman{page}}
+\setcounter{tocdepth}{2}
+
+\renewcommand{\cfttoctitlefont}{\hfil}
+\renewcommand{\cftloftitlefont}{\hfil}
+\renewcommand{\cftlottitlefont}{\hfil}
+\renewcommand{\cftbeforechapskip}{10pt}
+\renewcommand{\cftbeforesecskip}{5pt}
+\renewcommand{\cftbeforesubsecskip}{3pt}
+
+\begin{document}
+
+%% ============================================================
+%% COVER PAGE
+%% ============================================================
+\includepdf[pages=1]{cover.pdf}
+
+%% ============================================================
+%% QUOTES
+%% ============================================================
+\section*{Quotes}
+\addcontentsline{toc}{section}{Quotes}
+\vspace*{3cm}
+\begin{flushright}
+\textit{``The good news is that the moment you decide that what you know is}\\
+\textit{more important than what you have been taught to believe,}\\
+\textit{you will have shifted gears in your quest for abundance.''}\\[0.5cm]
+--- \textbf{Earle Nightingale}\\[2cm]
+\textit{``Artificial Intelligence is the new electricity.''}\\[0.5cm]
+--- \textbf{Andrew Ng}
+\end{flushright}
+\clearpage
+
+%% ============================================================
+%% DEDICATION
+%% ============================================================
+\section*{Dedication}
+\addcontentsline{toc}{section}{Dedication}
+\vspace*{2cm}
+\begin{flushright}
+\textit{To my beloved brother, \textbf{SILGA Pengdwende Fabrice} ---}\\[0.3cm]
+\textit{my pillar, my greatest support, and my most faithful ally}\\
+\textit{in every battle of life. This work is as much yours as it is mine.}\\[1cm]
+\textit{To my dear parents, whose love, sacrifice, and endless patience}\\
+\textit{have been the silent force behind every step of this journey.}\\
+\textit{With all my gratitude, my love, and my deepest respect.}\\[1cm]
+\textit{To all my supervisors and teachers who guided me}\\
+\textit{from my very first year to this final milestone ---}\\
+\textit{thank you for your knowledge, your patience,}\\
+\textit{and your dedication to shaping who I am today.}\\[1.5cm]
+\textbf{SILGA Patricia}
+\end{flushright}
+\clearpage
+
+%% ============================================================
+%% ACKNOWLEDGEMENTS
+%% ============================================================
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+\vspace{0.5cm}
+\justifying
+
+I would like to express my sincere gratitude to all those who contributed, in one
+way or another, to the successful completion of this thesis.
+
+First and foremost, I thank the Almighty God for the gift of life, health, and
+strength throughout this academic journey.
+
+My deepest gratitude goes to my thesis supervisor, \textbf{Mr. Roland TOUGMA},
+for his constant availability, valuable guidance, and constructive feedback
+throughout this work. His patience and dedication have been truly inspiring.
+
+I would like to express my heartfelt gratitude to \textbf{Dr. NIKIEMA Lebian
+Wilfried}, whose wholehearted support and dedication have been invaluable
+throughout this project. His encouragements and technical guidance have
+significantly contributed to the realization of this work.
+
+To the CEO of BIT, \textbf{Ms. Charlotte Rahe}, and the General Manager,
+\textbf{Mr. Baslayi Tindano}, I express my profound gratitude for their
+commitment to providing high-quality education and for creating an environment
+that fosters academic excellence and innovation.
+
+To all the faculty members of BIT, thank you for your dedication and commitment
+throughout these three years.
+
+To my beloved brother, \textbf{SILGA Pengdwende Fabrice}, and my dear parents ---
+your love, sacrifices, and unconditional support have been my greatest source of
+motivation. This achievement belongs to you as much as it does to me.
+
+Finally, I warmly thank all my friends, classmates, and every person who supported
+me morally and intellectually throughout this journey.
+\clearpage
+
+%% ============================================================
+%% PREFACE
+%% ============================================================
+\section*{Preface}
+\addcontentsline{toc}{section}{Preface}
+\justifying
+
+Burkina Institute of Technology (BIT) was inaugurated on October 15, 2018,
+in Koudougou. It is a private institute founded by a German woman named
+Susanne PERTL. The vision of BIT is to educate a new generation of leaders.
+Students are trained with technical and entrepreneurial knowledge to help them
+achieve this goal. That is also why the classes at BIT are taught in English,
+to facilitate the internationalization of students.\\
+
+BIT offers classes in three majors for the Bachelor's degree and one major for
+the Master's degree. The majors for the Bachelor's Degree are:\\
+
+\textbf{$\bullet$ Computer Science:} This was the first major when the institute
+was inaugurated. There are courses in web, mobile, and desktop development, as
+well as basics in networking, artificial intelligence, and data analysis.\\
+
+\textbf{$\bullet$ Electrical Engineering:} This was the second major, opened in
+2019 with a specialization in renewable energies. All the necessary courses
+related to renewable energy in the electrical engineering field are provided.\\
+
+\textbf{$\bullet$ Mechanical Engineering:} Introduced in 2021, with an opportunity
+to specialize in either mining or agriculture during the final year.\\
+
+BIT also has a laboratory where students carry out practical experiments. All of
+these programs are completed in three (3) years and are open to anyone who holds
+a scientific baccalaureate diploma.\\
+
+The Master's Degree major, introduced in 2023, is focused on Artificial
+Intelligence. It provides strong skills to help students master this promising
+field.\\
+
+At the end of the 3-year program, a thesis defense is required to obtain the
+Bachelor's Degree. It is in this context that we undertook the realization of
+this project on the use of Artificial Intelligence for the analysis of facial
+expressions and biometric data of internally displaced children --- a project
+that reflects both the technical and entrepreneurial spirit that BIT instills
+in its students.
+
+\clearpage
+
+%% ============================================================
+%% ABSTRACT (English)
+%% ============================================================
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+\justifying
+
+Internal displacement caused by armed conflict and insecurity has become a major
+humanitarian crisis in Burkina Faso, where the number of internally displaced
+persons exceeded two million by 2023. Internally displaced children constitute
+one of the most vulnerable groups, often experiencing significant psychological
+distress that remains largely undetected due to the lack of adequate screening
+tools in the field. This thesis presents the design and implementation of an
+artificial intelligence-based web application called EmotiAid, capable of
+analyzing facial expressions to automatically detect the emotional states of
+internally displaced children. The model was trained using the FER-2013 dataset,
+covering seven basic emotions defined by Paul Ekman: happiness, sadness, anger,
+fear, disgust, surprise, and neutrality. After preprocessing including face
+detection via OpenCV Haar Cascade, normalization, and data augmentation, a
+Convolutional Neural Network (CNN) achieved a validation accuracy of 67.53\%
+on the FER-2013 benchmark, exceeding the academic standard of 65\%. The final
+system includes a responsive web application built with React and FastAPI that
+allows humanitarian field workers to capture facial images via camera or file
+upload and receive instant emotional state predictions with confidence scores.
+An automatic alert mechanism notifies agents when a child displays high fear or
+sadness scores, recommending immediate psychosocial follow-up.
+
+\vspace{0.5cm}
+\textbf{Keywords:} Artificial Intelligence, Convolutional Neural Network,
+Facial Expression Recognition, Internally Displaced Children, Emotion Detection,
+EmotiAid, Psychosocial Support, Deep Learning.
+\clearpage
+
+%% ============================================================
+%% RESUME (French)
+%% ============================================================
+\section*{R\'esum\'e}
+\addcontentsline{toc}{section}{R\'esum\'e}
+\justifying
+
+Le d\'eplacement interne caus\'e par les conflits arm\'es et l'ins\'ecurit\'e
+est devenu une crise humanitaire majeure au Burkina Faso, o\`u le nombre de
+personnes d\'eplac\'ees internes a d\'epass\'e deux millions en 2023. Les
+enfants d\'eplac\'es internes constituent l'un des groupes les plus vuln\'erables,
+souffrant souvent de d\'etresses psychologiques importantes qui restent largement
+ind\'etect\'ees, faute d'outils de d\'epistage adapt\'es sur le terrain. Ce
+m\'emoire pr\'esente la conception et la mise en \oe{}uvre d'une application web
+bas\'ee sur l'intelligence artificielle appel\'ee EmotiAid, capable d'analyser
+les expressions faciales afin de d\'etecter automatiquement les \'etats
+\'emotionnels des enfants d\'eplac\'es internes. Le mod\`ele a \'et\'e
+entra\^in\'e \`a partir du dataset FER-2013, couvrant sept \'emotions de base
+d\'efinies par Paul Ekman~: joie, tristesse, col\`ere, peur, d\'ego\^ut,
+surprise et neutralit\'e. Apr\`es un pr\'etraitement rigoureux incluant la
+d\'etection de visage via OpenCV Haar Cascade, la normalisation et l'augmentation
+de donn\'ees, un r\'eseau de neurones convolutifs (CNN) a atteint une pr\'ecision
+de validation de 67,53\% sur le benchmark FER-2013, d\'epassant le standard
+acad\'emique de 65\%. Le syst\`eme final comprend une application web responsive
+d\'evelopp\'ee avec React et FastAPI, permettant aux agents humanitaires de
+capturer des images faciales via cam\'era ou t\'el\'echargement et de recevoir
+imm\'ediatement une pr\'ediction de l'\'etat \'emotionnel avec un score de
+confiance.
+
+\vspace{0.5cm}
+\noindent\textbf{Mots-cl\'es :} Intelligence Artificielle, R\'eseau de Neurones
+Convolutifs, Reconnaissance d'Expressions Faciales, Enfants D\'eplac\'es
+Internes, D\'etection d'\'Emotions, EmotiAid, Soutien Psychosocial,
+Apprentissage Profond.
+\clearpage
+
+%% ============================================================
+%% TABLE OF CONTENTS
+%% ============================================================
+\begingroup
+\renewcommand{\contentsname}{\Huge Table of Contents}
+\setlength{\parskip}{5pt}
+\tableofcontents
+\endgroup
+\clearpage
+
+%% ============================================================
+%% LIST OF ACRONYMS
+%% ============================================================
+\section*{List of Acronyms and Abbreviations}
+\addcontentsline{toc}{section}{List of Acronyms and Abbreviations}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{longtable}{|p{3.5cm}|p{10.5cm}|}
+\hline
+\textbf{Acronym} & \textbf{Definition} \\
+\hline
+AI       & Artificial Intelligence \\
+\hline
+API      & Application Programming Interface \\
+\hline
+Axios    & Promise-based HTTP Client for JavaScript \\
+\hline
+BIT      & Burkina Institute of Technology \\
+\hline
+CNN      & Convolutional Neural Network \\
+\hline
+CORS     & Cross-Origin Resource Sharing \\
+\hline
+CSV      & Comma-Separated Values \\
+\hline
+DL       & Deep Learning \\
+\hline
+FastAPI  & Modern Python Web Framework for Building APIs \\
+\hline
+FER      & Facial Expression Recognition \\
+\hline
+GPU      & Graphics Processing Unit \\
+\hline
+HTTP     & HyperText Transfer Protocol \\
+\hline
+IDP      & Internally Displaced Person \\
+\hline
+JS       & JavaScript \\
+\hline
+JSON     & JavaScript Object Notation \\
+\hline
+JWT      & JSON Web Token \\
+\hline
+Keras    & High-Level Neural Networks API (TensorFlow) \\
+\hline
+ML       & Machine Learning \\
+\hline
+ORM      & Object-Relational Mapping \\
+\hline
+OpenCV   & Open Source Computer Vision Library \\
+\hline
+Pillow   & Python Imaging Library \\
+\hline
+Python   & High-Level General-Purpose Programming Language \\
+\hline
+React    & JavaScript Library for User Interfaces \\
+\hline
+ReLU     & Rectified Linear Unit \\
+\hline
+REST     & Representational State Transfer \\
+\hline
+RUP      & Rational Unified Process \\
+\hline
+SQL      & Structured Query Language \\
+\hline
+SQLite   & Lightweight Relational Database Management System \\
+\hline
+SQLAlchemy & Python SQL Toolkit and ORM \\
+\hline
+SVM      & Support Vector Machine \\
+\hline
+TailwindCSS & Utility-First CSS Framework \\
+\hline
+TensorFlow & Open Source Machine Learning Platform \\
+\hline
+UML      & Unified Modeling Language \\
+\hline
+UNHCR    & United Nations High Commissioner for Refugees \\
+\hline
+URL      & Uniform Resource Locator \\
+\hline
+Uvicorn  & Lightning-Fast ASGI Server for Python \\
+\hline
+Vite     & Frontend Build Tool \\
+\hline
+XAI      & Explainable Artificial Intelligence \\
+\hline
+2TUP     & Two-Track Unified Process \\
+\hline
+\end{longtable}
+\clearpage
+
+%% ============================================================
+%% LIST OF FIGURES
+%% ============================================================
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\clearpage
+
+%% ============================================================
+%% LIST OF TABLES
+%% ============================================================
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\clearpage
+
+%% ============================================================
+%% Switch to Arabic numerals
+%% ============================================================
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+%% ============================================================
+%% GENERAL INTRODUCTION
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{General Introduction}
+{\LARGE \bfseries \noindent General Introduction}
+\vspace{2em}
+\justifying
+
+Since 2015, Burkina Faso has been severely affected by an escalating security
+crisis driven by armed groups operating across its territory. This conflict has
+triggered one of the most alarming internal displacement crises in West Africa.
+According to the United Nations High Commissioner for Refugees (UNHCR, 2023),
+the number of internally displaced persons in Burkina Faso exceeded two million,
+with children representing more than half of this population. These children are
+uprooted from their homes, separated from familiar environments, deprived of
+schooling, and exposed to violence and loss.
+
+The psychological consequences of forced displacement are profound. Displaced
+children frequently exhibit symptoms of post-traumatic stress disorder,
+depression, anxiety, and emotional dysregulation. However, the detection of these
+psychological disturbances remains a major challenge in the field, primarily
+because qualified mental health professionals are scarce in displacement camps,
+and traditional assessment methods require structured clinical environments
+unavailable in emergency humanitarian contexts.
+
+Artificial Intelligence, and more specifically Deep Learning applied to facial
+expression recognition, offers an innovative technological response to this
+humanitarian challenge. Convolutional Neural Networks have demonstrated remarkable
+performance in automatically detecting human emotions from facial images, achieving
+accuracy rates exceeding 65\% on the international FER-2013 benchmark
+\cite{goodfellow2013}. This thesis proposes the design and development of
+EmotiAid, a web application enabling humanitarian agents to photograph an
+internally displaced child and instantly obtain an AI-powered emotional state
+analysis.
+
+\section*{Problem Statement}
+\addcontentsline{toc}{section}{Problem Statement}
+
+The central research question of this thesis is: \textit{How can Artificial
+Intelligence be used to automatically detect emotional states of internally
+displaced children from facial photographs, in order to assist humanitarian
+agents in identifying children requiring urgent psychological follow-up, in the
+absence of specialized mental health professionals on the ground?}
+
+\section*{Objectives}
+\addcontentsline{toc}{section}{Objectives}
+
+\textbf{General Objective:} To design, develop, and validate an artificial
+intelligence system for automatic recognition of facial expressions of internally
+displaced children, integrated into a web application accessible to humanitarian
+agents in the field.
+
+\noindent\textbf{Specific Objectives:}
+\begin{itemize}
+    \item \textbf{SO1:} Train a CNN on the FER-2013 dataset to recognize seven
+    emotions with validation accuracy exceeding 65\%;
+    \item \textbf{SO2:} Design and develop a secure RESTful API using FastAPI
+    integrating the trained AI model with real-time inference capability;
+    \item \textbf{SO3:} Develop an intuitive responsive web interface using React
+    enabling agents to capture photographs, view results, and manage child profiles;
+    \item \textbf{SO4:} Implement an automatic psychological alert mechanism
+    triggered when fear or sadness scores exceed a critical threshold.
+\end{itemize}
+
+\section*{General Methodology}
+\addcontentsline{toc}{section}{General Methodology}
+
+This project adopts the 2TUP (Two-Track Unified Process) software development
+methodology, structured around two parallel tracks converging towards a unified
+solution. The AI component was developed using supervised deep learning on the
+FER-2013 dataset comprising 35,887 grayscale images across seven emotion classes.
+Training was performed on the Kaggle platform using a Tesla P100-PCIE-16GB GPU.
+The web application follows a three-tier architecture: a React frontend, a FastAPI
+backend, and an SQLite database.
+
+\section*{Thesis Organization}
+\addcontentsline{toc}{section}{Thesis Organization}
+
+This thesis is organized into two main parts. \textbf{Part I} covers the
+theoretical foundations in Chapter 1 and the methodology and conceptual approach
+in Chapter 2. \textbf{Part II} presents the design and implementation in Chapter
+3, and the results and analysis in Chapter 4. A general conclusion synthesizes
+the contributions and outlines perspectives for future work.
+
+\clearpage
+
+%% ============================================================
+%% PART I
+%% ============================================================
+\part*{Part I: Theoretical Foundations and State of the Art}
+\addcontentsline{toc}{part}{Part I: Theoretical Foundations and State of the Art}
+\addtocontents{toc}{\vspace{10pt}}
+
+%% ============================================================
+%% CHAPTER 1
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 1: General Information}
+{\LARGE \bfseries \noindent Chapter 1: General Information}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Context, Problematics and Objectives}
+
+\subsection{Context}
+
+The humanitarian situation in Burkina Faso has dramatically deteriorated since
+2015. Children face unique vulnerabilities including heightened risk of physical
+harm, psychological trauma, malnutrition, and loss of access to education.
+Humanitarian organizations such as UNICEF and Save the Children have identified
+early detection of psychological distress as a critical priority. However, the
+scarcity of trained mental health professionals in the field, combined with
+cultural and linguistic barriers, makes systematic psychological screening
+nearly impossible with conventional methods.
+
+\subsection{Problematics}
+
+The following specific problems are identified:
+
+\begin{itemize}
+    \item \textbf{P1:} Mental health professionals are insufficient in number to
+    serve the large displaced child population in the field;
+    \item \textbf{P2:} Children in distress often cannot verbally express their
+    psychological suffering, making clinical assessment difficult;
+    \item \textbf{P3:} Existing AI-based facial expression systems are not adapted
+    for deployment in low-resource humanitarian environments;
+    \item \textbf{P4:} Most FER datasets are adult-centric and may not generalize
+    well to child populations in African contexts.
+\end{itemize}
+
+\subsection{Objectives}
+
+These problems lead to the following objectives: develop an AI model capable of
+classifying seven basic emotions from facial images; build a simple web application
+deployable with minimal infrastructure; enable non-specialist humanitarian agents
+to conduct rapid emotional assessments; and contribute to the state of the art by
+applying FER technology in a humanitarian context.
+
+\section{General Information on Key Concepts}
+
+\subsection{Facial Biometric Data}
+
+Biometric data refers to measurable biological characteristics used to identify
+or analyze individuals. Facial biometric data encompasses measurable features
+extracted from the human face, including geometric measurements between facial
+landmarks such as eyes, nose, and mouth, as well as texture patterns and dynamic
+features such as micro-expressions. The face contains 43 muscles capable of
+producing thousands of distinct expressions, mapped by the Facial Action Coding
+System developed by Ekman and Friesen \cite{ekman1978} into discrete Action Units
+forming the biological basis for emotion classification.
+
+\subsection{Facial Expressions and Their Emotional Significance: Ekman's Model}
+
+Paul Ekman's foundational research established that six basic emotions are
+universally expressed through the same facial configurations regardless of
+cultural background: happiness, sadness, anger, fear, disgust, and surprise
+\cite{ekman1999}. A seventh category, neutrality, is added in computational
+systems. These seven categories form the basis of the FER-2013 dataset and of
+the EmotiAid classification system.
+
+\begin{table}[H]
+\centering
+\caption{The Seven Basic Emotions and Their Facial Characteristics}
+\begin{tabular}{|l|p{9cm}|}
+\hline
+\textbf{Emotion} & \textbf{Key Facial Indicators} \\
+\hline
+Happiness  & Raised lip corners, raised cheeks, crow's feet wrinkles \\
+\hline
+Sadness    & Inner brow raise, brow lowering, lip corner depression \\
+\hline
+Anger      & Brow lowering, upper eyelid raise, lip tightening \\
+\hline
+Fear       & Brow raise and pull together, upper eyelid raise, lip stretch \\
+\hline
+Disgust    & Nose wrinkling, upper lip raise, cheek raise \\
+\hline
+Surprise   & Brow raise, wide-open eyes, dropped jaw \\
+\hline
+Neutral    & No predominant muscular activation \\
+\hline
+\end{tabular}
+\label{tab:emotions}
+\end{table}
+
+\subsection{Internally Displaced Children: Context and Psychological Vulnerabilities}
+
+According to the UN Guiding Principles on Internal Displacement, internally
+displaced persons are individuals forced to leave their homes due to armed
+conflict, violence, or natural disasters, but who remain within their country's
+borders. Children constitute a particularly vulnerable sub-group. The
+psychological literature identifies specific risk factors including direct
+exposure to violence, separation from caregivers, disruption of schooling, loss
+of social networks, and chronic uncertainty about the future. These factors
+create conditions conducive to post-traumatic stress disorder, depression, anxiety
+disorders, and behavioral dysregulation.
+
+\subsection{Fundamentals of Artificial Intelligence}
+
+Artificial Intelligence refers to the simulation of human cognitive functions by
+computational systems, encompassing capabilities such as learning, reasoning,
+problem solving, and perception. The current wave of AI, driven by the
+availability of large datasets, powerful GPUs, and advances in neural network
+architectures, has produced systems that match or exceed human performance on
+specific perceptual tasks \cite{lecun1998}.
+
+\subsection{Deep Learning: A Key Sub-domain of AI}
+
+Deep learning is a sub-field of machine learning using multi-layered artificial
+neural networks to learn hierarchical representations of data. For image data,
+Convolutional Neural Networks have emerged as the dominant architecture,
+exploiting the spatial structure of images through convolutional filters detecting
+local patterns such as edges, textures, and shapes.
+
+\subsection{Presentation of the Proposed Solution: EmotiAid}
+
+EmotiAid is a web-based application integrating a trained CNN model into a
+humanitarian-oriented interface. The system allows a humanitarian field agent to
+upload a photograph or capture an image via the device camera, receive an automatic
+prediction of the child's dominant emotional state with confidence scores for all
+seven classes, and trigger an automatic alert when fear or sadness exceeds 60\%.
+Analysis results are saved to a database and accessible through a historical
+dashboard and statistical report. The application is built on a FastAPI backend
+and a React frontend, making it deployable on any standard web server and
+accessible from any modern browser.
+
+\subsection{Types of Emotions Detected by the Model}
+
+The EmotiAid model detects the seven emotions of the Ekman model: Anger, Disgust,
+Fear, Happiness, Neutrality, Sadness, and Surprise. Among these, Fear and Sadness
+are classified as high-priority emotions triggering the psychological alert
+mechanism, as they are most closely associated with post-traumatic stress and
+acute psychological distress in the context of forced displacement.
+
+\section{Ethical and Regulatory Considerations}
+
+\subsection{Legal and Regulatory Framework}
+
+The use of facial biometric data of children raises important legal and ethical
+questions. The General Data Protection Regulation (GDPR) classifies biometric
+data as sensitive personal data requiring explicit consent and specific security
+measures. The UN Convention on the Rights of the Child establishes that any
+technology used in relation to children must prioritize their best interests.
+
+\subsection{Informed Consent and Data Protection}
+
+In the context of EmotiAid, the humanitarian agent must obtain verbal consent
+from the child's guardian before capturing and analyzing a facial image. Images
+are processed in real time and are not retained in the database by default; only
+the analysis results and associated metadata are stored. No image is shared with
+third parties.
+
+\subsection{Anonymization and Data Security}
+
+All stored data is associated with an anonymized child identifier rather than a
+full name. The application uses JWT authentication to ensure that only registered
+agents can access analysis data.
+
+\subsection{Ethical Risks and Limitations}
+
+Several ethical risks are identified: misclassification leading to incorrect
+psychological assessment; potential stigmatization of children based on detected
+emotions; and data breach risks. These risks are mitigated by framing EmotiAid
+as a support tool for trained agents rather than an autonomous diagnostic system.
+The FER-2013 dataset, primarily composed of adult faces from Western contexts,
+may introduce cultural and demographic biases that must be considered when
+interpreting analysis results.
+
+\section{State of the Art}
+
+\subsection{Prior Work on AI and Emotion Recognition}
+
+The field of automatic facial expression recognition has evolved significantly
+over the past three decades. Early approaches relied on hand-crafted features
+such as Local Binary Patterns (LBP) and Histogram of Oriented Gradients (HOG),
+combined with classical classifiers such as Support Vector Machines. The
+introduction of deep learning transformed the FER landscape. The FER-2013
+challenge at ICML 2013, introduced by Goodfellow et al. \cite{goodfellow2013},
+marked a turning point, establishing a large-scale benchmark comprising 35,887
+labeled grayscale facial images across seven emotion classes.
+
+\subsection{Existing Models in the Literature}
+
+\textbf{FER+} \cite{barsoum2016} is an improved version of FER-2013, where each
+image was annotated by ten annotators rather than one, producing more reliable
+probabilistic labels and achieving higher model accuracy due to better annotation
+quality.
+
+\textbf{DeepFace} \cite{taigman2014}, developed by Facebook AI Research, uses a
+nine-layer deep CNN trained on four million face images to achieve 97.35\%
+accuracy on the Labeled Faces in the Wild benchmark. Although primarily designed
+for identity verification, its architecture strongly influenced subsequent FER
+systems.
+
+\textbf{AffectNet} \cite{mollahosseini2017} is the largest publicly available
+facial expression dataset with over one million images. Its ethnic and demographic
+diversity makes it particularly relevant for systems targeting diverse populations.
+
+\begin{table}[H]
+\centering
+\caption{Comparison of Key FER Models in the Literature}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Model} & \textbf{Authors} & \textbf{Dataset} & \textbf{Accuracy} \\
+\hline
+FER-2013 baseline & Goodfellow et al. (2013) & FER-2013 & 65.0\% \\
+\hline
+FER+ & Barsoum et al. (2016) & FER+ & 81.20\% \\
+\hline
+DeepFace & Taigman et al. (2014) & LFW & 97.35\% \\
+\hline
+AffectNet & Mollahosseini et al. (2017) & AffectNet & 58.00\% \\
+\hline
+\textbf{EmotiAid CNN (This work)} & \textbf{SILGA (2026)} & \textbf{FER-2013} & \textbf{67.53\%} \\
+\hline
+\end{tabular}
+\label{tab:models}
+\end{table}
+
+\subsection{Justification of the Proposed Solution}
+
+The EmotiAid CNN achieves 67.53\% validation accuracy on FER-2013, surpassing the
+65\% academic standard established by Goodfellow et al. \cite{goodfellow2013}.
+While pre-trained models like VGG-Face and ResNet offer higher performance, they
+require significant computational resources, making them unsuitable for CPU-based
+deployment in humanitarian environments. The custom lightweight CNN architecture
+developed in this project balances prediction accuracy with computational
+efficiency, addressing a real-world deployment gap absent from the existing
+literature.
+
+\subsection*{Chapter Conclusion}
+
+This chapter established the theoretical foundations of EmotiAid. The key concepts
+underpinning the system were reviewed, including facial biometric data, Ekman's
+universal emotion model, the vulnerability of internally displaced children, the
+fundamentals of AI and CNNs, and the ethical framework governing the use of
+biometric technology on vulnerable populations. The state of the art analysis
+confirmed that a deployment gap exists in humanitarian contexts that EmotiAid
+specifically addresses.
+
+\clearpage
+
+%% ============================================================
+%% CHAPTER 2
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 2: Methodology and Conceptual Approach}
+{\LARGE \bfseries \noindent Chapter 2: Methodology and Conceptual Approach}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Methodology}
+
+\subsection{Software Development Methodology: The 2TUP Model}
+
+This project adopts the 2TUP (Two-Track Unified Process) methodology, an
+adaptation of the Rational Unified Process specifically designed for
+object-oriented software projects. The 2TUP model structures development into
+two parallel tracks:
+
+\begin{itemize}
+    \item \textbf{The Functional Track:} Focuses on functional requirements, user
+    needs, use cases, and business logic. For EmotiAid, this encompasses
+    requirements analysis for the humanitarian agent interface and the emotion
+    detection workflow definition.
+    \item \textbf{The Technical Track:} Addresses technical architecture,
+    frameworks, and infrastructure, including the CNN architecture selection, the
+    React/FastAPI technology stack, and the REST API design.
+\end{itemize}
+
+The two tracks converge in the design and implementation phase, ensuring the final
+system is both functionally complete and technically sound.
+
+\subsection{Data Collection}
+
+The primary dataset is \textbf{FER-2013} (Facial Expression Recognition 2013),
+introduced at the ICML 2013 Challenges in Representation Learning workshop
+\cite{goodfellow2013}.
+
+\begin{table}[H]
+\centering
+\caption{FER-2013 Dataset Characteristics}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Property} & \textbf{Value} \\
+\hline
+Total samples & 35,887 grayscale images \\
+\hline
+Image dimensions & 48 $\times$ 48 pixels \\
+\hline
+Number of classes & 7 (Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral) \\
+\hline
+Training set & 28,709 images \\
+\hline
+Validation set & 3,589 images \\
+\hline
+Test set & 3,589 images \\
+\hline
+Format & Image files (JPG) \\
+\hline
+Source & Kaggle (msambare/fer2013) \\
+\hline
+\end{tabular}
+\label{tab:fer2013}
+\end{table}
+
+\subsection{Data Preprocessing}
+
+Raw FER-2013 data requires the following preprocessing steps:
+
+\begin{enumerate}
+    \item \textbf{Normalization:} Pixel values are scaled from [0, 255] to [0.0, 1.0].
+    \item \textbf{Reshaping:} Arrays are reshaped to (48, 48, 1) for CNN input.
+    \item \textbf{Label encoding:} Integer class labels are one-hot encoded.
+    \item \textbf{Data augmentation:} Horizontal flipping, rotation ($\pm$10°),
+    zoom (10\%), and brightness adjustment are applied to improve generalization.
+\end{enumerate}
+
+\subsection{Data Validation}
+
+Before training, dataset integrity is verified through class distribution analysis
+to identify imbalance, sample visualization to confirm label-image correspondence,
+and statistical validation of normalized pixel value distributions.
+
+\subsection{Model Development}
+
+The CNN model is developed using TensorFlow 2.x and Keras. The development follows
+an iterative process: a baseline architecture is first established and trained,
+then progressively refined based on validation performance using EarlyStopping and
+ReduceLROnPlateau callbacks.
+
+\subsection{Model Training}
+
+Training is performed on the Kaggle cloud platform using a Tesla P100-PCIE-16GB
+GPU. The Adam optimizer with learning rate 0.001 is used, with categorical
+cross-entropy as the loss function, a batch size of 64, and a maximum of 50 epochs.
+
+\subsection{Evaluation Metrics}
+
+The model is evaluated using accuracy, precision, recall, F1-score per class, and
+a confusion matrix visualizing classification performance across all seven emotion
+classes.
+
+\section{Conceptual Approach}
+
+\subsection{General System Architecture}
+
+The EmotiAid system follows a three-tier client-server architecture: (1) the
+Presentation Layer, a React.js responsive web application providing the user
+interface; (2) the Application Layer, a FastAPI REST API handling authentication,
+business logic, and AI model inference; and (3) the Data Layer, an SQLite database
+storing user accounts, child profiles, and analysis histories.
+
+\subsection{Functional Architecture}
+
+The system supports the following main functional flows: authentication flow
+(agent logs in, JWT token issued); analysis flow (image captured, sent to API,
+preprocessed, CNN inference, result returned and saved); history flow (agent
+queries past analyses); and statistics flow (aggregate emotion data displayed on
+dashboard).
+
+\subsection{Software Architecture}
+
+The backend follows FastAPI's router-based modular architecture with separation
+between routes, models, schemas, and database logic. The frontend uses React's
+component-based architecture with functional components and hooks for state
+management.
+
+\subsection{Hardware Architecture}
+
+Training was performed on Kaggle GPU cloud (Tesla P100-PCIE-16GB). Production
+deployment requires a server with minimum 4-core CPU, 8 GB RAM, and 10 GB storage.
+Client access requires only a mobile phone with a web browser and internet
+connection.
+
+\subsection{AI Inference Architecture}
+
+During inference, the system executes the following pipeline: (1) image received
+as a multipart form upload via HTTP POST; (2) decoded using Pillow and converted
+to grayscale; (3) face detected and cropped using OpenCV Haar Cascade
+\cite{viola2001}; (4) resized to 48$\times$48 and normalized to [0, 1]; (5) passed
+through the loaded Keras CNN model; (6) Softmax output converted to emotion label
+and confidence scores; (7) result serialized as JSON and returned to the frontend
+with alert status.
+
+\subsection{Technological Choice: Responsive Web Application}
+
+The choice of a responsive web application was motivated by three factors:
+(1) accessibility --- any device with a browser can access the system without
+installation; (2) maintainability --- a single codebase serves all platforms;
+(3) deployability --- the system can be hosted on a local server accessible via
+local Wi-Fi without internet dependency.
+
+\subsection*{Chapter Conclusion}
+
+This chapter presented the 2TUP methodology and the conceptual architecture of
+EmotiAid. The FER-2013 dataset provides a solid foundation for CNN training, and
+the preprocessing pipeline ensures data quality. The three-tier architecture
+establishes a clean separation between presentation, business logic, and data
+layers.
+
+\clearpage
+
+%% ============================================================
+%% PART II
+%% ============================================================
+\part*{Part II: Design and Implementation}
+\addcontentsline{toc}{part}{Part II: Design and Implementation}
+\addtocontents{toc}{\vspace{10pt}}
+
+%% ============================================================
+%% CHAPTER 3
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 3: Design, Modelling and Conceptual Approach}
+{\LARGE \bfseries \noindent Chapter 3: Design, Modelling and Conceptual Approach}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Functional and Technical Requirements}
+
+\subsection{Functional Requirements}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements of EmotiAid}
+\begin{tabular}{|l|p{7cm}|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} \\
+\hline
+FR-01 & Agent authenticates with username and password & Must Have \\
+\hline
+FR-02 & Agent uploads a child photograph for analysis & Must Have \\
+\hline
+FR-03 & Agent captures an image via device camera & Must Have \\
+\hline
+FR-04 & System displays detected emotion and confidence scores & Must Have \\
+\hline
+FR-05 & System generates alert for fear or sadness $>$ 60\% & Must Have \\
+\hline
+FR-06 & Analysis results are automatically saved to database & Must Have \\
+\hline
+FR-07 & Agent consults analysis history & Should Have \\
+\hline
+FR-08 & Agent manages child profiles (create, view, history) & Should Have \\
+\hline
+FR-09 & Dashboard displays emotion distribution statistics & Should Have \\
+\hline
+FR-10 & Agent generates and prints a PDF statistical report & Could Have \\
+\hline
+\end{tabular}
+\label{tab:requirements}
+\end{table}
+
+\subsection{Technical Requirements}
+
+The system must satisfy the following technical constraints: emotion prediction
+response time under 5 seconds; application accessible from any modern browser
+without installation; responsive design for mobile and desktop; secure JWT-based
+authentication; and REST API following standard HTTP conventions.
+
+\section{UML Modelling}
+
+\subsection{Use Case Diagram}
+
+The system identifies three main actors. The \textbf{Humanitarian Agent} is the
+primary user who logs in, captures or uploads images, views emotion analysis
+results, manages child profiles, and consults the dashboard. The \textbf{AI
+System} is an automated component that preprocesses images, runs CNN inference,
+and returns predictions. The \textbf{Database} persists user accounts, child
+profiles, and analysis records.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{use_case_diagram.png}
+\caption{Use Case Diagram of EmotiAid}
+\label{fig:usecase}
+\end{figure}
+
+\subsection{Class Diagram}
+
+The main entities of the system are:
+\begin{itemize}
+    \item \textbf{Agent:} id, username, password\_hash, nom\_complet, created\_at;
+    \item \textbf{Child:} id, prenom, age\_approx, zone, agent\_id (FK), created\_at;
+    \item \textbf{Analysis:} id, child\_id (FK), agent\_id (FK), emotion\_principale,
+    scores (JSON), alerte (bool), created\_at;
+    \item \textbf{EmotionModel:} model\_path, emotions, threshold, predict(),
+    detectFace(), preprocess();
+    \item \textbf{FaceDetector:} cascade, detect().
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{class_diagram.png}
+\caption{Class Diagram of EmotiAid}
+\label{fig:classdiagram}
+\end{figure}
+
+\subsection{Sequence Diagram}
+
+The main sequence for an emotion analysis is: (1) agent opens the Analysis page;
+(2) agent captures or uploads an image; (3) frontend sends HTTP POST to
+\texttt{/predict} with the image file and JWT token; (4) FastAPI backend receives
+the request, verifies the token, and calls the preprocessing pipeline; (5) OpenCV
+detects and crops the face; (6) preprocessed image passed to the CNN model;
+(7) model returns Softmax predictions; (8) backend formats JSON response with
+emotion label, all scores, and alert status, saves to database; (9) frontend
+renders the result card with emotion, confidence bars, and alert badge.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{sequence_diagram.png}
+\caption{Sequence Diagram of EmotiAid Analysis Flow}
+\label{fig:sequence}
+\end{figure}
+
+\section{Development of the AI Model}
+
+\subsection{Model Architecture}
+
+The EmotiAid CNN is a custom architecture with 29 layers comprising four
+convolutional blocks followed by a fully connected classifier.
+
+\begin{table}[H]
+\centering
+\caption{EmotiAid CNN Architecture Summary}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Block} & \textbf{Configuration} & \textbf{Output Shape} \\
+\hline
+Block 1 & Conv2D(32) + BN + MaxPool + Dropout(0.25) & 24$\times$24$\times$32 \\
+\hline
+Block 2 & Conv2D(64) + BN + MaxPool + Dropout(0.25) & 12$\times$12$\times$64 \\
+\hline
+Block 3 & Conv2D(128) + BN + MaxPool + Dropout(0.25) & 6$\times$6$\times$128 \\
+\hline
+Block 4 & Conv2D(256) + BN + MaxPool + Dropout(0.25) & 3$\times$3$\times$256 \\
+\hline
+Classifier & Flatten + Dense(512) + Dense(256) + Softmax(7) & 7 \\
+\hline
+\end{tabular}
+\label{tab:cnn}
+\end{table}
+
+\subsection{Training Configuration}
+
+\begin{itemize}
+    \item Optimizer: Adam, learning rate 0.001;
+    \item Loss function: Categorical cross-entropy;
+    \item Batch size: 64; Maximum epochs: 50;
+    \item Callbacks: ModelCheckpoint (save best model), EarlyStopping
+    (patience=10), ReduceLROnPlateau (factor=0.5, patience=5);
+    \item Training hardware: Kaggle GPU Tesla P100-PCIE-16GB.
+\end{itemize}
+
+\subsection{Training Process}
+
+Training was completed in approximately 44 epochs before EarlyStopping was
+triggered. The best model weights were saved as \texttt{emotion\_model\_best.h5}.
+Training curves showed steady improvement with convergence observed after epoch 30.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{training_curves.png}
+\caption{Training and Validation Accuracy/Loss Curves}
+\label{fig:training}
+\end{figure}
+
+\section{Development of the Application}
+
+\subsection{Technologies Used}
+
+\begin{table}[H]
+\centering
+\caption{Technology Stack for EmotiAid}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Component} & \textbf{Technology} & \textbf{Version} \\
+\hline
+Backend framework & FastAPI & 0.104 \\
+\hline
+Authentication & Python-Jose + Passlib & JWT / bcrypt 4.0.1 \\
+\hline
+AI / Deep Learning & TensorFlow / Keras & 2.13 \\
+\hline
+Image processing & OpenCV, Pillow & 4.8 / 10.0 \\
+\hline
+Database ORM & SQLAlchemy + SQLite & 2.0 \\
+\hline
+Frontend framework & React.js + Vite & 18.2 \\
+\hline
+CSS framework & TailwindCSS & 3.0 \\
+\hline
+HTTP client & Axios & 1.4 \\
+\hline
+Language & Python / JavaScript & 3.12 / ES6+ \\
+\hline
+\end{tabular}
+\label{tab:tech}
+\end{table}
+
+\subsection{Application Structure}
+
+\begin{lstlisting}[caption={EmotiAid Project Structure}]
+EmotiAid/
+|-- Backend/
+|   |-- main.py
+|   |-- database.py
+|   |-- models.py
+|   |-- schemas.py
+|   |-- routes/
+|   |   |-- auth.py
+|   |   |-- predict.py
+|   |   |-- children.py
+|   |   `-- analyses.py
+|   `-- model/
+|       `-- emotion_model_best.h5
+`-- frontend/
+    |-- src/
+    |   |-- pages/
+    |   |   |-- Login.jsx
+    |   |   |-- Dashboard.jsx
+    |   |   |-- Analyse.jsx
+    |   |   |-- Historique.jsx
+    |   |   |-- Rapport.jsx
+    |   |   `-- ProfilEnfant.jsx
+    |   `-- App.jsx
+    `-- package.json
+\end{lstlisting}
+
+\subsection{Key Features of the Interface}
+
+The EmotiAid interface provides six main pages. The \textbf{Login page} handles
+agent authentication with JWT token storage. The \textbf{Dashboard} displays
+key statistics and an emotion distribution chart. The \textbf{Analysis page}
+offers camera capture and file upload with emotion results. The \textbf{History
+page} lists all past analyses. The \textbf{Child Profiles page} manages
+individual child records. The \textbf{Report page} generates a printable PDF
+statistical report.
+
+\subsection*{Chapter Conclusion}
+
+This chapter presented the complete design of EmotiAid, from functional and
+technical requirements through UML models to the CNN architecture and technology
+stack. The following chapter presents the implementation results and their analysis.
+
+\clearpage
+
+%% ============================================================
+%% CHAPTER 4
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 4: Implementation, Results and Analysis}
+{\LARGE \bfseries \noindent Chapter 4: Implementation, Results and Analysis}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Implementation}
+
+\subsection{Backend Implementation}
+
+The trained CNN model is loaded once at server startup and kept in memory to
+minimize inference latency. The prediction route receives a multipart image
+upload, runs the preprocessing pipeline (face detection via Haar Cascade,
+grayscale conversion, resizing to 48$\times$48, normalization), and passes the
+array to the model.
+
+\begin{lstlisting}[caption={FastAPI Prediction Route (routes/predict.py)}]
+from fastapi import APIRouter, File, UploadFile, Header
+from tensorflow import keras
+import numpy as np, cv2
+from PIL import Image
+import io
+
+model = keras.models.load_model('model/emotion_model_best.h5')
+EMOTIONS = ['angry','disgust','fear','happy','neutral','sad','surprise']
+
+@router.post("/predict")
+async def predict_emotion(file: UploadFile = File(...),
+                          authorization: str = Header(None)):
+    image_bytes = await file.read()
+    face_bytes = detect_face(image_bytes)
+    img_array = preprocess_image(face_bytes)
+    predictions = model.predict(img_array, verbose=0)[0]
+    emotion_index = int(np.argmax(predictions))
+    scores = {EMOTIONS[i]: round(float(predictions[i])*100, 2)
+              for i in range(len(EMOTIONS))}
+    alerte = scores.get('fear',0) > 60 or scores.get('sad',0) > 60
+    return {"emotion_principale": EMOTIONS[emotion_index],
+            "scores": scores, "alerte": alerte}
+\end{lstlisting}
+
+\subsection{Frontend Implementation}
+
+The React Analysis page implements both camera capture via the
+\texttt{getUserMedia()} API and file upload, with automatic display of results
+upon successful prediction.
+
+\section{Results}
+
+\subsection{Model Training Results}
+
+The CNN model was trained on FER-2013 over 50 epochs with EarlyStopping. The best
+validation accuracy of \textbf{67.53\%} was achieved at epoch 44.
+
+\begin{table}[H]
+\centering
+\caption{EmotiAid CNN Training Results}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Final Training Accuracy & 72.8\% \\
+\hline
+Best Validation Accuracy & \textbf{67.53\%} \\
+\hline
+Best Epoch & 44 \\
+\hline
+Model File Size & 21.9 MB \\
+\hline
+Total Parameters & $\sim$4.2 million \\
+\hline
+Training Duration & $\sim$45 minutes (Kaggle GPU) \\
+\hline
+\end{tabular}
+\label{tab:results}
+\end{table}
+
+\subsection{Performance per Emotion Class}
+
+\begin{table}[H]
+\centering
+\caption{Per-Class Performance on FER-2013 Test Set}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Emotion} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\hline
+Angry    & 0.61 & 0.60 & 0.61 \\
+\hline
+Disgust  & 0.46 & 0.46 & 0.46 \\
+\hline
+Fear     & 0.45 & 0.45 & 0.45 \\
+\hline
+Happy    & 0.88 & 0.88 & 0.88 \\
+\hline
+Neutral  & 0.63 & 0.63 & 0.63 \\
+\hline
+Sad      & 0.53 & 0.53 & 0.53 \\
+\hline
+Surprise & 0.77 & 0.77 & 0.77 \\
+\hline
+\textbf{Overall} & \textbf{0.67} & \textbf{0.67} & \textbf{0.67} \\
+\hline
+\end{tabular}
+\label{tab:perclass}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{confusion_matrix.png}
+\caption{Confusion Matrix on FER-2013 Test Set}
+\label{fig:confusion}
+\end{figure}
+
+\subsection{Web Application Results}
+
+The EmotiAid web application was successfully developed and tested. Key
+observations include: average prediction response time of 2.3 seconds on CPU;
+image upload functional for JPEG and PNG formats; camera capture functional on
+Chrome and Firefox; alert system correctly triggered for fear and sadness
+predictions above 60\%; history and dashboard pages display data accurately.
+
+\subsection{Real-World Prediction Test}
+
+During functional testing, a real photograph was submitted through the EmotiAid
+interface. The model returned: \textbf{Neutral 86.6\%}, Sad 7.6\%, Angry 3.6\%,
+with no alert triggered. This result demonstrates the system's ability to produce
+coherent predictions on real-world images.
+
+\section{Analysis and Discussion}
+
+\subsection{Innovation and Outreach Strategy}
+
+EmotiAid represents a novel application of AI technology to a humanitarian context.
+The key innovations are: (1) domain-specific deployment adapting a general FER
+system to internally displaced children in Burkina Faso; (2) an interface
+specifically designed for non-technical humanitarian agents; (3) an automatic
+alert mechanism flagging high-risk emotional states. For outreach, EmotiAid could
+be introduced to humanitarian organizations through partnerships with UNICEF and
+the Burkina Faso Ministry of Social Action, with a pilot deployment in one IDP
+camp for real-world validation.
+
+\subsection{Limitations}
+
+\begin{itemize}
+    \item FER-2013 is primarily composed of adult faces; performance on child faces
+    may differ from reported accuracy;
+    \item The Disgust class shows lower performance due to severe dataset imbalance;
+    \item The system requires a camera-equipped device and network connectivity;
+    \item Cultural differences in emotional expression between Western training data
+    and Sub-Saharan African subjects are not accounted for.
+\end{itemize}
+
+\subsection{Recommendations}
+
+\begin{itemize}
+    \item Implement Transfer Learning with MobileNetV2 to improve accuracy to
+    72--75\%;
+    \item Integrate AffectNet dataset for better ethnic diversity representation;
+    \item Conduct a clinical validation study with child psychologists in a real
+    IDP camp.
+\end{itemize}
+
+\subsection*{Chapter Conclusion}
+
+This chapter presented the full implementation of EmotiAid. The FastAPI backend
+successfully integrates the CNN model with real-time inference, JWT authentication,
+and SQLite persistence. The React frontend provides a complete interface covering
+analysis, history, child profiles, and reporting. The CNN achieved 67.53\%
+validation accuracy on FER-2013, consistent with the academic state of the art.
+
+\clearpage
+
+%% ============================================================
+%% GENERAL CONCLUSION
+%% ============================================================
+\chapter*{General Conclusion and Perspectives}
+\addcontentsline{toc}{chapter}{General Conclusion and Perspectives}
+\justifying
+
+This thesis presented the design and implementation of EmotiAid, an AI-based web
+application for the automatic detection of emotional states in internally displaced
+children through facial expression analysis. The work was motivated by the critical
+need for accessible psychosocial screening tools in humanitarian contexts,
+particularly in Burkina Faso, where the ongoing security crisis has displaced more
+than two million people.
+
+A CNN trained on FER-2013 demonstrated the technical feasibility of automated
+facial emotion classification with a validation accuracy of 67.53\%, exceeding the
+academic standard of 65\% \cite{goodfellow2013}. The integration of this model
+within a FastAPI/React web application produced a functional system enabling
+non-specialist humanitarian agents to conduct rapid emotional assessments using a
+standard mobile device.
+
+The key contributions of this work are threefold. First, it demonstrates that AI
+technology can be adapted and deployed for humanitarian applications in low-resource
+environments. Second, it produces a functional prototype serving as a basis for
+further development and clinical validation. Third, it articulates the technical
+and ethical challenges that must be addressed for responsible deployment of such
+systems with vulnerable children.
+
+\textbf{Perspectives:} From a technical standpoint, the most immediate priority is
+the integration of Transfer Learning with MobileNetV2 to improve model accuracy to
+the 72--75\% range. From an organizational standpoint, a pilot deployment in a
+Burkina Faso IDP camp in collaboration with a humanitarian organization and child
+psychologists would constitute the critical next step toward real-world impact.
+
+\clearpage
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\addcontentsline{toc}{chapter}{Bibliography}
+\justifying
+
+\begin{thebibliography}{99}
+
+\bibitem{barsoum2016}
+Barsoum E., Zhang C., Ferrer C.C. and Zhang Z. (2016),
+Training deep networks for facial expression recognition with crowd-sourced label
+distribution,
+\textit{ACM International Conference on Multimodal Interaction}, pp. 279--283.
+
+\bibitem{ekman1999}
+Ekman P. (1999),
+Basic emotions. In T. Dalgleish and M. Power (Eds.),
+\textit{Handbook of Cognition and Emotion},
+John Wiley \& Sons, pp. 45--60.
+
+\bibitem{ekman1978}
+Ekman P. and Friesen W.V. (1978),
+\textit{Facial Action Coding System},
+Consulting Psychologists Press, Palo Alto.
+
+\bibitem{goodfellow2013}
+Goodfellow I.J., Erhan D., Carrier P.L. and Courville A. (2013),
+Challenges in representation learning: A report on three machine learning contests,
+\textit{Neural Information Processing Systems Workshop}.
+
+\bibitem{he2016}
+He K., Zhang X., Ren S. and Sun J. (2016),
+Deep residual learning for image recognition,
+\textit{Proceedings of CVPR}, pp. 770--778.
+
+\bibitem{lecun1998}
+LeCun Y., Bottou L., Bengio Y. and Haffner P. (1998),
+Gradient-based learning applied to document recognition,
+\textit{Proceedings of the IEEE}, 86(11), pp. 2278--2324.
+
+\bibitem{li2020}
+Li S. and Deng W. (2020),
+Deep facial expression recognition: A survey,
+\textit{IEEE Transactions on Affective Computing}, 13(3), pp. 1195--1215.
+
+\bibitem{mollahosseini2017}
+Mollahosseini A., Hasani B. and Mahoor M.H. (2017),
+AffectNet: A database for facial expression, valence, and arousal computing
+in the wild,
+\textit{IEEE Transactions on Affective Computing}, 10(1), pp. 18--31.
+
+\bibitem{srivastava2014}
+Srivastava N., Hinton G., Krizhevsky A., Sutskever I. and Salakhutdinov R. (2014),
+Dropout: A simple way to prevent neural networks from overfitting,
+\textit{Journal of Machine Learning Research}, 15(1), pp. 1929--1958.
+
+\bibitem{taigman2014}
+Taigman Y., Yang M., Ranzato M. and Wolf L. (2014),
+DeepFace: Closing the gap to human-level performance in face verification,
+\textit{Proceedings of CVPR}, pp. 1701--1708.
+
+\bibitem{unhcr2023}
+UNHCR (2023),
+\textit{Global Trends: Forced Displacement in 2022},
+United Nations High Commissioner for Refugees, Geneva.
+
+\bibitem{viola2001}
+Viola P. and Jones M. (2001),
+Rapid object detection using a boosted cascade of simple features,
+\textit{Proceedings of CVPR}, Vol. 1, pp. 511--518.
+
+\bibitem{zhang2016}
+Zhang K., Zhang Z., Li Z. and Qiao Y. (2016),
+Joint face detection and alignment using multitask cascaded convolutional networks,
+\textit{IEEE Signal Processing Letters}, 23(10), pp. 1499--1503.
+
+\end{thebibliography}
+
+\vspace{1cm}
+\noindent\textbf{Websites}
+\begin{enumerate}
+    \item Kaggle FER-2013 Dataset. Available at:
+    \url{https://www.kaggle.com/datasets/msambare/fer2013}. Accessed: March 2026.
+    \item TensorFlow Documentation. Available at:
+    \url{https://www.tensorflow.org/api_docs}. Accessed: March 2026.
+    \item FastAPI Documentation. Available at:
+    \url{https://fastapi.tiangolo.com}. Accessed: March 2026.
+    \item React.js Documentation. Available at:
+    \url{https://react.dev}. Accessed: March 2026.
+    \item UNHCR Burkina Faso. Available at:
+    \url{https://www.unhcr.org/countries/burkina-faso}. Accessed: March 2026.
+\end{enumerate}
+
+\clearpage
+
+\end{document}
