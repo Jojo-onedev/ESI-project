@@ -1,0 +1,55 @@
+\chapter{Modelling and Realization Technique}
+\thispagestyle{fancy}
+\justifying
+
+This chapter presents the modelling and realization of the SAMU digital triage system, providing a technical overview of its design and implementation. The process involved translating clinical workflows into a clear software architecture using Universal Modelling Language (UML) and selecting a high-performance technology stack that meets the demanding requirements of emergency medical regulation.
+
+\section{System Modelling and UML Specifications}
+The modelling phase of the SAMU triage project was essential for defining the roles of users, the structure of the data, and the dynamic behavior of the system. We developed several UML diagrams as a blueprint for development.
+
+\subsection{Actor Interaction and Use Case Diagram}
+The triage system identifies two primary actors and a supervisor. The \textbf{Operator} is the main user who performs patient triage, inputs clinical data, and views ESI results. The \textbf{Supervisor} can manage operator accounts, oversee current triage activities, and generate reports. The system automates the triage process, acting as an intelligent intermediary that applies the ESI logic to the operator's input.
+
+\subsection{Conceptual Data Model and Class Diagram}
+To ensure data integrity and robust storage, we identified several essential entities. The \textbf{Operator} class manages user accounts and security, while the \textbf{TriageCase} class stores the vital signs, clinical symptoms, and the resulting ESI level for each intervention. These entities are linked to an \textbf{AuditLog} system that records all sensitive administrative and clinical actions, ensuring transparency and accountability.
+
+\subsection{Dynamic Behavior and Sequence Diagram}
+The sequence of events during a triage session follows a clear pattern. First, the operator authenticates through a secure login interface. Second, a new triage session is initiated where clinical data is sent to the backend API. Third, the FastAPI server applies the ESI algorithm, stores the result in a PostgreSQL database, and returns the ESI level to the frontend for real-time display.
+
+\section{Realization and Technology Stack Selection}
+The technical implementation of the SAMU triage system leverages several modern technologies, selected for their reliability, performance, and security features.
+
+\subsection{Premium Frontend with React.js}
+The user interface is built with React.js and TailwindCSS, offering a premium and responsive experience that fits the institutional identity of SAMU Burkina Faso. We focused on creating a clean, modern design that minimizes cognitive load for operators during high-stress triage sessions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{login_page.png}
+\caption{Premium Login Interface for SAMU Triage Portal}
+\label{fig:login}
+\end{figure}
+
+\subsection{High-Performance Backend with FastAPI}
+The application layer is implemented using FastAPI, a modern Python framework known for its high performance and native support for asynchronous programming. This choice was motivated by the need for low-latency responses during patient prioritization, as well as the ease of building secure RESTful APIs.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{dashboard_main.png}
+\caption{Supervisor Dashboard with Recharts Visualizations and 24h Reports}
+\label{fig:dashboard}
+\end{figure}
+
+\subsection{Robust Data Management with PostgreSQL}
+To move from local SQLite tests to a production-ready environment, we migrated the system to a PostgreSQL database. This migration ensures robust transactional support, efficient handling of historical data, and a secure platform for auditing and reporting.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{user_management.png}
+\caption{Admin Interface for Operator and Specialist Management}
+\label{fig:admin}
+\end{figure}
+
+\section{Security Architecture and Implementation}
+Security was a primary consideration throughout the project, culminating in several hardening measures. We implemented secure authentication using JSON Web Tokens (JWT) and Bcrypt for password hashing. Furthermore, administrative actions are protected by a role-based access control (RBAC) system, ensuring that only supervisors can access sensitive user management features. Additional security headers, such as Content-Security-Policy (CSP) and brute-force protection through login delays and lockouts, were also integrated to protect the portal from external threats.
+
+\clearpage

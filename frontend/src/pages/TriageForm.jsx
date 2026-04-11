@@ -3,11 +3,18 @@ import api from '../api';
 import { generateTiragePDF } from '../utils/generatePDF';
 import { FileDown, UserPlus, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { jwtDecode } from 'jwt-decode';
 
 export default function TriageForm() {
   const [form, setForm] = useState({
     patient_identifier: '',
     symptoms_description: '',
+    caller_name: '',
+    caller_surname: '',
+    caller_age: '',
+    caller_sex: '',
+    medical_category: 'Médecine Générale',
+    specific_symptom: 'Aucun',
     consciousness: 'Conscient',
     breathing: 'Normale',
     bleeding: 'Aucun',
@@ -17,15 +24,62 @@ export default function TriageForm() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [startTime, setStartTime] = useState(null); // ⏱️ Phase 8
+  const [startTime, setStartTime] = useState(null); 
+  const [operatorFullName, setOperatorFullName] = useState('Agent SAMU');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Cache local
+  const categories = {
+    "Médecine Générale": [
+      "Arrêt cardiorespiratoire", "Détresse respiratoire extrême avec épuisement", "Coma profond (GCS <= 8) d'origine médicale",
+      "Hypotension sévère ou choc", "Douleur thoracique avec ECG anormal (SCA)", "Dyspnée modérée à sévère",
+      "Fièvre grave (T>=40°C, hypothermie, purpura, confusion)", "Exposition à maladie contagieuse grave", "Hémorragies digestives abondantes",
+      "Intoxications graves", "Douleur thoracique ECG normal mais à risque", "Malaise sans instabilité",
+      "Dyspnée modérée bien tolérée", "Douleur abdominale modérée", "Ictère", "Intoxication sans gravité immédiate",
+      "Hypertension sans signe de gravité", "Palpitations simples", "AES >= 48 h", "Vomissements simples chez adulte stable",
+      "Fièvre simple bien tolérée", "Toux / bronchite simple", "Constipation simple", "Douleur de membre ou sciatique simple"
+    ],
+    "Chirurgie": [
+      "Traumatisme avec amputation", "Traumatisme crânien avec coma (GCS <= 8)", "Hémorragie abondante",
+      "Traumatisme thoraco-abdominal pénétrant ou haute vélocité", "Brûlures étendues / visage / main", "Torsion testiculaire suspectée",
+      "Rétention aiguë d'urine douloureuse", "Hématurie abondante", "Corps étranger voies aériennes avec détresse",
+      "Occlusion intestinale, hernie étranglée", "Plaie complexe ou main", "Traumatisme stable nécessitant imagerie",
+      "Brûlure peu étendue avec avis spécialisé", "Douleur lombaire ou colique néphrétique stable", "Corps étranger digestif tranchant sans détresse",
+      "Plaie simple hors main", "Hernie simple non douloureuse", "Traumatisme distal modéré", "Excoriations", "Soins locaux simples"
+    ],
+    "Gynécologie - Obstétrique": [
+      "Accouchement imminent ou réalisé", "Eclampsie", "Rupture utérine", "Grossesse Extra utérine rompue",
+      "Hémorragie du post-partum abondante", "Grossesse 3e trimestre avec haut risque (métrorragies, douleur, HTA...)",
+      "Grossesse 1er-2e trimestre avec douleur/métrorragie", "Méno-métrorragies avec grossesse suspectée",
+      "Problèmes de post-partum simples", "Allaitement + fièvre modérée", "Anomalies vulvo-vaginales simples", "Mastite simple"
+    ],
+    "Pédiatrie": [
+      "Arrêt cardio-respiratoire pédiatrique", "Convulsions répétées", "Anémie décompensée", "Détresse respiratoire (SpO2<90%, cyanose)",
+      "Fièvre (T>38,5°)", "Dyspnée avec sifflement", "Déshydratation sévère nourrisson", "Hypotension pédiatrique",
+      "Paludisme grave", "Convulsions hyperthermiques intermittentes", "Diarrhée / vomissements modérés",
+      "Pleurs incoercibles nécessitant bilan", "Troubles alimentaires nourrisson", "Ictère néonatal simple",
+      "Bradycardie ou tachycardie bien tolérée", "Consultation bénigne (Très rare)"
+    ]
+  };
+
   useEffect(() => {
     const saved = localStorage.getItem('triage_draft');
     if (saved) {
       try { 
         setForm(JSON.parse(saved)); 
         toast.success("Brouillon récupéré automatiquement", { icon: '📝' });
+      } catch (e) {}
+    }
+
+    // Récupérer le nom de l'agent connecté
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded.full_name) {
+          setOperatorFullName(decoded.full_name);
+        } else {
+          setOperatorFullName(decoded.sub || 'Agent SAMU');
+        }
       } catch (e) {}
     }
   }, []);
@@ -36,10 +90,15 @@ export default function TriageForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Démarrer le chrono au premier changement (si pas déjà fait)
     if (!startTime && value.length > 0) setStartTime(Date.now());
     
-    setForm(prev => ({ ...prev, [name]: name === 'estimated_resources' ? parseInt(value) : value }));
+    setForm(prev => {
+      const newForm = { ...prev, [name]: name === 'estimated_resources' || name === 'caller_age' ? parseInt(value) || '' : value };
+      if (name === 'medical_category') {
+        newForm.specific_symptom = 'Aucun'; // Reset symptom when category changes
+      }
+      return newForm;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -48,12 +107,15 @@ export default function TriageForm() {
     setError('');
     setResult(null);
 
+    const dataToSend = { ...form };
+    if (!dataToSend.caller_age) dataToSend.caller_age = null;
+
     try {
       const duration = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
-      const response = await api.post('/triage/evaluate', { ...form, duration_seconds: duration });
+      const response = await api.post('/triage/evaluate', { ...dataToSend, duration_seconds: duration });
       setResult(response.data);
       localStorage.removeItem('triage_draft'); 
-      setStartTime(null); // Reset pour le prochain
+      setStartTime(null); 
       toast.success("Évaluation terminée avec succès !");
     } catch (err) {
       const msg = err.response?.data?.detail || "Erreur réseau: impossible de joindre le serveur de décision ESI.";
@@ -64,7 +126,6 @@ export default function TriageForm() {
     }
   };
 
-  // Dérive le code couleur à partir du niveau ESI (le backend ne le renvoie pas)
   const getColorCode = (level) => {
     const map = { 1: 'Rouge', 2: 'Orange', 3: 'Jaune', 4: 'Vert', 5: 'Bleu' };
     return map[level] || 'Bleu';
@@ -82,13 +143,12 @@ export default function TriageForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
-      {/* Résultat - Affichage en mode Popup (Modal) */}
       {result && (() => {
         const colorCode = getColorCode(result.esi_level);
         return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 overflow-y-auto">
             <div className={`w-full max-w-lg p-8 rounded-3xl shadow-2xl border-4 ${getColorClass(colorCode)} transform transition-all scale-100 animate-in zoom-in-95 duration-300`}>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-4xl font-black tracking-tight">Niveau ESI : {result.esi_level}</h3>
@@ -97,7 +157,7 @@ export default function TriageForm() {
               <p className="text-xl font-medium opacity-95 leading-relaxed">{result.esi_explanation}</p>
               <div className="mt-8 space-y-3">
                 <button
-                  onClick={() => generateTiragePDF({ ...result, color_code: colorCode }, form)}
+                  onClick={() => generateTiragePDF({ ...result, color_code: colorCode }, form, operatorFullName)}
                   className="w-full bg-white/90 hover:bg-white text-slate-800 font-bold py-3 px-6 rounded-xl transition-colors border border-white/50 text-base shadow-sm flex items-center justify-center gap-2"
                 >
                   <FileDown className="h-5 w-5" />
@@ -106,13 +166,18 @@ export default function TriageForm() {
                 <button 
                   onClick={() => {
                     setResult(null); 
-                    setForm({...form, patient_identifier:'', symptoms_description:'', consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 });
+                    setForm({
+                      patient_identifier:'', symptoms_description:'', 
+                      caller_name:'', caller_surname:'', caller_age:'', caller_sex:'', 
+                      medical_category: 'Médecine Générale', specific_symptom: 'Aucun', 
+                      consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 
+                    });
                     setStartTime(null);
                   }} 
                   className="w-full bg-white/20 hover:bg-white/30 text-current font-bold py-3 px-6 rounded-xl backdrop-blur-sm transition-colors border border-white/30 text-base shadow-sm flex items-center justify-center gap-2"
                 >
                   <UserPlus className="h-5 w-5" />
-                  Commencer un nouveau patient
+                  Nouveau Triage
                 </button>
               </div>
             </div>
@@ -120,69 +185,197 @@ export default function TriageForm() {
         );
       })()}
 
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-        <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-          <span className="bg-blue-100 text-blue-700 p-2 rounded-lg mr-3">
-            <AlertTriangle className="h-6 w-6" />
-          </span>
-          Évaluation Médicale Initiale
-        </h2>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-slate-800 flex items-center">
+            <span className="bg-blue-100 text-blue-700 p-2 rounded-lg mr-3">
+              <AlertTriangle className="h-5 w-5" />
+            </span>
+            Évaluation Médicale ESI de l'urgence
+          </h2>
+          <div className="text-xs font-bold text-slate-400 uppercase bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+            Session : {operatorFullName}
+          </div>
+        </div>
         
-        {error && <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-6 border border-red-200">{error}</div>}
+        {error && <div className="bg-red-50 text-red-700 p-3 rounded-lg mb-6 border border-red-200 text-sm">{error}</div>}
         
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-slate-700 mb-1">Identifiant Patient (Nom/Localisation)</label>
-              <input type="text" name="patient_identifier" value={form.patient_identifier} onChange={handleChange} required
-                className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3" placeholder="Ex: Homme 40 ans, Avenue Kwame Nkrumah..." />
-            </div>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* Colonne GAUCHE : Identification et Contexte */}
+          <div className="space-y-6">
             
-            <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-slate-700 mb-1">Symptômes Déclarés</label>
-              <textarea name="symptoms_description" value={form.symptoms_description} onChange={handleChange} required rows="2"
-                className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3" placeholder="Décrivez la raison de l'appel brièvement..."></textarea>
+            {/* Section Informations Appelant */}
+            <div className="p-4 bg-slate-50/50 border border-slate-100 rounded-xl">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Identité de l'Appelant (Optionnel)</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Nom</label>
+                  <input type="text" name="caller_name" value={form.caller_name} onChange={handleChange}
+                    className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 text-sm" placeholder="..." />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Prénom</label>
+                  <input type="text" name="caller_surname" value={form.caller_surname} onChange={handleChange}
+                    className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 text-sm" placeholder="..." />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Âge</label>
+                  <input type="number" name="caller_age" value={form.caller_age} onChange={handleChange} min="0" max="120"
+                    className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 text-sm" placeholder="Ans" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Sexe</label>
+                  <select name="caller_sex" value={form.caller_sex} onChange={handleChange} className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 text-sm">
+                    <option value="">Non précisé</option>
+                    <option value="H">Homme</option>
+                    <option value="F">Femme</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <label className="block text-sm font-bold text-slate-700 mb-2">État de conscience</label>
-              <select name="consciousness" value={form.consciousness} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                <option>Conscient</option>
-                <option className="text-red-600 font-bold">Inconscient</option>
-              </select>
+            {/* Section Patient & Situation */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Identifiant / Localisation du Patient *</label>
+                <input type="text" name="patient_identifier" value={form.patient_identifier} onChange={handleChange} required
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Ex: Accidenté, PK25 Route de Bobo..." />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Motif de l'appel (Symptômes déclarés) *</label>
+                <textarea name="symptoms_description" value={form.symptoms_description} onChange={handleChange} required rows="4"
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Décrivez la raison de l'appel de manière concise..."></textarea>
+              </div>
             </div>
-            
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <label className="block text-sm font-bold text-slate-700 mb-2">Respiration</label>
-              <select name="breathing" value={form.breathing} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                <option>Normale</option>
-                <option className="text-orange-600 font-bold">Difficile</option>
-                <option className="text-red-600 font-bold">Absente</option>
-              </select>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <label className="block text-sm font-bold text-slate-700 mb-2">Saignement / Hémorragie</label>
-              <select name="bleeding" value={form.bleeding} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                <option>Aucun</option>
-                <option>Léger</option>
-                <option className="text-orange-600 font-bold">Abondant</option>
-              </select>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <label className="block text-sm font-bold text-slate-700 mb-2">Ressources Médicales (Estimation)</label>
-              <select name="estimated_resources" value={form.estimated_resources} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                <option value={0}>0: Aucune ressource technique</option>
-                <option value={1}>1: Une seule (ex: Radio, ou Sutures)</option>
-                <option value={2}>2+: Multiples (ex: Labo + Radio + IV)</option>
-              </select>
-            </div>
+
           </div>
 
-          <button type="submit" disabled={loading} className="w-full bg-slate-800 hover:bg-slate-900 text-white focus:ring-4 focus:ring-slate-300 font-bold rounded-xl text-lg px-5 py-4 text-center transition-all shadow hover:shadow-lg disabled:opacity-70">
-            {loading ? 'Calcul ESI en cours...' : 'CONFIRMER L\'ÉVALUATION'}
-          </button>
+          {/* Colonne DROITE : Évaluation Clinique & Décision */}
+          <div className="space-y-6">
+            
+            {/* Section Domaine Médical & Critères Spécifiques */}
+            <div className="bg-blue-50/50 p-5 rounded-xl border border-blue-100 space-y-4 shadow-sm">
+              <h3 className="text-[10px] font-black text-blue-800 uppercase tracking-widest flex items-center gap-2 border-b border-blue-100 pb-1">
+                Anatomopathologie & Critères Majeurs
+              </h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Domaine Médical Concerné</label>
+                  <select name="medical_category" value={form.medical_category} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 text-sm font-medium">
+                    <option value="Médecine Générale">Médecine Générale</option>
+                    <option value="Chirurgie">Chirurgie (Traumato, Uro...)</option>
+                    <option value="Gynécologie - Obstétrique">Gynécologie - Obstétrique</option>
+                    <option value="Pédiatrie">Pédiatrie</option>
+                  </select>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-700 uppercase">Critères Majeurs (Auto-ESI)</label>
+                    <input 
+                      type="text" 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Filtrer..."
+                      className="text-xs border-b border-blue-200 focus:border-blue-500 outline-hidden bg-transparent px-1 w-24 transition-all"
+                    />
+                  </div>
+                  
+                  <div className="max-h-[140px] overflow-y-auto pr-1 custom-scrollbar">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setForm(prev => ({ ...prev, specific_symptom: 'Aucun' }))}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                          form.specific_symptom === 'Aucun' 
+                          ? 'bg-blue-600 text-white border-blue-700 shadow-md' 
+                          : 'bg-white text-slate-500 border-slate-200 hover:border-blue-300'
+                        }`}
+                      >
+                        Aucun
+                      </button>
+                      
+                      {categories[form.medical_category === 'Chirurgie (Traumato, Uro...)' ? 'Chirurgie' : form.medical_category]
+                        ?.filter(sym => sym.toLowerCase().includes(searchTerm.toLowerCase()))
+                        .map(sym => (
+                        <button
+                          key={sym}
+                          type="button"
+                          onClick={() => {
+                            setForm(prev => ({ ...prev, specific_symptom: sym }));
+                            if (!startTime) setStartTime(Date.now());
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border text-left leading-tight ${
+                            form.specific_symptom === sym 
+                            ? 'bg-blue-600 text-white border-blue-700 shadow-md scale-105' 
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-blue-50 hover:border-blue-300'
+                          }`}
+                        >
+                          {sym}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section Paramètres Vitaux Standards */}
+            <div className={`transition-all duration-500 ${form.specific_symptom !== 'Aucun' && form.specific_symptom !== '' ? 'opacity-40 grayscale pointer-events-none scale-95 origin-top' : 'opacity-100'}`}>
+              <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-1">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Évaluation des Signes Vitaux</h3>
+                {form.specific_symptom !== 'Aucun' && form.specific_symptom !== '' && (
+                  <span className="text-[10px] font-black bg-blue-100 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+                    ⚡ AUTOMATISÉ
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Conscience</label>
+                  <select name="consciousness" value={form.consciousness} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
+                    <option>Conscient</option>
+                    <option className="text-red-600">Inconscient</option>
+                  </select>
+                </div>
+                
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Respiration</label>
+                  <select name="breathing" value={form.breathing} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
+                    <option>Normale</option>
+                    <option className="text-orange-600">Difficile</option>
+                    <option className="text-red-600">Absente</option>
+                  </select>
+                </div>
+                
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Saignement</label>
+                  <select name="bleeding" value={form.bleeding} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
+                    <option>Aucun</option>
+                    <option>Léger</option>
+                    <option className="text-orange-600">Abondant</option>
+                  </select>
+                </div>
+                
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Ressources estimées</label>
+                  <select name="estimated_resources" value={form.estimated_resources} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
+                    <option value={0}>0 ressource</option>
+                    <option value={1}>1 ressource</option>
+                    <option value={2}>2+ ressources</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className="w-full bg-slate-900 hover:bg-black text-white focus:ring-4 focus:ring-slate-300 font-black rounded-xl text-md px-5 py-4 text-center transition-all shadow-xl hover:shadow-2xl disabled:opacity-70 flex justify-center items-center gap-2 uppercase tracking-widest mt-2">
+              {loading ? 'Traitement...' : 'Déterminer la Priorité ESI'}
+            </button>
+          </div>
+
         </form>
       </div>
     </div>

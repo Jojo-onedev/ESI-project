@@ -92,7 +92,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     
     # Intégrer le rôle directement dans la réponse du login
     access_token = auth.create_access_token(
-        data={"sub": user.username, "role": user.role}, expires_delta=access_token_expires
+        data={"sub": user.username, "role": user.role, "full_name": user.full_name}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer", "role": user.role}
 
@@ -102,7 +102,7 @@ def read_users_me(current_user: models.Operator = Depends(get_current_user)):
 
 @router.put("/me", response_model=schemas.Operator)
 def update_user_profile(
-    profile: schemas.Operator, # On utilise le schéma existant ou un partiel
+    profile: schemas.OperatorUpdate, 
     db: Session = Depends(get_db),
     current_user: models.Operator = Depends(get_current_user)
 ):

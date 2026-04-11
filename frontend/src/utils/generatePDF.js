@@ -4,8 +4,9 @@ import jsPDF from 'jspdf';
  * Génère un PDF professionnel de la fiche de triage ESI.
  * @param {Object} result - Le résultat ESI du backend
  * @param {Object} form - Les données du formulaire soumis
+ * @param {String} operatorName - Nom de l'agent SAMU
  */
-export function generateTiragePDF(result, form) {
+export function generateTiragePDF(result, form, operatorName = "Agent SAMU") {
   const doc = new jsPDF();
   const now = new Date();
   const dateStr = now.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -58,20 +59,32 @@ export function generateTiragePDF(result, form) {
     return yPos + 7 * lines.length;
   };
 
-  // Identification
-  y = section('Identification du Patient', y);
-  y = field('Identifiant', form.patient_identifier, y) + 2;
-  y = field('Symptômes', form.symptoms_description, y) + 6;
+  // Identification (Appelant & Patient)
+  y = section('Informations Appelant & Patient', y);
+  
+  let callerInfo = [];
+  if (form.caller_name || form.caller_surname) callerInfo.push(`${form.caller_name || ''} ${form.caller_surname || ''}`.trim());
+  if (form.caller_age) callerInfo.push(`${form.caller_age} ans`);
+  if (form.caller_sex) callerInfo.push(`Sexe: ${form.caller_sex}`);
+  
+  y = field('Infos Appelant', callerInfo.length > 0 ? callerInfo.join(' | ') : 'Non précisé', y);
+  y = field('Identifiant Patient', form.patient_identifier, y) + 2;
+  y = field('Motif (Symptômes)', form.symptoms_description, y) + 4;
+
+  // Domaine & Critères
+  y = section('Classification Clinique', y);
+  y = field('Domaine Médical', form.medical_category, y);
+  y = field('Critère Majeur Détecté', form.specific_symptom, y) + 4;
 
   // Signes vitaux
-  y = section('Signes Vitaux Évalués', y);
+  y = section('Évaluation Standard (Si applicable)', y);
   y = field('Conscience', form.consciousness, y);
   y = field('Respiration', form.breathing, y);
   y = field('Saignement', form.bleeding, y);
   y = field('Ressources estimées', `${form.estimated_resources} ressource(s)`, y) + 6;
 
   // Décision
-  y = section('Décision ESI (Algorithme Automatique)', y);
+  y = section('Décision ESI', y);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   const split = doc.splitTextToSize(result.esi_explanation, 175);
@@ -81,7 +94,8 @@ export function generateTiragePDF(result, form) {
   // ── Pied de page ───────────────────────────────────────────────────
   doc.setFontSize(8);
   doc.setTextColor(148, 163, 184);
-  doc.line(10, 280, 200, 280);
+  doc.line(10, 275, 200, 275);
+  doc.text(`Opérateur en charge du triage : ${operatorName}`, 10, 281);
   doc.text('SAMU Triage ESI - Système d\'Aide à la Décision Préhospitalière | Burkina Faso', 10, 286);
   doc.text(`Document généré le ${dateStr} à ${timeStr}`, 10, 291);
 

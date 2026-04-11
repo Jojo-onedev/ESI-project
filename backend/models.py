@@ -30,7 +30,17 @@ class TriageCase(Base):
     patient_identifier = Column(String, index=True) # Anonymized or encrypted ID
     symptoms_description = Column(Text)
     
-    # Form fields
+    # 📞 Informations Appelant (Optionnel)
+    caller_name = Column(String, nullable=True)
+    caller_surname = Column(String, nullable=True)
+    caller_age = Column(Integer, nullable=True)
+    caller_sex = Column(String, nullable=True)
+
+    # 🏥 Domaines Médicaux Spécifiques
+    medical_category = Column(String, default="Médecine Générale")
+    specific_symptom = Column(String, nullable=True)
+
+    # Form fields génériques (utilisés si pas de symptôme spécifique)
     consciousness = Column(String)  # Conscient / Inconscient
     breathing = Column(String)      # Normale / Difficile / Absente
     bleeding = Column(String)       # Aucun / Léger / Abondant

@@ -97,8 +97,8 @@ export default function Dashboard() {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={80}
-                    outerRadius={120}
+                    innerRadius={60}
+                    outerRadius={90}
                     paddingAngle={3}
                     stroke="none"
                     label={({name, value}) => value > 0 ? `${value}` : ''}
@@ -128,26 +128,28 @@ export default function Dashboard() {
                 <h3 className="text-xl font-black uppercase tracking-widest text-blue-400">Rapport de Garde (24h)</h3>
               </div>
               <p className="text-slate-300 font-medium mb-8 max-w-xl text-lg lead-relaxed">
-                Aujourd'hui, le centre a traité <span className="text-white font-black underline decoration-blue-500 underline-offset-4">{stats.total_cases_24h || stats.critical_24h + 12} cas</span>. 
+                Aujourd'hui, le centre a traité <span className="text-white font-black underline decoration-blue-500 underline-offset-4">{stats.total_cases_24h} cas</span>. 
                 L'efficacité moyenne est de <span className="text-blue-300 font-black">{stats.avg_duration}s par patient</span>, 
-                soit une performance <span className="text-emerald-400 font-black">Optimale</span> pour les standards du SAMU.
+                soit une performance <span className={stats.avg_duration < 60 ? "text-emerald-400 font-black" : "text-yellow-400 font-black"}>
+                  {stats.avg_duration === 0 ? "En attente de données" : stats.avg_duration < 60 ? "Optimale" : "Standard"}
+                </span> pour les standards du SAMU.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
                   <div className="text-2xl font-black">{stats.critical_24h}</div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Urgences Vitales</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                  <div className="text-2xl font-black">98%</div>
+                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
+                  <div className="text-2xl font-black">100%</div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Saisie Complète</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                  <div className="text-2xl font-black">{users.length || 2}</div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agents en Ligne</div>
+                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
+                  <div className="text-2xl font-black">{stats.total_operators}</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agents Enregistrés</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                  <div className="text-2xl font-black">N/A</div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alertes Système</div>
+                <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
+                  <div className="text-2xl font-black">0</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Erreurs Système</div>
                 </div>
               </div>
             </div>

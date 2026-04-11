@@ -39,6 +39,12 @@ class TokenData(BaseModel):
 class TriageForm(BaseModel):
     patient_identifier: str
     symptoms_description: str
+    caller_name: Optional[str] = None
+    caller_surname: Optional[str] = None
+    caller_age: Optional[int] = None
+    caller_sex: Optional[str] = None
+    medical_category: str = "Médecine Générale"
+    specific_symptom: Optional[str] = None
     consciousness: str   # Conscient, Inconscient
     breathing: str       # Normale, Difficile, Absente
     bleeding: str        # Aucun, Léger, Abondant
@@ -55,6 +61,12 @@ class TriageCaseResponse(BaseModel):
     operator_id: int
     patient_identifier: str
     symptoms_description: str
+    caller_name: Optional[str] = None
+    caller_surname: Optional[str] = None
+    caller_age: Optional[int] = None
+    caller_sex: Optional[str] = None
+    medical_category: str
+    specific_symptom: Optional[str] = None
     consciousness: str
     breathing: str
     bleeding: str

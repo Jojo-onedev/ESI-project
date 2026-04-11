@@ -1,0 +1,249 @@
+\documentclass[a4paper,12pt,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{amsmath}
+\geometry{a4paper, margin=1in}
+
+%% ============================================================
+%% FONTS (Professional Palatino for Academic Thesis)
+%% ============================================================
+\usepackage{newpxtext}
+\usepackage{newpxmath}
+\usepackage[T1]{fontenc}
+
+\usepackage{tocloft}
+\usepackage{graphicx}
+\graphicspath{{images/}} % Folder for screenshots
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+\usepackage{indentfirst}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+
+%% ============================================================
+%% CONFIGURATION & COLORS
+%% ============================================================
+\definecolor{bitblue}{RGB}{0, 70, 127}
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  language=Python,
+  morekeywords={await, async},
+  keywordstyle=\color{bitblue}\bfseries,
+  commentstyle=\color{gray}\itshape
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=cyan
+}
+
+\onehalfspacing
+
+%% ============================================================
+%% HEADERS & FOOTERS (Promotion 2023-2026)
+%% ============================================================
+\setlength{\headheight}{13.6pt}
+\fancyhf{}
+\pagestyle{fancy}
+\fancyhead[L]{\small\textit{Digital System for Prehospital Triage (ESI)}}
+\fancyhead[R]{\small\textit{SAMU Burkina Faso}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[L]{\small\textbf{BATIONO Jonathan} \quad Promotion: 2023--2026}
+\fancyfoot[R]{\small Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\renewcommand{\thepage}{\roman{page}}
+\setcounter{tocdepth}{2}
+
+\renewcommand{\cfttoctitlefont}{\hfil\Huge\bfseries}
+\renewcommand{\cftloftitlefont}{\hfil\Huge\bfseries}
+\renewcommand{\cftlottitlefont}{\hfil\Huge\bfseries}
+\renewcommand{\cftbeforechapskip}{10pt}
+\renewcommand{\cftbeforesecskip}{5pt}
+\renewcommand{\cftbeforesubsecskip}{3pt}
+
+\begin{document}
+
+%% ============================================================
+%% FRONT MATTER
+%% ============================================================
+\includepdf[pages=1]{cover.pdf}
+
+\newpage
+\thispagestyle{fancy}
+\section*{Dedication}
+\addcontentsline{toc}{section}{Dedication}
+\vspace*{3cm}
+\justifying
+I dedicate this work to my family, whose unwavering support and encouragement have been the cornerstone of my academic journey. Their sacrifices and belief in my potential have provided the motivation necessary to reach this significant milestone. To my friends and mentors who walked alongside me, sharing knowledge and inspiration, this achievement is a testament to our collective determination. Finally, I dedicate this effort to the healthcare professionals of the SAMU Burkina Faso, whose dedication to saving lives inspired the creation of this digital assistance system.
+\clearpage
+
+\newpage
+\thispagestyle{fancy}
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+\vspace{1cm}
+\justifying
+I would like to express my deepest gratitude to my thesis supervisor for his invaluable guidance, patience, and constructive feedback throughout the development of this project. His expertise in software engineering and commitment to academic excellence were essential in shaping the final outcome of this work.
+
+I also extend my sincere thanks to the administration and faculty of the Burkina Institute of Technology (BIT) for providing an environment conducive to learning and innovation. The technical and professional skills acquired during my years of study have been fundamental to the realization of this project.
+
+My heartfelt thanks go to the staff of SAMU Burkina Faso for their cooperation and the insights provided into the challenges of pre-hospital triage. Their expert perspective ensured that the developed system remains grounded in real-world clinical needs.
+
+Finally, I am profoundly grateful to my parents and siblings for their constant love and moral support. Without their presence, this journey would have been far more difficult.
+\clearpage
+
+\newpage
+\thispagestyle{fancy}
+\section*{Preface}
+\addcontentsline{toc}{section}{Preface}
+\justifying
+The Burkina Institute of Technology (BIT), inaugurated in October 2018 in Koudougou, represents a modern vision for education in West Africa. Founded by Susanne PERTL, the institute aims to cultivate a new generation of leaders equipped with both technical expertise and an entrepreneurial mindset. By conducting classes in English and fostering international collaboration, BIT prepares its students for the global challenges of the digital age.
+
+The institute offers specialized programs in Computer Science, Electrical Engineering, and Mechanical Engineering, complemented by a Master's degree in Artificial Intelligence. At the conclusion of their three-year undergraduate program, students are required to conduct a technical project and defend a thesis. It is within this framework of academic excellence and real-world application that the present work, focusing on the digitization of the Emergency Severity Index (ESI) triage protocol for the SAMU of Burkina Faso, was developed. This project seeks to bridge the gap between clinical needs and technological solutions to improve emergency healthcare outcomes.
+\clearpage
+
+%% ============================================================
+%% ABSTRACT & RÉSUMÉ
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+\justifying
+The management of pre-hospital medical emergencies in Burkina Faso, coordinated by the SAMU (Service d'Aide Médicale Urgente), faces significant challenges due to the manual nature of patient triage. Triage—the critical process of prioritizing patients based on clinical severity—currently relies on verbal assessments and human experience, often leading to inconsistencies or delays in high-stress environments. This thesis explores the design and implementation of a digital decision support system specifically tailored for the SAMU, utilizing the internationally validated Emergency Severity Index (ESI) algorithm.
+
+The proposed solution implements a robust 5-level prioritization logic through a modern web application built with a FastAPI backend and a React.js frontend. By automating the ESI decision tree, the system provides standardized guidance to operators, ensuring objective sorting of patients. Beyond the triage algorithm, the application integrates advanced security measures, supervisor dashboards for resource tracking, and automatic report generation. Functional testing confirms that the system effectively minimizes ambiguity in patient assessment, optimizing the deployment of mobile medical units (SMUR) and enhancing the overall efficiency of emergency responses in the Burkinabè context.
+
+\vspace{0.5cm}
+\noindent\textbf{Keywords:} Emergency Severity Index (ESI), SAMU, Pre-hospital Triage, Decision Support, Health Information Systems, Burkina Faso.
+\clearpage
+
+\newpage
+\thispagestyle{fancy}
+\section*{R\'esum\'e}
+\addcontentsline{toc}{section}{R\'esum\'e}
+\justifying
+La régulation des urgences pré-hospitalières au Burkina Faso, assurée par le SAMU (Service d'Aide Médicale Urgente), se heurte aujourd'hui à des limites opérationnelles liées au caractère manuel du triage des patients. Ce processus, déterminant pour la survie des patients, repose principalement sur l'expérience individuelle des agents, ce qui peut engendrer des erreurs d'appréciation face à la pression ou à des informations incomplètes. Ce travail de fin de cycle porte sur la conception et le développement d'un système numérique d'aide à la décision basé sur le protocole Emergency Severity Index (ESI) à cinq niveaux.
+
+S'appuyant sur une architecture moderne combinant FastAPI pour le backend et React.js pour le frontend, la solution permet d'automatiser l'arbre de décision ESI afin de standardiser la priorisation des patients. Le système intègre également des fonctionnalités de gestion sécurisée des accès (RBAC), un tableau de bord pour le suivi statistique en temps réel ainsi que la génération automatique de rapports d'intervention. Les résultats des tests démontrent que la numérisation du triage réduit l'ambiguïté décisionnelle et optimise l'engagement des unités mobiles de réanimation (SMUR), améliorant ainsi la réactivité de la chaîne de secours au Burkina Faso.
+
+\vspace{0.5cm}
+\noindent\textbf{Mots-cl\'es :} Emergency Severity Index (ESI), SAMU, Triage Pr\'e-hospitalier, Aide à la Décision, Systèmes d'Information en Santé, Burkina Faso.
+\clearpage
+
+%% ============================================================
+%% TOC / LOF / LOT
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\begingroup
+\tableofcontents
+\endgroup
+\clearpage
+
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\clearpage
+
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\clearpage
+
+%% ============================================================
+%% LIST OF ACRONYMS
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\section*{List of Acronyms and Abbreviations}
+\addcontentsline{toc}{section}{List of Acronyms and Abbreviations}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{longtable}{|p{3.5cm}|p{10.5cm}|}
+\hline
+\textbf{Acronym} & \textbf{Definition} \\
+\hline
+API      & Application Programming Interface \\
+\hline
+BIT      & Burkina Institute of Technology \\
+\hline
+CORS     & Cross-Origin Resource Sharing \\
+\hline
+CSP      & Content Security Policy \\
+\hline
+ESI      & Emergency Severity Index \\
+\hline
+HTTP     & HyperText Transfer Protocol \\
+\hline
+JSON     & JavaScript Object Notation \\
+\hline
+JWT      & JSON Web Token \\
+\hline
+ORM      & Object-Relational Mapping \\
+\hline
+RBAC     & Role-Based Access Control \\
+\hline
+REST     & Representational State Transfer \\
+\hline
+SAMU     & Service d'Aide M\'edicale Urgente \\
+\hline
+SMUR     & Service Mobile d'Urgence et de R\'eanimation \\
+\hline
+SQL      & Structured Query Language \\
+\hline
+UML      & Unified Modeling Language \\
+\hline
+\end{longtable}
+\clearpage
+
+%% ============================================================
+%% MAIN BODY
+%% ============================================================
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+\include{chapters/introduction}
+
+\part{Theoretical Foundations and State of the Art}
+\include{chapters/chap1}
+\include{chapters/chap2}
+
+\part{Design and Implementation}
+\include{chapters/chap3}
+\include{chapters/chap4}
+
+\include{chapters/conclusion}
+
+%% ============================================================
+%% BIBLIOGRAPHY (At the end)
+%% ============================================================
+\clearpage
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

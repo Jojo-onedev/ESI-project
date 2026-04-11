@@ -1,0 +1,28 @@
+\chapter{Methodology and Conceptual Approach}
+\thispagestyle{fancy}
+\justifying
+
+This chapter discusses the methodology and the conceptual framework for our project, providing a roadmap for translating clinical needs into a functional digital system. A systematic approach to requirements gathering and software development was necessary to ensure that the developed triage tool effectively addresses the challenges faced by SAMU agents in Burkina Faso.
+
+\section{Analysis of System Requirements}
+The design of the SAMU digital triage system began with an in-depth analysis of its core functionalities and technical constraints. This involved identifying both functional requirements, which define what the system must do, and non-functional requirements, which specify how the system should operate.
+
+\subsection{Functional Requirements}
+The primary objective of the system is to assist operators in the rapid and standardized categorization of patients. This requires a digital implementation of the ESI algorithm that process vital signs and clinical criteria to determine a priority level from 1 to 5. Furthermore, the system must support secure user authentication for operators and supervisors, as well as the ability to manage and audit intervention histories. An essential feature is the supervisor's ability to oversee a real-time dashboard reflecting current triage activities and resource allocations.
+
+\subsection{Non-Functional Requirements}
+To be effective in a pre-hospital regulation center, the system must satisfy several non-functional constraints. High availability and performance are paramount, as any delay in the triage process can have serious clinical consequences. The user interface must be intuitive and responsive across different devices, from desktop workstations to mobile tablets. Data security and integrity are also critical, particularly in the handling of patient-related information, necessitating robust authentication and audit logging mechanisms.
+
+\section{Software Development Methodology: The 2TUP Model}
+To manage the complexity of this project, we have adopted the Two-Track Unified Process (2TUP) as our primary development methodology. This model is characterized by its division into two parallel tracks: a functional track and a technical track. In our project, the functional track involved the detailed analysis of the ESI protocol and the specific triage workflows within the SAMU. Simultaneously, the technical track focused on the selection and configuration of our technology stack, including the backend framework, database management, and security protocols. This dual-layered approach allowed for a specialized focus on each dimension before their convergence in the final system design and implementation.
+
+\section{Conceptual Architecture and Data Flow}
+The conceptual architecture of the SAMU triage system is based on a three-tier model, which ensures a clean separation between the user interface, the business logic, and the persistent storage of data.
+
+\subsection{Presentation, Application, and Data Layers}
+The presentation layer consists of a React.js web application that provides an interactive and responsive experience for SAMU agents. The application layer is a FastAPI-based REST API that processes triage data, executes the ESI logic, and handles user authentication. Finally, the data layer uses a PostgreSQL database to securely store operator accounts, patient records, and audit logs. This layered architecture not only improves maintainability but also ensures the scalability of the system.
+
+\subsection{Digital Triage Workflow}
+The workflow begins when an operator initiates a new triage case, entering initial patient information and clinical observations. These data are sent to the backend, where the ESI algorithm is applied in a multi-step process. Once the priority level is determined, the result is displayed back to the operator with specific recommendations, and the entire intervention is persisted in the database for later review by supervisors. This digitized process ensures that every triage decision is consistent, standardized, and auditable.
+
+\clearpage

@@ -110,22 +110,36 @@ def delete_all_cases(
 # ⚠️ ROUTE PROTÉGÉE : Statistiques pour le Tableau de Bord
 @router.get("/stats")
 def get_dashboard_stats(db: Session = Depends(get_db), current_user: models.Operator = Depends(get_current_supervisor)):
+    yesterday = datetime.now(timezone.utc) - timedelta(hours=24)
+    
+    # Statistiques globales (pour le camembert)
     stats = db.query(
         models.TriageCase.esi_level, 
         func.count(models.TriageCase.id)
     ).group_by(models.TriageCase.esi_level).all()
     
-    total_cases = db.query(models.TriageCase).count()
+    total_cases_all = db.query(models.TriageCase).count()
     
-    # ⏱️ Performance Moyenne (Phase 8)
-    avg_duration = db.query(func.avg(models.TriageCase.duration_seconds)).scalar() or 0
+    # Stats des dernières 24h
+    total_cases_24h = db.query(models.TriageCase).filter(models.TriageCase.created_at >= yesterday).count()
     
-    # Formatage pour Recharts (Frontend)
+    avg_duration_24h = db.query(
+        func.avg(models.TriageCase.duration_seconds)
+    ).filter(models.TriageCase.created_at >= yesterday).scalar() or 0
+    
+    critical_24h = db.query(models.TriageCase).filter(
+        models.TriageCase.esi_level <= 2,
+        models.TriageCase.created_at >= yesterday
+    ).count()
+
+    total_operators = db.query(models.Operator).count()
+    
+    # Formatage pour Recharts (Distribution globale)
     levels_data = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
     for level, count in stats:
         levels_data[level] = count
         
-    result = [
+    distribution = [
         {"name": "ESI 1 (Rouge)", "value": levels_data[1], "level": 1, "fill": "#dc2626"},
         {"name": "ESI 2 (Orange)", "value": levels_data[2], "level": 2, "fill": "#f97316"},
         {"name": "ESI 3 (Jaune)", "value": levels_data[3], "level": 3, "fill": "#eab308"},
@@ -133,24 +147,13 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_user: models.Oper
         {"name": "ESI 5 (Bleu)", "value": levels_data[5], "level": 5, "fill": "#0ea5e9"}
     ]
     
-    # 📊 KPI avancés (Phase 7)
-    yesterday = datetime.now(timezone.utc) - timedelta(hours=24)
-    critical_24h = db.query(models.TriageCase).filter(
-        models.TriageCase.esi_level <= 2,
-        models.TriageCase.created_at >= yesterday
-    ).count()
-
-    total_cases_24h = db.query(models.TriageCase).filter(
-        models.TriageCase.created_at >= yesterday
-    ).count()
-    
     return {
-        "total_cases": total_cases_24h, # On peut aussi garder le total absolu si besoin
-        "total_cases_all": total_cases,
+        "total_cases_all": total_cases_all,
         "total_cases_24h": total_cases_24h,
         "critical_24h": critical_24h,
-        "avg_duration": round(float(avg_duration), 1),
-        "distribution": result
+        "avg_duration": round(float(avg_duration_24h), 1),
+        "total_operators": total_operators,
+        "distribution": distribution
     }
 
 # ⚠️ ROUTE PROTÉGÉE : Liste des logs d'audit pour superviseur

@@ -1,0 +1,79 @@
+\chapter{Results, Analysis and Discussion}
+\thispagestyle{fancy}
+\justifying
+
+This chapter presents the results of the SAMU digital triage system development and provides an analysis of its clinical and technical performance. We successfully implemented the ESI 5-level protocol through an interactive web-based decision tree and validated its effectiveness through several functional test scenarios.
+
+\section{System Implementation and Functional Results}
+The primary outcome of the project is a fully functional web portal that enables SAMU operators to prioritize patients in a standardized and efficient manner. The user experience is designed to be as simple as possible, allowing for rapid data entry without losing essential clinical precision.
+
+\subsection{Standardized ESI Triage Process}
+The core of the system is the interactive decision tree, which follows the ESI v4 algorithm logic. Users walk through a multi-step form to determine the appropriate priority level for each patient. This process ensures that every critical diagnostic question is answered, minimizing the risk of misclassification.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{triage_multi_step.png}
+\caption{Step-by-Step Triage Form for SAMU Operators}
+\label{fig:triage_form}
+\end{figure}
+
+\subsection{Automated ESI Level Calculation}
+Once the clinical data is processed, the system returns a clear ESI level (1 to 5) with specific recommendations for each priority. For example, an ESI Level 1 result is accompanied by immediate resuscitation warnings and priority unit dispatch alerts.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{esi_result_box.png}
+\caption{ESI Triage Result with Level and Immediate Priority Indicator}
+\label{fig:esi_result}
+\end{figure}
+
+\subsection{Intervention History and PDF Reporting}
+A critical requirement for the SAMU is the ability to record and archive every triage decision. The system provides a historical view of all interventions and allows operators to export a standardized PDF report for each session. This feature is essential for clinical auditability and for maintaining a permanent medical record.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{pdf_report_sample.png}
+\caption{Exported PDF Triage Report with Standardized SAMU Formatting}
+\label{fig:pdf_report}
+\end{figure}
+
+\section{Performance Evaluation and Testing}
+To ensure the reliability of the system, we conducted several functional tests across different ESI scenarios. We compared the system's output with manual expert triage results to verify accuracy.
+
+\subsection{Functional Test Scenarios}
+In tests involving Level 1 (Immediate Life Threat) and Level 2 (High Risk) scenarios, the system achieved a 100\% match with expected clinical priorities. For ESI Levels 3 to 5, where resource counting is required, the system consistently applied the correct logic, demonstrating its value in eliminating ambiguity.
+
+\begin{table}[H]
+\centering
+\caption{Functional Validation of ESI Levels across Test Scenarios}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Scenario} & \textbf{Clinical Condition} & \textbf{Expected ESI} & \textbf{System Result} \\
+\hline
+Scenario A & Cardiac Arrest / Apnea      & Level 1      & Level 1 (Success) \\
+\hline
+Scenario B & Acute Chest Pain / High Risk & Level 2      & Level 2 (Success) \\
+\hline
+Scenario C & Minor Fracture (2 resources) & Level 3      & Level 3 (Success) \\
+\hline
+Scenario D & Simple Laceration (1 res.) & Level 4      & Level 4 (Success) \\
+\hline
+Scenario E & Prescription Refill (0 res.)& Level 5      & Level 5 (Success) \\
+\hline
+\end{tabular}
+\label{tab:functional_tests}
+\end{table}
+
+\section{Analysis and Discussion}
+The development of the SAMU digital triage portal represents a significant step towards the modernization of the pre-hospital emergency chain in Burkina Faso. Our analysis focuses on both the technical achievements and the potential clinical impact of the system.
+
+\subsection{Clinical and Operational Impact}
+The system successfully addresses the limitations of manual triage by providing an objective, auditable framework for patient sorting. This standardization is particularly important in high-volume situations or when dealing with inexperienced staff. The automated 24h reports and supervisor dashboards provide SAMU management with valuable data for resource planning and quality improvement.
+
+\subsection{Technical Considerations and System Hardening}
+From a technical standpoint, the choice of FastAPI and React has proven to be effective in delivering a high-performance and secure system. The migration to PostgreSQL and the implementation of advanced security headers ensure that the application is production-ready. The system's modular design allows for future extensions, such as integration with hospital information systems or mobile dispatch units.
+
+\subsection{Limitations and Future Perspectives}
+While the system is fully functional, certain limitations must be acknowledged. The current version requires a reliable network connection to communicate with the central API. Future versions could incorporate offline capabilities or mobile-only interfaces for use in remote rural areas. Furthermore, the integration of real-time GPS tracking for SMUR units would further enhance the system's ability to coordinate large-scale emergency responses.
+
+\clearpage
