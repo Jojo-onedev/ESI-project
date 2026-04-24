@@ -46,12 +46,13 @@ def main():
         print("Generation de l'historique ESI & Audit...")
         import random
         # Quelques cas prédéfinis
+        # Quelques cas prédéfinis avec le nouveau schéma (smur_number, patient_age, age_category, pas, fc, spo2, fr, gcs, pain_scale, estimated_resources, esi_level, esi_explanation)
         base_cases = [
-            ("Traoré", "Choc, totalement inconscient", "Inconscient", "Difficile", "Abondant", 2, 1, "Danger vital immédiat"),
-            ("Mamadou", "Coupure profonde au bras avec une machette", "Conscient", "Normale", "Abondant", 1, 2, "Hémorragie sévère"),
-            ("Fatou", "Douleur au ventre depuis 3h, nausées", "Conscient", "Normale", "Aucun", 2, 3, "Urgent (2 ressources)"),
-            ("Saliou", "Entorse cheville", "Conscient", "Normale", "Aucun", 1, 4, "Moins urgent (1 ressource)"),
-            ("Diallo", "Information médicale, toux légère", "Conscient", "Normale", "Aucun", 0, 5, "Non urgent")
+            ("Traoré", "SMUR-01", 45, "Choc, totalement inconscient", "adult", 60, 190, 80, 45, 5, 0, 2, 1, "Danger vital immédiat"),
+            ("Mamadou", "SMUR-03", 30, "Coupure profonde au bras avec une machette", "adult", 120, 140, 95, 25, 15, 8, 1, 2, "Hémorragie sévère"),
+            ("Fatou", "SMUR-02", 25, "Douleur au ventre depuis 3h, nausées", "adult", 130, 90, 98, 18, 15, 6, 2, 3, "Urgent (2 ressources)"),
+            ("Saliou", None, 10, "Entorse cheville", "child", 110, 100, 99, 20, 15, 4, 1, 4, "Moins urgent (1 ressource)"),
+            ("Diallo", None, 0, "Information médicale, toux légère", "infant", 80, 120, 99, 30, 15, 1, 0, 5, "Non urgent")
         ]
         
         for i in range(40):
@@ -60,13 +61,19 @@ def main():
             c = models.TriageCase(
                 operator_id=op.id,
                 patient_identifier=f"Patient {random.randint(100, 999)} - {template[0]}",
-                symptoms_description=template[1],
-                consciousness=template[2],
-                breathing=template[3],
-                bleeding=template[4],
-                estimated_resources=template[5],
-                esi_level=template[6],
-                esi_explanation=template[7],
+                smur_number=template[1],
+                patient_age=template[2],
+                symptoms_description=template[3],
+                age_category=template[4],
+                pas=template[5],
+                fc=template[6],
+                spo2=template[7],
+                fr=template[8],
+                gcs=template[9],
+                pain_scale=template[10],
+                estimated_resources=template[11],
+                esi_level=template[12],
+                esi_explanation=template[13],
                 duration_seconds=random.randint(30, 240) # ⏱️ Phase 8
             )
             db.add(c)

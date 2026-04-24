@@ -38,6 +38,8 @@ class TokenData(BaseModel):
 # Triage Schemas
 class TriageForm(BaseModel):
     patient_identifier: str
+    smur_number: Optional[str] = None
+    patient_age: Optional[int] = None
     symptoms_description: str
     caller_name: Optional[str] = None
     caller_surname: Optional[str] = None
@@ -45,10 +47,14 @@ class TriageForm(BaseModel):
     caller_sex: Optional[str] = None
     medical_category: str = "Médecine Générale"
     specific_symptom: Optional[str] = None
-    consciousness: str   # Conscient, Inconscient
-    breathing: str       # Normale, Difficile, Absente
-    bleeding: str        # Aucun, Léger, Abondant
-    estimated_resources: int # 0, 1, 2
+    age_category: str = "adult"
+    pas: Optional[int] = None
+    fc: Optional[int] = None
+    spo2: Optional[int] = None
+    fr: Optional[int] = None
+    gcs: Optional[int] = None
+    pain_scale: Optional[int] = None
+    estimated_resources: int = 0
     duration_seconds: Optional[int] = 0 # ⏱️ Temps de triage (Phase 8)
 
 class TriageResult(BaseModel):
@@ -60,6 +66,8 @@ class TriageCaseResponse(BaseModel):
     id: int
     operator_id: int
     patient_identifier: str
+    smur_number: Optional[str] = None
+    patient_age: Optional[int] = None
     symptoms_description: str
     caller_name: Optional[str] = None
     caller_surname: Optional[str] = None
@@ -67,9 +75,13 @@ class TriageCaseResponse(BaseModel):
     caller_sex: Optional[str] = None
     medical_category: str
     specific_symptom: Optional[str] = None
-    consciousness: str
-    breathing: str
-    bleeding: str
+    age_category: str
+    pas: Optional[int] = None
+    fc: Optional[int] = None
+    spo2: Optional[int] = None
+    fr: Optional[int] = None
+    gcs: Optional[int] = None
+    pain_scale: Optional[int] = None
     estimated_resources: int
     esi_level: int
     esi_explanation: str

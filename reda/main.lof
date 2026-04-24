@@ -1,11 +1,15 @@
 \babel@toc {english}{}\relax 
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Premium Login Interface for SAMU Triage Portal}}{12}{figure.caption.12}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Supervisor Dashboard with Recharts Visualizations and 24h Reports}}{13}{figure.caption.13}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Admin Interface for Operator and Specialist Management}}{14}{figure.caption.14}%
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Step-by-Step Triage Form for SAMU Operators}}{16}{figure.caption.15}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces ESI Triage Result with Level and Immediate Priority Indicator}}{17}{figure.caption.16}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Exported PDF Triage Report with Standardized SAMU Formatting}}{18}{figure.caption.17}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Use Case Diagram of the SAMU Triage System}}{25}{figure.caption.17}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Class Diagram of the System}}{26}{figure.caption.18}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Sequence Diagram of the Triage Process}}{27}{figure.caption.19}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Premium Authentication Interface}}{30}{figure.caption.20}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Two-Column Triage Form with Smart Chips}}{30}{figure.caption.21}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Automated ESI Result Display}}{31}{figure.caption.22}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Supervisor 24-Hour Analytics Dashboard}}{31}{figure.caption.23}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Use Case Diagram of the SAMU Triage System}}{35}{figure.caption.27}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Class Diagram of the System}}{36}{figure.caption.28}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Sequence Diagram of the Triage Process}}{37}{figure.caption.29}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Premium Authentication Interface}}{40}{figure.caption.30}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Two-Column Triage Form with Smart Chips}}{40}{figure.caption.31}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Automated ESI Result Display}}{41}{figure.caption.32}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Supervisor 24-Hour Analytics Dashboard}}{41}{figure.caption.33}%

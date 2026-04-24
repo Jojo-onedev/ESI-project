@@ -8,6 +8,8 @@ import { jwtDecode } from 'jwt-decode';
 export default function TriageForm() {
   const [form, setForm] = useState({
     patient_identifier: '',
+    smur_number: '',
+    patient_age: '',
     symptoms_description: '',
     caller_name: '',
     caller_surname: '',
@@ -15,9 +17,13 @@ export default function TriageForm() {
     caller_sex: '',
     medical_category: 'Médecine Générale',
     specific_symptom: 'Aucun',
-    consciousness: 'Conscient',
-    breathing: 'Normale',
-    bleeding: 'Aucun',
+    age_category: 'adult',
+    pas: '',
+    fc: '',
+    spo2: '',
+    fr: '',
+    gcs: 15,
+    pain_scale: 0,
     estimated_resources: 0
   });
   
@@ -88,12 +94,26 @@ export default function TriageForm() {
     localStorage.setItem('triage_draft', JSON.stringify(form));
   }, [form]);
 
+  // Auto-calcul de la catégorie d'âge
+  useEffect(() => {
+    if (form.patient_age !== '' && form.patient_age !== null) {
+      const age = parseInt(form.patient_age);
+      if (!isNaN(age)) {
+        if (age > 12) setForm(prev => ({ ...prev, age_category: 'adult' }));
+        else if (age >= 1 && age <= 12) setForm(prev => ({ ...prev, age_category: 'child' }));
+        else if (age === 0) setForm(prev => ({ ...prev, age_category: 'infant' }));
+      }
+    }
+  }, [form.patient_age]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (!startTime && value.length > 0) setStartTime(Date.now());
     
     setForm(prev => {
-      const newForm = { ...prev, [name]: name === 'estimated_resources' || name === 'caller_age' ? parseInt(value) || '' : value };
+      const isNumberField = ['estimated_resources', 'caller_age', 'patient_age', 'pas', 'fc', 'spo2', 'fr', 'gcs', 'pain_scale'].includes(name);
+      const val = isNumberField ? (value === '' ? '' : parseInt(value)) : value;
+      const newForm = { ...prev, [name]: val };
       if (name === 'medical_category') {
         newForm.specific_symptom = 'Aucun'; // Reset symptom when category changes
       }
@@ -108,7 +128,12 @@ export default function TriageForm() {
     setResult(null);
 
     const dataToSend = { ...form };
-    if (!dataToSend.caller_age) dataToSend.caller_age = null;
+    // Convertir les champs numériques vides en null pour Pydantic
+    const numericFields = ['caller_age', 'patient_age', 'pas', 'fc', 'spo2', 'fr', 'gcs', 'pain_scale'];
+    numericFields.forEach(field => {
+      if (dataToSend[field] === '' || dataToSend[field] === undefined) dataToSend[field] = null;
+    });
+    if (!dataToSend.smur_number) dataToSend.smur_number = null;
 
     try {
       const duration = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
@@ -167,10 +192,10 @@ export default function TriageForm() {
                   onClick={() => {
                     setResult(null); 
                     setForm({
-                      patient_identifier:'', symptoms_description:'', 
+                      patient_identifier:'', smur_number:'', patient_age:'', symptoms_description:'', 
                       caller_name:'', caller_surname:'', caller_age:'', caller_sex:'', 
                       medical_category: 'Médecine Générale', specific_symptom: 'Aucun', 
-                      consciousness:'Conscient', breathing:'Normale', bleeding:'Aucun', estimated_resources:0 
+                      age_category: 'adult', pas: '', fc: '', spo2: '', fr: '', gcs: 15, pain_scale: 0, estimated_resources: 0 
                     });
                     setStartTime(null);
                   }} 
@@ -237,10 +262,23 @@ export default function TriageForm() {
 
             {/* Section Patient & Situation */}
             <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1">Identifiant Patient *</label>
+                  <input type="text" name="patient_identifier" value={form.patient_identifier} onChange={handleChange} required
+                    className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Nom, ID, ou Lieu..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1">Âge du Patient (Ans) *</label>
+                  <input type="number" name="patient_age" value={form.patient_age} onChange={handleChange} required min="0" max="120"
+                    className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Ex: 45 (0 pour Bébé)" />
+                </div>
+              </div>
+              
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">Identifiant / Localisation du Patient *</label>
-                <input type="text" name="patient_identifier" value={form.patient_identifier} onChange={handleChange} required
-                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Ex: Accidenté, PK25 Route de Bobo..." />
+                <label className="block text-sm font-bold text-slate-700 mb-1">Numéro du SMUR</label>
+                <input type="text" name="smur_number" value={form.smur_number} onChange={handleChange}
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" placeholder="Ex: Numero SMUR" />
               </div>
               
               <div>
@@ -323,51 +361,66 @@ export default function TriageForm() {
               </div>
             </div>
 
-            {/* Section Paramètres Vitaux Standards */}
+            {/* Section Constantes Vitales (Modulation ESI) */}
             <div className={`transition-all duration-500 ${form.specific_symptom !== 'Aucun' && form.specific_symptom !== '' ? 'opacity-40 grayscale pointer-events-none scale-95 origin-top' : 'opacity-100'}`}>
               <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-1">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Évaluation des Signes Vitaux</h3>
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Évaluation des Constantes (Modulation ESI)</h3>
                 {form.specific_symptom !== 'Aucun' && form.specific_symptom !== '' && (
                   <span className="text-[10px] font-black bg-blue-100 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
                     ⚡ AUTOMATISÉ
                   </span>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Conscience</label>
-                  <select name="consciousness" value={form.consciousness} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
-                    <option>Conscient</option>
-                    <option className="text-red-600">Inconscient</option>
+              
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Catégorie d'Âge *</label>
+                  <select name="age_category" value={form.age_category} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-2 text-sm font-bold">
+                    <option value="newborn">Nouveau-né (0-1 mois)</option>
+                    <option value="infant">Nourrisson (1 mois - 1 an)</option>
+                    <option value="child">Enfant (1 - 12 ans)</option>
+                    <option value="adult">Adulte (&gt; 12 ans)</option>
                   </select>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Pouls (FC)</label>
+                  <input type="number" name="fc" value={form.fc} onChange={handleChange} placeholder="bpm" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
                 </div>
                 
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Respiration</label>
-                  <select name="breathing" value={form.breathing} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
-                    <option>Normale</option>
-                    <option className="text-orange-600">Difficile</option>
-                    <option className="text-red-600">Absente</option>
-                  </select>
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Resp (FR)</label>
+                  <input type="number" name="fr" value={form.fr} onChange={handleChange} placeholder="mvt/min" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
                 </div>
                 
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Saignement</label>
-                  <select name="bleeding" value={form.bleeding} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
-                    <option>Aucun</option>
-                    <option>Léger</option>
-                    <option className="text-orange-600">Abondant</option>
-                  </select>
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Tension (PAS)</label>
+                  <input type="number" name="pas" value={form.pas} onChange={handleChange} placeholder="mmHg" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
                 </div>
                 
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Ressources estimées</label>
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">SpO2 (%)</label>
+                  <input type="number" name="spo2" value={form.spo2} onChange={handleChange} placeholder="%" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
+                </div>
+
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Glasgow</label>
+                  <input type="number" name="gcs" value={form.gcs} onChange={handleChange} min="3" max="15" placeholder="/15" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
+                </div>
+
+                <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Douleur</label>
+                  <input type="number" name="pain_scale" value={form.pain_scale} onChange={handleChange} min="0" max="10" placeholder="/10" className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold" />
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <label className="block text-[10px] font-black text-slate-500 mb-1 uppercase">Ressources Médicales Estimées *</label>
                   <select name="estimated_resources" value={form.estimated_resources} onChange={handleChange} className="w-full bg-white border border-slate-300 text-slate-900 rounded-md p-1.5 text-xs font-bold">
-                    <option value={0}>0 ressource</option>
-                    <option value={1}>1 ressource</option>
-                    <option value={2}>2+ ressources</option>
+                    <option value={0}>Aucune ressource (0)</option>
+                    <option value={1}>Une ressource (1)</option>
+                    <option value={2}>Deux ressources ou plus (2+)</option>
                   </select>
-                </div>
               </div>
             </div>
 

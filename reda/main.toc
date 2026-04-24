@@ -1,51 +1,86 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{Dedication}{ii}{section*.1}%
-\contentsline {section}{Acknowledgements}{iii}{section*.2}%
-\contentsline {section}{Preface}{iv}{section*.3}%
-\contentsline {section}{Abstract}{v}{section*.4}%
-\contentsline {section}{R\'esum\'e}{vi}{section*.5}%
-\contentsline {section}{List of Figures}{viii}{section*.5}%
-\contentsline {section}{List of Tables}{ix}{section*.5}%
-\contentsline {section}{List of Acronyms and Abbreviations}{x}{section*.6}%
-\contentsline {chapter}{General Introduction}{1}{chapter*.7}%
-\contentsline {section}{Problem Statement}{1}{section*.8}%
-\contentsline {section}{Objectives}{1}{section*.9}%
-\contentsline {section}{Methodology}{2}{section*.10}%
-\contentsline {section}{Thesis Organization}{2}{section*.11}%
-\contentsline {part}{I\hspace {1em}Theoretical Foundations and State of the Art}{3}{part.1}%
-\contentsline {chapter}{\numberline {1}General Information and Key Concepts}{4}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Emergency Medical Services and the SAMU}{4}{section.1.1}%
-\contentsline {section}{\numberline {1.2}The Strategic Importance of Triage}{4}{section.1.2}%
-\contentsline {section}{\numberline {1.3}The Emergency Severity Index (ESI)}{5}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Digital Decision Support in Modern Healthcare}{5}{section.1.4}%
-\contentsline {chapter}{\numberline {2}Methodology and Conceptual Approach}{6}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Analysis of System Requirements}{6}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Functional Requirements}{6}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Non-Functional Requirements}{7}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Software Development Methodology: The 2TUP Model}{7}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Conceptual Architecture and Data Flow}{7}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Presentation, Application, and Data Layers}{7}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Digital Triage Workflow}{8}{subsection.2.3.2}%
-\contentsline {part}{II\hspace {1em}Design and Implementation}{9}{part.2}%
-\contentsline {chapter}{\numberline {3}Modelling and Realization Technique}{10}{chapter.3}%
-\contentsline {section}{\numberline {3.1}System Modelling and UML Specifications}{10}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Actor Interaction and Use Case Diagram}{10}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Conceptual Data Model and Class Diagram}{10}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}Dynamic Behavior and Sequence Diagram}{11}{subsection.3.1.3}%
-\contentsline {section}{\numberline {3.2}Realization and Technology Stack Selection}{11}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Premium Frontend with React.js}{11}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}High-Performance Backend with FastAPI}{12}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Robust Data Management with PostgreSQL}{13}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Security Architecture and Implementation}{14}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Results, Analysis and Discussion}{15}{chapter.4}%
-\contentsline {section}{\numberline {4.1}System Implementation and Functional Results}{15}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Standardized ESI Triage Process}{15}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Automated ESI Level Calculation}{16}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Intervention History and PDF Reporting}{17}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Performance Evaluation and Testing}{18}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Functional Test Scenarios}{18}{subsection.4.2.1}%
-\contentsline {section}{\numberline {4.3}Analysis and Discussion}{19}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Clinical and Operational Impact}{19}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Technical Considerations and System Hardening}{19}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Limitations and Future Perspectives}{19}{subsection.4.3.3}%
-\contentsline {chapter}{General Conclusion and Perspectives}{21}{chapter*.19}%
+\contentsline {section}{Dedication}{1}{section*.1}%
+\contentsline {section}{Acknowledgements}{2}{section*.2}%
+\contentsline {section}{Preface}{3}{section*.3}%
+\contentsline {section}{Abstract}{4}{section*.4}%
+\contentsline {section}{R\'esum\'e}{5}{section*.5}%
+\contentsline {section}{List of Acronyms and Abbreviations}{6}{section*.6}%
+\contentsline {section}{List of Figures}{10}{table.0.1}%
+\contentsline {section}{List of Tables}{11}{table.0.1}%
+\contentsline {chapter}{General Introduction}{12}{table.0.1}%
+\contentsline {section}{Problem Statement}{12}{section*.7}%
+\contentsline {section}{Objectives of the Project}{13}{section*.8}%
+\contentsline {section}{General Methodology}{13}{section*.9}%
+\contentsline {section}{Organization of the Thesis}{14}{section*.10}%
+\contentsline {part}{Part I: Theoretical Foundations and State of the Art}{16}{part*.11}%
+\vspace {10pt}
+\contentsline {chapter}{Chapter 1: Essential Concepts}{16}{section*.12}%
+\contentsline {section}{\numberline {I}General Information}{16}{section.0.1}%
+\contentsline {subsection}{\numberline {I.1}Emergency Medical Systems}{16}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {I.2}Medical Triage and Its Importance}{16}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {I.3}The Emergency Severity Index (ESI) Model}{16}{subsection.0.1.3}%
+\contentsline {subsection}{\numberline {I.4}Healthcare Decision Support Systems}{17}{subsection.0.1.4}%
+\contentsline {section}{\numberline {II}State of the Art}{17}{section.0.2}%
+\contentsline {subsection}{\numberline {II.1}Existing Work on Computer-Assisted Triage}{17}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {II.2}Digital Applications in Emergency Services}{18}{subsection.0.2.2}%
+\contentsline {subsection}{\numberline {II.3}Systems and Existing Solutions in the Literature}{18}{subsection.0.2.3}%
+\contentsline {subsection}{\numberline {II.4}Justification of the Proposed Solution}{18}{subsection.0.2.4}%
+\contentsline {chapter}{Chapter 2: Methodology and Conceptual Approach}{20}{section*.13}%
+\contentsline {section}{\numberline {III}Research and Development Methodology}{20}{section.0.3}%
+\contentsline {subsection}{\numberline {III.1}Needs Analysis of the Triage System}{20}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {III.2}Definition of Functional and Non-Functional Requirements}{20}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {III.3}System Development Methodology}{21}{subsection.0.3.3}%
+\contentsline {section}{\numberline {IV}Conceptual Approach of the System}{22}{section.0.4}%
+\contentsline {subsection}{\numberline {IV.1}General Architecture of the System}{22}{subsection.0.4.1}%
+\contentsline {subsection}{\numberline {IV.2}Data Flow of the Triage Process}{22}{subsection.0.4.2}%
+\contentsline {subsection}{\numberline {IV.3}Conceptual Modeling of the Proposed Solution}{23}{subsection.0.4.3}%
+\contentsline {part}{Part II: Design and Implementation}{25}{part*.15}%
+\vspace {10pt}
+\contentsline {chapter}{Chapter 3: Modelling and Technical Realization}{25}{section*.16}%
+\contentsline {section}{\numberline {V}Needs Analysis and UML Modeling}{25}{section.0.5}%
+\contentsline {subsection}{\numberline {V.1}Needs Specifications}{25}{subsection.0.5.1}%
+\contentsline {subsection}{\numberline {V.2}Use Case Diagram}{25}{subsection.0.5.2}%
+\contentsline {subsection}{\numberline {V.3}Class Diagram}{26}{subsection.0.5.3}%
+\contentsline {subsection}{\numberline {V.4}Sequence Diagram}{26}{subsection.0.5.4}%
+\contentsline {section}{\numberline {VI}Implementation of the Solution}{27}{section.0.6}%
+\contentsline {subsection}{\numberline {VI.1}Development Environment}{27}{subsection.0.6.1}%
+\contentsline {subsection}{\numberline {VI.2}Technologies Used}{27}{subsection.0.6.2}%
+\contentsline {subsection}{\numberline {VI.3}Backend Development and API}{27}{subsection.0.6.3}%
+\contentsline {subsection}{\numberline {VI.4}User Interface Development}{28}{subsection.0.6.4}%
+\contentsline {chapter}{Chapter 4: Results, Analysis and Discussion}{29}{subsection.0.6.4}%
+\contentsline {section}{\numberline {VII}System Evaluation}{29}{section.0.7}%
+\contentsline {subsection}{\numberline {VII.1}Functional Testing}{29}{subsection.0.7.1}%
+\contentsline {subsection}{\numberline {VII.2}Usage Scenarios}{29}{subsection.0.7.2}%
+\contentsline {subsection}{\numberline {VII.3}Analysis of Results}{29}{subsection.0.7.3}%
+\contentsline {section}{\numberline {VIII}Presentation of the Developed System}{29}{section.0.8}%
+\contentsline {subsection}{\numberline {VIII.1}User Interfaces}{29}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {VIII.2}Functioning of the Triage Engine}{30}{subsection.0.8.2}%
+\contentsline {subsection}{\numberline {VIII.3}Administration and Historical Logs}{31}{subsection.0.8.3}%
+\contentsline {section}{\numberline {IX}Discussion and Perspectives}{32}{section.0.9}%
+\contentsline {subsection}{\numberline {IX.1}Critical Analysis of the Results}{32}{subsection.0.9.1}%
+\contentsline {chapter}{General Conclusion}{33}{section*.24}%
+\contentsline {part}{Part II: Design and Implementation}{35}{part*.25}%
+\vspace {10pt}
+\contentsline {chapter}{Chapter 3: Modelling and Technical Realization}{35}{section*.26}%
+\contentsline {section}{\numberline {X}Needs Analysis and UML Modeling}{35}{section.0.10}%
+\contentsline {subsection}{\numberline {X.1}Needs Specifications}{35}{subsection.0.10.1}%
+\contentsline {subsection}{\numberline {X.2}Use Case Diagram}{35}{subsection.0.10.2}%
+\contentsline {subsection}{\numberline {X.3}Class Diagram}{36}{subsection.0.10.3}%
+\contentsline {subsection}{\numberline {X.4}Sequence Diagram}{36}{subsection.0.10.4}%
+\contentsline {section}{\numberline {XI}Implementation of the Solution}{37}{section.0.11}%
+\contentsline {subsection}{\numberline {XI.1}Development Environment}{37}{subsection.0.11.1}%
+\contentsline {subsection}{\numberline {XI.2}Technologies Used}{37}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {XI.3}Backend Development and API}{37}{subsection.0.11.3}%
+\contentsline {subsection}{\numberline {XI.4}User Interface Development}{38}{subsection.0.11.4}%
+\contentsline {chapter}{Chapter 4: Results, Analysis and Discussion}{39}{subsection.0.11.4}%
+\contentsline {section}{\numberline {XII}System Evaluation}{39}{section.0.12}%
+\contentsline {subsection}{\numberline {XII.1}Functional Testing}{39}{subsection.0.12.1}%
+\contentsline {subsection}{\numberline {XII.2}Usage Scenarios}{39}{subsection.0.12.2}%
+\contentsline {subsection}{\numberline {XII.3}Analysis of Results}{39}{subsection.0.12.3}%
+\contentsline {section}{\numberline {XIII}Presentation of the Developed System}{39}{section.0.13}%
+\contentsline {subsection}{\numberline {XIII.1}User Interfaces}{39}{subsection.0.13.1}%
+\contentsline {subsection}{\numberline {XIII.2}Functioning of the Triage Engine}{40}{subsection.0.13.2}%
+\contentsline {subsection}{\numberline {XIII.3}Administration and Historical Logs}{41}{subsection.0.13.3}%
+\contentsline {section}{\numberline {XIV}Discussion and Perspectives}{42}{section.0.14}%
+\contentsline {subsection}{\numberline {XIV.1}Critical Analysis of the Results}{42}{subsection.0.14.1}%
+\contentsline {chapter}{General Conclusion}{43}{section*.34}%

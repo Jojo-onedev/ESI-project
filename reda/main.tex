@@ -1,20 +1,12 @@
 \documentclass[a4paper,12pt,oneside]{report}
+
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{geometry}
 \usepackage{amsmath}
 \geometry{a4paper, margin=1in}
-
-%% ============================================================
-%% FONTS (Professional Palatino for Academic Thesis)
-%% ============================================================
-\usepackage{newpxtext}
-\usepackage{newpxmath}
-\usepackage[T1]{fontenc}
-
 \usepackage{tocloft}
 \usepackage{graphicx}
-\graphicspath{{images/}} % Folder for screenshots
 \usepackage{setspace}
 \usepackage{xcolor}
 \usepackage{float}
@@ -31,123 +23,172 @@
 \usepackage{etoolbox}
 \usepackage{fancyhdr}
 
-%% ============================================================
-%% CONFIGURATION & COLORS
-%% ============================================================
-\definecolor{bitblue}{RGB}{0, 70, 127}
-\definecolor{codegray}{rgb}{0.95,0.95,0.95}
-
-\lstset{
-  backgroundcolor=\color{codegray},
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  frame=single,
-  language=Python,
-  morekeywords={await, async},
-  keywordstyle=\color{bitblue}\bfseries,
-  commentstyle=\color{gray}\itshape
-}
-
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    citecolor=blue,
-    urlcolor=cyan
-}
-
-\onehalfspacing
-
-%% ============================================================
-%% HEADERS & FOOTERS (Promotion 2023-2026)
-%% ============================================================
-\setlength{\headheight}{13.6pt}
-\fancyhf{}
-\pagestyle{fancy}
-\fancyhead[L]{\small\textit{Digital System for Prehospital Triage (ESI)}}
-\fancyhead[R]{\small\textit{SAMU Burkina Faso}}
-\renewcommand{\headrulewidth}{0.4pt}
-\fancyfoot[L]{\small\textbf{BATIONO Jonathan} \quad Promotion: 2023--2026}
-\fancyfoot[R]{\small Page \thepage}
-\renewcommand{\footrulewidth}{0.4pt}
-
-\renewcommand{\thepage}{\roman{page}}
-\setcounter{tocdepth}{2}
-
-\renewcommand{\cfttoctitlefont}{\hfil\Huge\bfseries}
-\renewcommand{\cftloftitlefont}{\hfil\Huge\bfseries}
-\renewcommand{\cftlottitlefont}{\hfil\Huge\bfseries}
-\renewcommand{\cftbeforechapskip}{10pt}
-\renewcommand{\cftbeforesecskip}{5pt}
-\renewcommand{\cftbeforesubsecskip}{3pt}
-
 \begin{document}
+% ton cover page
+%\includepdf[pages=1]{cover.pdf}
+
+% ================= FRONT MATTER + INTRODUCTION + CHAPTERS 1-2 =================
 
 %% ============================================================
-%% FRONT MATTER
+%% DEDICATION
 %% ============================================================
-\includepdf[pages=1]{cover.pdf}
 
-\newpage
-\thispagestyle{fancy}
 \section*{Dedication}
 \addcontentsline{toc}{section}{Dedication}
-\vspace*{3cm}
+\vspace*{2cm}
+
 \justifying
-I dedicate this work to my family, whose unwavering support and encouragement have been the cornerstone of my academic journey. Their sacrifices and belief in my potential have provided the motivation necessary to reach this significant milestone. To my friends and mentors who walked alongside me, sharing knowledge and inspiration, this achievement is a testament to our collective determination. Finally, I dedicate this effort to the healthcare professionals of the SAMU Burkina Faso, whose dedication to saving lives inspired the creation of this digital assistance system.
+\textit{To my parents, whose sacrifices, patience, and steady support}\\
+\textit{have carried me farther than words can express.}\\
+\textit{This work is a reflection of the values you planted in me:}\\
+\textit{discipline, courage, and perseverance.}\\[0.8cm]
+
+\textit{To my family, for the encouragement, the prayers,}\\
+\textit{and the quiet strength that stayed with me throughout this journey.}\\
+\textit{In moments of doubt as in moments of progress,}\\
+\textit{your presence made a real difference.}\\[0.8cm]
+
+\textit{To my teachers and supervisors,}\\
+\textit{for the guidance, the demands, and the knowledge shared along the way.}\\
+\textit{Beyond technical skills, you helped shape the way I think,}\\
+\textit{question, and build.}\\[0.8cm]
+
+\textit{To my friends and classmates,}\\
+\textit{for the conversations, the support, and the shared effort}\\
+\textit{that made this academic path less lonely and more meaningful.}\\[1cm]
+
+\textit{Finally, I dedicate this work to myself ---}\\
+\textit{for the effort invested, the setbacks faced,}\\
+\textit{and the decision to keep moving forward until the end.}\\[1.2cm]
+
+\textbf{BATIONO Jonathan}
 \clearpage
 
-\newpage
-\thispagestyle{fancy}
+%% ============================================================
+%% ACKNOWLEDGEMENTS
+%% ============================================================
 \section*{Acknowledgements}
 \addcontentsline{toc}{section}{Acknowledgements}
-\vspace{1cm}
+\vspace{0.5cm}
 \justifying
-I would like to express my deepest gratitude to my thesis supervisor for his invaluable guidance, patience, and constructive feedback throughout the development of this project. His expertise in software engineering and commitment to academic excellence were essential in shaping the final outcome of this work.
 
-I also extend my sincere thanks to the administration and faculty of the Burkina Institute of Technology (BIT) for providing an environment conducive to learning and innovation. The technical and professional skills acquired during my years of study have been fundamental to the realization of this project.
+I would like to express my sincere gratitude to all those who contributed, directly or indirectly, to the completion of this work.
 
-My heartfelt thanks go to the staff of SAMU Burkina Faso for their cooperation and the insights provided into the challenges of pre-hospital triage. Their expert perspective ensured that the developed system remains grounded in real-world clinical needs.
+First of all, I thank God for health, strength, and the grace that allowed me to reach this important stage of my academic journey.
 
-Finally, I am profoundly grateful to my parents and siblings for their constant love and moral support. Without their presence, this journey would have been far more difficult.
+My deepest appreciation goes to my supervisor, \textbf{Mr. Roland TOUGMA}, for his guidance, availability, and valuable advice throughout this project. His remarks helped me refine my ideas and maintain a clear direction in the development of this study.
+
+I also wish to thank the administration and faculty of the \textbf{Burkina Institute of Technology (BIT)} for the quality of the training provided and for the academic environment that encouraged both technical rigor and initiative \cite{bitsite}.
+
+My thanks also go to the professional from the \textbf{Service d'Aide M\'edicale Urgente (SAMU)} who agreed to respond to the survey used in this study. His practical feedback on emergency call regulation and current triage practices gave this work an essential field perspective.
+
+I am equally grateful to my family for their moral support, their patience, and their constant encouragement throughout these years of study.
+
+Finally, I thank my classmates and friends for the exchanges, support, and moments of solidarity shared during this journey.
+
 \clearpage
 
-\newpage
-\thispagestyle{fancy}
+%% ============================================================
+%% PREFACE
+%% ============================================================
 \section*{Preface}
 \addcontentsline{toc}{section}{Preface}
 \justifying
-The Burkina Institute of Technology (BIT), inaugurated in October 2018 in Koudougou, represents a modern vision for education in West Africa. Founded by Susanne PERTL, the institute aims to cultivate a new generation of leaders equipped with both technical expertise and an entrepreneurial mindset. By conducting classes in English and fostering international collaboration, BIT prepares its students for the global challenges of the digital age.
 
-The institute offers specialized programs in Computer Science, Electrical Engineering, and Mechanical Engineering, complemented by a Master's degree in Artificial Intelligence. At the conclusion of their three-year undergraduate program, students are required to conduct a technical project and defend a thesis. It is within this framework of academic excellence and real-world application that the present work, focusing on the digitization of the Emergency Severity Index (ESI) triage protocol for the SAMU of Burkina Faso, was developed. This project seeks to bridge the gap between clinical needs and technological solutions to improve emergency healthcare outcomes.
+This thesis was carried out as part of the requirements for the completion of the Engineering degree in \textbf{Computer Science and Entrepreneurship} at the \textbf{Burkina Institute of Technology (BIT)}. BIT positions itself as an institution focused on technology, innovation, and entrepreneurship, with the ambition of training graduates capable of designing solutions that respond to concrete local challenges \cite{bitsite}.
+
+The choice of this project was motivated by a simple observation: in many contexts, digital transformation has made significant progress in commerce, education, and administration, yet critical health services still face situations where essential decisions rely heavily on manual procedures. Emergency care is one of those areas where time, accuracy, and organization can directly influence outcomes.
+
+The present work therefore explores the design of a digital decision-support system for prehospital triage, using the Emergency Severity Index (ESI) as a structured clinical framework. Beyond the academic requirement, this project reflects a broader interest in building useful digital systems adapted to the operational realities of Burkina Faso.
+
 \clearpage
 
 %% ============================================================
-%% ABSTRACT & RÉSUMÉ
+%% ABSTRACT (English)
 %% ============================================================
-\newpage
-\thispagestyle{fancy}
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
 \justifying
-The management of pre-hospital medical emergencies in Burkina Faso, coordinated by the SAMU (Service d'Aide Médicale Urgente), faces significant challenges due to the manual nature of patient triage. Triage—the critical process of prioritizing patients based on clinical severity—currently relies on verbal assessments and human experience, often leading to inconsistencies or delays in high-stress environments. This thesis explores the design and implementation of a digital decision support system specifically tailored for the SAMU, utilizing the internationally validated Emergency Severity Index (ESI) algorithm.
 
-The proposed solution implements a robust 5-level prioritization logic through a modern web application built with a FastAPI backend and a React.js frontend. By automating the ESI decision tree, the system provides standardized guidance to operators, ensuring objective sorting of patients. Beyond the triage algorithm, the application integrates advanced security measures, supervisor dashboards for resource tracking, and automatic report generation. Functional testing confirms that the system effectively minimizes ambiguity in patient assessment, optimizing the deployment of mobile medical units (SMUR) and enhancing the overall efficiency of emergency responses in the Burkinabè context.
+Emergency medical response requires fast and reliable prioritization of cases. In prehospital settings, this task is particularly difficult because operators often make decisions under pressure, with incomplete information received by phone and without digital support tools. In Burkina Faso, the recent operationalization of the Service d'Aide M\'edicale Urgente (SAMU) has strengthened prehospital emergency care, yet the need for structured decision-support mechanisms remains significant \cite{ministry2024_urgences,ministry2024_garde}.
+
+This thesis presents the design and development of a digital decision-support system for prehospital triage based on the Emergency Severity Index (ESI), with a case study focused on the SAMU of Burkina Faso. The objective is not to replace medical judgment, but to provide a prototype capable of structuring the collection of clinical information, assisting the prioritization of patients, and improving traceability during emergency call regulation.
+
+The study combines a review of the literature on emergency triage and clinical decision support systems with a field-oriented needs analysis based on a questionnaire administered to an experienced SAMU professional. The findings show that current triage practices remain largely manual and rely mainly on assessment criteria such as level of consciousness, breathing status, and bleeding severity. These observations informed the design of the proposed system.
+
+The resulting prototype is a web-based application intended for call-center operators. It records patient information, applies explicit triage rules inspired by the ESI logic, assigns a priority level, and stores the generated result. The proposed solution aims to demonstrate how a simple, context-aware digital tool can support prehospital triage, reduce avoidable prioritization errors, and provide more reliable data for future service improvement.
 
 \vspace{0.5cm}
-\noindent\textbf{Keywords:} Emergency Severity Index (ESI), SAMU, Pre-hospital Triage, Decision Support, Health Information Systems, Burkina Faso.
+\noindent\textbf{Keywords:} prehospital triage, Emergency Severity Index, SAMU, decision support system, emergency medical services, Burkina Faso.
+
 \clearpage
 
-\newpage
-\thispagestyle{fancy}
+%% ============================================================
+%% RESUME (French)
+%% ============================================================
 \section*{R\'esum\'e}
 \addcontentsline{toc}{section}{R\'esum\'e}
 \justifying
-La régulation des urgences pré-hospitalières au Burkina Faso, assurée par le SAMU (Service d'Aide Médicale Urgente), se heurte aujourd'hui à des limites opérationnelles liées au caractère manuel du triage des patients. Ce processus, déterminant pour la survie des patients, repose principalement sur l'expérience individuelle des agents, ce qui peut engendrer des erreurs d'appréciation face à la pression ou à des informations incomplètes. Ce travail de fin de cycle porte sur la conception et le développement d'un système numérique d'aide à la décision basé sur le protocole Emergency Severity Index (ESI) à cinq niveaux.
 
-S'appuyant sur une architecture moderne combinant FastAPI pour le backend et React.js pour le frontend, la solution permet d'automatiser l'arbre de décision ESI afin de standardiser la priorisation des patients. Le système intègre également des fonctionnalités de gestion sécurisée des accès (RBAC), un tableau de bord pour le suivi statistique en temps réel ainsi que la génération automatique de rapports d'intervention. Les résultats des tests démontrent que la numérisation du triage réduit l'ambiguïté décisionnelle et optimise l'engagement des unités mobiles de réanimation (SMUR), améliorant ainsi la réactivité de la chaîne de secours au Burkina Faso.
+La prise en charge des urgences m\'edicales exige une priorisation rapide et fiable des cas. En contexte pr\'ehospitalier, cette t\^ache est particuli\`erement d\'elicate, car les d\'ecisions sont souvent prises sous pression, \`a partir d'informations incompl\`etes re\c{c}ues par t\'el\'ephone, et sans outil num\'erique d'aide \`a la d\'ecision. Au Burkina Faso, la mise en service du Service d'Aide M\'edicale Urgente (SAMU) a renforc\'e la prise en charge pr\'ehospitali\`ere, mais le besoin d'outils structurants reste important \cite{ministry2024_urgences,ministry2024_garde}.
+
+Ce m\'emoire pr\'esente la conception et le d\'eveloppement d'un syst\`eme num\'erique d'aide \`a la d\'ecision pour le triage pr\'ehospitalier bas\'e sur l'Emergency Severity Index (ESI), \`a travers le cas du SAMU du Burkina Faso. L'objectif n'est pas de remplacer le jugement m\'edical, mais de proposer un prototype capable de structurer la collecte d'informations cliniques, d'assister la priorisation des patients et d'am\'eliorer la tra\c{c}abilit\'e de la r\'egulation des appels d'urgence.
+
+L'\'etude combine une revue de la litt\'erature sur le triage d'urgence et les syst\`emes d'aide \`a la d\'ecision clinique avec une analyse des besoins nourrie par une enqu\^ete de terrain r\'ealis\'ee aupr\`es d'un professionnel exp\'eriment\'e du SAMU. Les r\'esultats montrent que les pratiques actuelles de triage demeurent largement manuelles et reposent principalement sur l'\'evaluation de crit\`eres comme l'\'etat de conscience, la respiration et l'importance du saignement. Ces \'el\'ements ont guid\'e la conception de la solution propos\'ee.
+
+Le prototype obtenu est une application web destin\'ee aux op\'erateurs du centre d'appel. Elle permet d'enregistrer les informations du patient, d'appliquer des r\`egles explicites inspir\'ees de la logique ESI, d'attribuer un niveau de priorit\'e et de conserver une trace des \'evaluations r\'ealis\'ees. La solution propos\'ee vise ainsi \`a montrer comment un outil num\'erique simple et adapt\'e au contexte peut contribuer \`a structurer le triage pr\'ehospitalier, \`a r\'eduire certaines erreurs de priorisation et \`a fournir des donn\'ees plus fiables pour l'am\'elioration future du service.
 
 \vspace{0.5cm}
-\noindent\textbf{Mots-cl\'es :} Emergency Severity Index (ESI), SAMU, Triage Pr\'e-hospitalier, Aide à la Décision, Systèmes d'Information en Santé, Burkina Faso.
+\noindent\textbf{Mots-cl\'es :} triage pr\'ehospitalier, Emergency Severity Index, SAMU, syst\`eme d'aide \`a la d\'ecision, urgences m\'edicales, Burkina Faso.
+
+\clearpage
+
+%% ============================================================
+%% LIST OF ACRONYMS
+%% ============================================================
+\section*{List of Acronyms and Abbreviations}
+\addcontentsline{toc}{section}{List of Acronyms and Abbreviations}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{longtable}{|p{3.5cm}|p{10.5cm}|}
+\hline
+\textbf{Acronym} & \textbf{Definition} \\
+\hline
+AHRQ & Agency for Healthcare Research and Quality \\
+\hline
+API & Application Programming Interface \\
+\hline
+BIT & Burkina Institute of Technology \\
+\hline
+CDS & Clinical Decision Support \\
+\hline
+CDSS & Clinical Decision Support System \\
+\hline
+ED & Emergency Department \\
+\hline
+EMS & Emergency Medical Services \\
+\hline
+ESI & Emergency Severity Index \\
+\hline
+HTTP & HyperText Transfer Protocol \\
+\hline
+JSON & JavaScript Object Notation \\
+\hline
+REST & Representational State Transfer \\
+\hline
+SAMU & Service d'Aide M\'edicale Urgente \\
+\hline
+SMUR & Structure Mobile d'Urgence et de R\'eanimation \\
+\hline
+SQL & Structured Query Language \\
+\hline
+UML & Unified Modeling Language \\
+\hline
+UI & User Interface \\
+\hline
+UX & User Experience \\
+\hline
+\end{longtable}
 \clearpage
 
 %% ============================================================
@@ -173,77 +214,641 @@ S'appuyant sur une architecture moderne combinant FastAPI pour le backend et Rea
 \clearpage
 
 %% ============================================================
-%% LIST OF ACRONYMS
+%% GENERAL INTRODUCTION
 %% ============================================================
 \newpage
 \thispagestyle{fancy}
-\section*{List of Acronyms and Abbreviations}
-\addcontentsline{toc}{section}{List of Acronyms and Abbreviations}
-\renewcommand{\arraystretch}{1.3}
+\addcontentsline{toc}{chapter}{General Introduction}
+{\LARGE \bfseries \noindent General Introduction}
+\vspace{2em}
+\justifying
 
-\begin{longtable}{|p{3.5cm}|p{10.5cm}|}
-\hline
-\textbf{Acronym} & \textbf{Definition} \\
-\hline
-API      & Application Programming Interface \\
-\hline
-BIT      & Burkina Institute of Technology \\
-\hline
-CORS     & Cross-Origin Resource Sharing \\
-\hline
-CSP      & Content Security Policy \\
-\hline
-ESI      & Emergency Severity Index \\
-\hline
-HTTP     & HyperText Transfer Protocol \\
-\hline
-JSON     & JavaScript Object Notation \\
-\hline
-JWT      & JSON Web Token \\
-\hline
-ORM      & Object-Relational Mapping \\
-\hline
-RBAC     & Role-Based Access Control \\
-\hline
-REST     & Representational State Transfer \\
-\hline
-SAMU     & Service d'Aide M\'edicale Urgente \\
-\hline
-SMUR     & Service Mobile d'Urgence et de R\'eanimation \\
-\hline
-SQL      & Structured Query Language \\
-\hline
-UML      & Unified Modeling Language \\
-\hline
-\end{longtable}
+Emergency care systems occupy a special place in every health system because they operate where uncertainty, urgency, and limited time meet. In such contexts, the quality of the first assessment can shape the rest of the care pathway. Whether the patient is ultimately transferred, stabilized on site, or referred elsewhere, the first decision made by the operator or clinician often determines the speed and appropriateness of the response.
+
+In Burkina Faso, emergency medical response has received renewed institutional attention with the rollout of the Service d'Aide M\'edicale Urgente (SAMU), a public service dedicated to prehospital emergency care. According to the Ministry of Health and Public Hygiene, the SAMU was introduced to ensure medical management of emergencies occurring outside health facilities and is supported by equipped ambulances for critical interventions \cite{ministry2024_urgences}. A ministerial text published in 2024 also specifies that the service organizes duty coverage for regulation and prehospital emergency management \cite{ministry2024_garde}. This institutional setting creates a timely opportunity to reflect on how digital tools could support emergency call regulation and case prioritization.
+
+Yet the prehospital context remains particularly demanding. Unlike hospital triage, where professionals can directly observe the patient and access vital signs or complementary examinations, prehospital triage often begins with fragmented information provided by an anxious caller over the phone. The operator must quickly identify warning signs, estimate severity, and help determine priority, sometimes in a situation where road conditions, distance, or urban traffic may already delay the intervention itself.
+
+Within this context, triage is not a secondary administrative step. It is a practical mechanism for sorting urgency, organizing limited resources, and reducing the risk that the most severe cases remain unattended. Structured triage scales have been developed precisely for this purpose. Among them, the Emergency Severity Index (ESI) has become one of the best-known five-level triage tools, combining clinical severity and anticipated resource needs in order to classify patients according to priority \cite{gilboy2011,esi5handbook}.
+
+However, the existence of a triage model does not automatically guarantee its effective use in routine operations. In many services, assessment still depends heavily on memory, experience, handwritten notes, or local habits. Where computerized support is absent, the process may become less traceable and more vulnerable to inconsistency. Reviews on clinical decision support systems show that digital tools can strengthen healthcare delivery by providing targeted clinical knowledge, structuring information, and supporting decision-making without replacing professional judgment \cite{sutton2020,wasylewicz2018,chen2023}.
+
+The present work is grounded in that idea. It does not aim to automate medicine or remove human expertise from emergency regulation. Rather, it seeks to design a digital decision-support system capable of structuring prehospital triage for the SAMU of Burkina Faso through explicit rules inspired by the ESI framework. The project takes the form of an academic prototype intended for call-center operators, with emphasis on simplicity, clarity, and practical relevance.
+
+\section*{Problem Statement}
+\addcontentsline{toc}{section}{Problem Statement}
+
+At the SAMU of Burkina Faso, patient triage in emergency situations is still largely performed manually, often through telephone assessment or on-the-ground evaluation. This prehospital setting presents several operational challenges. On the one hand, urban traffic, road conditions, and the accessibility of remote areas can delay interventions. On the other hand, operators must make rapid decisions based on incomplete or imprecise information transmitted by callers who are themselves under stress. In the absence of a digital decision-support tool, patient prioritization relies mainly on human experience, which may lead to inconsistency, avoidable delays, or errors in the handling of the most serious cases.
+
+The central question of this study is therefore the following:
+
+\textit{How can a digital decision-support system based on the Emergency Severity Index (ESI) be designed to improve prehospital triage at the SAMU of Burkina Faso?}
+
+\section*{Objectives of the Project}
+\addcontentsline{toc}{section}{Objectives of the Project}
+
+\textbf{General Objective}
+
+The general objective of this work is to design and develop a digital decision-support system for prehospital triage based on the Emergency Severity Index (ESI), adapted to the operational context of the SAMU of Burkina Faso.
+
+\noindent\textbf{Specific Objectives}
+\begin{itemize}
+    \item Analyze the current prehospital triage context and identify the practical needs of emergency call regulation;
+    \item Study the theoretical foundations of emergency triage, the Emergency Severity Index, and digital decision-support systems in healthcare;
+    \item Define the functional and non-functional requirements of the proposed solution;
+    \item Model the system using appropriate conceptual and UML tools;
+    \item Develop a functional prototype capable of assigning a triage level from structured patient information;
+    \item Evaluate the prototype through functional tests and simulated use scenarios.
+\end{itemize}
+
+\section*{General Methodology}
+\addcontentsline{toc}{section}{General Methodology}
+
+This work follows an applied and iterative methodology oriented toward prototype development. It combines documentary research, field-oriented needs analysis, conceptual modeling, and technical implementation.
+
+The first phase consisted of reviewing the literature on emergency medical systems, triage principles, the ESI model, and digital decision-support systems in healthcare. The second phase focused on needs analysis through a short questionnaire administered to a SAMU professional in order to gather practical information on the current workflow, the criteria used during regulation, and the perceived usefulness of a digital support tool. The third phase concerned the conceptual design of the system, including functional analysis, requirements definition, and modeling. The fourth phase covered the development of a web-based prototype. Finally, the last phase involved functional testing and critical discussion of the obtained results.
+
+\section*{Organization of the Thesis}
+\addcontentsline{toc}{section}{Organization of the Thesis}
+
+This thesis is organized into two main parts.
+
+\textbf{Part I} presents the theoretical foundations and the state of the art. Chapter 1 introduces the key concepts related to emergency medical systems, triage, the ESI model, and healthcare decision-support systems, then reviews previous work and existing digital solutions. Chapter 2 focuses on the methodology of the study and the conceptual approach adopted for the design of the proposed system.
+
+\textbf{Part II} is devoted to design, implementation, and analysis. Chapter 3 presents system modeling and the technical realization of the solution. Chapter 4 discusses the developed prototype, the tests carried out, the obtained results, and the main limitations and perspectives.
+
 \clearpage
 
 %% ============================================================
-%% MAIN BODY
+%% PART I
 %% ============================================================
-\renewcommand{\thepage}{\arabic{page}}
-\setcounter{page}{1}
-
-\include{chapters/introduction}
-
-\part{Theoretical Foundations and State of the Art}
-\include{chapters/chap1}
-\include{chapters/chap2}
-
-\part{Design and Implementation}
-\include{chapters/chap3}
-\include{chapters/chap4}
-
-\include{chapters/conclusion}
+\part*{Part I: Theoretical Foundations and State of the Art}
+\addcontentsline{toc}{part}{Part I: Theoretical Foundations and State of the Art}
+\addtocontents{toc}{\vspace{10pt}}
 
 %% ============================================================
-%% BIBLIOGRAPHY (At the end)
+%% CHAPTER 1
 %% ============================================================
-\clearpage
 \newpage
 \thispagestyle{fancy}
-\addcontentsline{toc}{chapter}{Bibliography}
+\addcontentsline{toc}{chapter}{Chapter 1: Essential Concepts}
+{\LARGE \bfseries \noindent Chapter 1: Essential Concepts}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{General Information}
+
+\subsection{Emergency Medical Systems}
+
+Emergency medical systems are organized structures intended to detect, assess, and respond to urgent health situations in the shortest possible time. They usually include an alert and regulation component, transportation resources, trained personnel, and a connection with receiving health facilities. Their effectiveness depends not only on ambulances or equipment, but also on the quality of information processing during the first minutes of an emergency \cite{turner2019,miller2022}.
+
+In Burkina Faso, the SAMU was introduced as a public service for prehospital emergency management, with the mission of ensuring medical care for emergencies occurring outside health facilities \cite{ministry2024_urgences}. This makes the call-center function particularly important, since the first clinical orientation of the case may begin before the patient is physically seen by a health professional.
+
+Prehospital emergency systems generally operate under constraints that differ from those of hospital emergency departments. Operators frequently work with incomplete data, uncertain localization, caller distress, and limited immediate verification. For this reason, structured regulation and triage tools can be especially useful in strengthening consistency and traceability during decision-making.
+
+\subsection{Medical Triage and Its Importance}
+
+Medical triage is the process of sorting patients according to the urgency of their condition in order to allocate care and resources in a rational manner. In emergency care, triage is not merely an administrative classification; it is a safety mechanism. Its primary purpose is to identify patients who need immediate or rapid attention while allowing less urgent cases to wait appropriately \cite{christ2016,ahrqtriage}.
+
+In practice, triage serves several functions at once. It supports rapid prioritization, contributes to better resource use, and helps reduce preventable delays in severe cases. In overloaded contexts, it can also improve workflow organization by making urgency more explicit and more comparable from one case to another.
+
+The importance of triage becomes even more pronounced in prehospital care. At that stage, the available information is often limited to symptoms described by a third party or by the patient over the phone. This increases the value of a clear decision process. Without a structured triage approach, prioritization can vary from one operator to another, even when faced with similar situations.
+
+\subsection{The Emergency Severity Index (ESI) Model}
+
+The Emergency Severity Index (ESI) is a five-level triage tool used to classify patients according to clinical severity and expected resource needs. It was designed for emergency department triage and has been widely used because it provides a rapid and structured framework for prioritization \cite{gilboy2011,esi5handbook}. The scale ranges from ESI-1, corresponding to immediate life-saving intervention, to ESI-5, corresponding to cases that require neither immediate urgency management nor additional resources.
+
+A central feature of the ESI is that it does not rely on a single criterion. It combines urgency and anticipated complexity of care. In broad terms, the assessment begins by identifying life-threatening conditions and high-risk situations, then moves toward an estimation of the resources that may be required for the patient's management \cite{gilboy2011}. This layered logic makes the model both practical and reproducible.
+
+Although the ESI was originally developed for emergency departments, its structured reasoning can inspire the design of prehospital triage support tools, especially where operators need to make prioritization decisions quickly and consistently. In the present work, the ESI is not treated as an immutable hospital workflow but as a clinically recognized framework that can guide the design of a digital support system for call-center regulation.
+
+\subsection{Healthcare Decision Support Systems}
+
+Clinical decision support systems (CDSS) are tools designed to improve healthcare delivery by enhancing decisions with relevant clinical knowledge, patient information, and structured recommendations \cite{sutton2020,wasylewicz2018}. Their role is not to replace clinicians, nurses, or operators, but to provide timely support in situations where data must be interpreted rapidly and consistently.
+
+The literature generally distinguishes several forms of decision support. Some systems are based on explicit rules or guidelines; others rely on statistical models, machine learning, or predictive analytics. In all cases, the core purpose remains similar: to reduce uncertainty, standardize reasoning where appropriate, and support better decisions in complex environments \cite{teufel2021,chen2023}.
+
+The system proposed in this thesis belongs to the rule-based family. It does not attempt to infer triage decisions through artificial intelligence or hidden models. Instead, it applies explicit decision rules inspired by the ESI framework in order to guide prehospital prioritization. This choice is deliberate: a rule-based prototype is easier to justify, easier to audit, and better aligned with the educational objective of the project.
+
+\section{State of the Art}
+
+\subsection{Existing Work on Computer-Assisted Triage}
+
+Computer-assisted triage has attracted growing attention in recent years, both in hospital emergency departments and in telephone-based emergency regulation. A scoping review published in 2024 on clinical decision support systems for emergency telephone triage shows increasing interest in systems designed to assist operators during remote assessment, while also highlighting important variations in functionality, maturity, and evaluation methods \cite{michel2024}. This indicates that the field is active, but not yet fully standardized.
+
+Studies have also examined the use of computerized decision support in emergency department triage. Recent findings suggest that such systems can improve consistency and support faster decision-making under pressure, especially when the workflow is repetitive and the decision criteria can be formalized \cite{cetin2023,morlotti2024}. However, the evidence also shows that usefulness depends heavily on usability, local adaptation, and integration into routine practice.
+
+\subsection{Digital Applications in Emergency Services}
+
+Digitalization in emergency services has taken several forms. Some solutions focus on structured data capture, some on automatic severity suggestion, and others on telephone triage integration. In many settings, these applications aim to reduce reliance on handwritten documentation and to improve case traceability \cite{morlotti2024,islam2021}.
+
+Research on emergency telephone triage has shown that computer-supported systems can help structure questioning and promote more consistent prioritization, but their quality varies and implementation remains context-sensitive \cite{islam2021,alotaibi2021}. This is particularly relevant for the present project, which addresses a call-center environment in a setting where simplicity and clarity are more important than technical complexity.
+
+The literature also suggests that digital tools are most useful when they fit the actual workflow of the service rather than imposing an external logic. This is why a lightweight, operator-oriented web prototype is more appropriate here than a heavy system modeled on large hospital infrastructures.
+
+\subsection{Systems and Existing Solutions in the Literature}
+
+Several digital triage approaches can be identified in the literature. Some systems are based on traditional triage scales embedded into software; others use more advanced prediction models or electronic triage engines. For example, research funded by AHRQ compared an electronic triage approach to the Emergency Severity Index, which remains a major reference in emergency triage practice \cite{hopscore}. Other works have explored Bayesian models for triage support or electronic solutions for telephone-based regulation \cite{sadeghi2006,hsiao2006}.
+
+Recent reviews on digital or AI-supported triage note that these systems show promise, but they also point to persistent concerns about validation, explainability, generalizability, and the real-world impact on care outcomes \cite{digi_triage_2024,tyler2024}. In resource-constrained settings, these concerns are compounded by infrastructure limitations and variable digital literacy.
+
+For the purposes of this study, the most relevant reference models are not necessarily the most technologically sophisticated ones. The most relevant are those that demonstrate that triage reasoning can be structured into digital workflows, especially in contexts where the objective is to support rather than replace the human operator.
+
+\subsection{Justification of the Proposed Solution}
+
+The literature clearly shows two converging realities. First, emergency triage benefits from structured and reproducible decision frameworks. Second, digital decision-support tools can improve data organization, standardization, and traceability when they are well adapted to their users and context \cite{sutton2020,michel2024,morlotti2024}.
+
+The field inquiry conducted for this study reinforces that observation. The surveyed SAMU professional confirmed that the current triage process relies on questioning, note-taking, and a final judgment based on the operator's synthesis of the answers. He also indicated that level of consciousness, breathing, and bleeding are among the main criteria used to evaluate severity, while no digital support system is currently used. He further pointed out that a digital tool could make data exploitation easier and provide more reliable statistics.
+
+These elements justify the proposed solution. The project addresses a practical gap: the need for a simple digital system capable of structuring triage information, supporting the operator's reasoning, and preserving a trace of the assessment. Rather than aiming for a highly complex intelligent system, this study proposes a realistic and auditable prototype based on explicit ESI-inspired rules and adapted to the working conditions of emergency call regulation.
+
+\subsection*{Chapter Conclusion}
+
+This chapter reviewed the main concepts that frame the present work: emergency medical systems, medical triage, the Emergency Severity Index, and healthcare decision-support systems. It also examined the current state of research on computer-assisted triage and digital tools used in emergency services. The analysis showed that structured triage and digital support are not competing ideas, but complementary ones. This provides a strong basis for the design of a context-aware digital triage prototype for the SAMU of Burkina Faso.
+
+\clearpage
+
+%% ============================================================
+%% CHAPTER 2
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 2: Methodology and Conceptual Approach}
+{\LARGE \bfseries \noindent Chapter 2: Methodology and Conceptual Approach}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Research and Development Methodology}
+
+\subsection{Needs Analysis of the Triage System}
+
+The needs analysis phase was essential because the proposed system is intended for a specific operational environment: emergency call regulation in a prehospital setting. Before defining technical components, it was necessary to understand how triage is currently carried out, what information is considered important, and where the main difficulties lie.
+
+To support this phase, a short field questionnaire was addressed to a SAMU professional. The respondent was an \textbf{infirmier} with more than ten years of experience in emergency services. His answers provided useful insight into the current practice of emergency call handling and triage. According to the response collected, the first information generally requested during an emergency call is the \textit{reason for the call}. The respondent also indicated that there is an existing procedure for handling emergency calls through the medical regulation assistant, but that the process is currently carried out without a digital triage support tool.
+
+The same inquiry showed that the priority of intervention is mainly determined by the severity of the case and that the principal criteria used to assess severity are the \textbf{level of consciousness}, \textbf{breathing status}, and \textbf{bleeding}. The respondent further explained that the regulator asks questions, writes down the answers, and then makes a final synthesis before drawing a conclusion. This description is important because it reveals that the current logic is already structured, but its execution remains manual and dependent on the operator's handling of the information.
+
+The inquiry also highlighted two additional points. First, a digital decision-support system was perceived as useful, especially for easier data exploitation and the production of more reliable statistics. Second, the main concern raised about such a system was the users' ability to handle the digital tool itself. This means that usability must be treated as a central design requirement rather than an accessory feature.
+
+Based on these observations, the system to be developed should be capable of: capturing the reason for the call, recording the essential clinical indicators, applying a transparent triage logic, displaying a clear priority result, and storing the evaluation for later consultation. It should also remain simple enough to be used by operators who may not have advanced digital skills.
+
+\subsection{Definition of Functional and Non-Functional Requirements}
+
+The system requirements were defined from three sources: the general project objective, the documentary review, and the field inquiry.
+
+\textbf{Functional Requirements}
+
+The system should allow the operator to:
+\begin{itemize}
+    \item create a new emergency call record;
+    \item enter patient-related information relevant to triage;
+    \item record the reason for the call;
+    \item capture structured responses regarding consciousness, breathing, bleeding, and general condition;
+    \item apply explicit triage rules inspired by the ESI logic;
+    \item generate and display a triage level;
+    \item store completed triage records in a history module;
+    \item consult previous intervention records when needed.
+\end{itemize}
+
+\textbf{Non-Functional Requirements}
+
+The system should also satisfy a set of quality-related constraints:
+\begin{itemize}
+    \item \textbf{Simplicity:} the interface must be clear and easy to learn;
+    \item \textbf{Rapidity:} the result should be produced immediately after data entry;
+    \item \textbf{Traceability:} each triage evaluation should be stored and retrievable;
+    \item \textbf{Consistency:} the same input conditions should always produce the same result;
+    \item \textbf{Readability:} the output must be understandable at a glance;
+    \item \textbf{Adaptability:} the prototype should remain lightweight and easy to improve later.
+\end{itemize}
+
+These requirements reflect the nature of the project: a practical prototype intended to support real decision situations without adding unnecessary complexity.
+
+\subsection{System Development Methodology}
+
+The development of the system follows an iterative prototype-oriented methodology. This choice is appropriate for three reasons. First, the project is academic and aims at producing a functional demonstrator rather than an industrial deployment. Second, the needs became clearer as the inquiry and conceptual reflection progressed. Third, the system itself is relatively compact, which makes incremental development more realistic than a heavy, rigid methodology.
+
+The adopted approach can be described through five main phases:
+
+\textbf{Phase 1: Problem Understanding and Documentary Review} \\
+This phase focused on clarifying the domain of study. It included the review of literature on emergency care systems, prehospital triage, the ESI model, and decision-support systems in healthcare.
+
+\textbf{Phase 2: Needs Analysis} \\
+This phase relied on the field questionnaire and the interpretation of the collected information in order to identify practical expectations, workflow characteristics, and key clinical criteria.
+
+\textbf{Phase 3: Conceptual Design} \\
+The third phase translated the identified needs into system structures: architecture, data flow, use cases, and conceptual models.
+
+\textbf{Phase 4: Prototype Development} \\
+The fourth phase consisted of implementing the backend logic, the triage engine, and the user interface, while preserving simplicity and coherence with the identified needs.
+
+\textbf{Phase 5: Functional Testing and Critical Review} \\
+The final phase focused on verifying the behavior of the prototype through usage scenarios and discussing the strengths and limitations of the developed solution.
+
+This methodology ensures that the final prototype remains aligned with the problem it intends to address.
+
+\section{Conceptual Approach of the System}
+
+\subsection{General Architecture of the System}
+
+The proposed solution follows a simple client-server architecture. It is designed as a web application intended for emergency call-center operators. At a high level, the system includes three main components:
+
+\begin{itemize}
+    \item a \textbf{user interface layer}, through which the operator enters triage information and visualizes the result;
+    \item an \textbf{application layer}, responsible for processing the input and applying the triage rules;
+    \item a \textbf{data layer}, used to store patient-related triage records and call history.
+\end{itemize}
+
+This architecture was chosen because it matches the intended use of the prototype. It is simple enough for a demonstrative academic project, while remaining structured enough to support later extensions.
+
+\subsection{Data Flow of the Triage Process}
+
+The triage workflow begins when an emergency call is received. The operator opens the system and records the reason for the call together with the basic patient data. The operator then completes the triage form by entering the relevant clinical indicators. Once the form is submitted, the application layer processes the responses using predefined rules based on the ESI logic. The system then generates a triage level and displays the result to the operator. Finally, the evaluation is stored in the database for future consultation.
+
+This flow can be summarized in the following sequence:
+
+\begin{enumerate}
+    \item reception of the emergency call;
+    \item data entry by the operator;
+    \item execution of the triage logic;
+    \item generation of the priority level;
+    \item storage of the triage result.
+\end{enumerate}
+
+This structured flow is important because it transforms a largely manual reasoning process into a traceable digital workflow.
+
+\subsection{Conceptual Modeling of the Proposed Solution}
+
+At the conceptual level, the system revolves around a small number of core entities. The first is the \textbf{Operator}, who interacts with the application and performs the triage. The second is the \textbf{Patient}, whose case is being assessed. The third is the \textbf{Emergency Call}, which contains the contextual information related to the request. The fourth is the \textbf{Triage Record}, which stores the clinical indicators and the generated priority level.
+
+The conceptual logic of the solution is rule-based. The system receives structured inputs and transforms them into an output according to explicit decision rules. This design choice makes the system transparent, explainable, and easier to justify in an academic context. It also aligns with the stated goal of assisting the operator rather than replacing professional judgment.
+
+At this stage, the conceptual approach establishes the bridge between the identified needs and the technical realization that will be presented in the next chapter.
+
+\subsection*{Chapter Conclusion}
+
+This chapter presented the methodology adopted for the study and the conceptual approach retained for the development of the proposed system. The inquiry carried out with a SAMU professional played an important role in grounding the project in real operational practice. It confirmed that prehospital triage remains largely manual, highlighted the criteria effectively used during assessment, and reinforced the need for a simple digital decision-support tool. On that basis, the chapter defined the system requirements, clarified the development approach, and outlined the conceptual architecture of the solution. These elements now provide a coherent basis for the technical modeling and implementation presented in the following chapter.
+
+%% ============================================================
+%% PART II
+%% ============================================================
+\part*{Part II: Design and Implementation}
+\addcontentsline{toc}{part}{Part II: Design and Implementation}
+\addtocontents{toc}{\vspace{10pt}}
+
+%% ============================================================
+%% CHAPTER 3
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 3: Modelling and Technical Realization}
+{\LARGE \bfseries \noindent Chapter 3: Modelling and Technical Realization}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Needs Analysis and UML Modeling}
+
+\subsection{Needs Specifications}
+The specifications translate the conceptual needs identified previously into structural components. Functionally, the system must authenticate users according to two distinct roles: \textbf{Operator} (responsible for conducting patient triage) and \textbf{Supervisor} (responsible for overall monitoring and team management). The system must securely capture the caller's identity, evaluate medical indicators across four main medical domains (General Medicine, Surgery, Gynecology/Obstetrics, and Pediatrics), dynamically compute the ESI level, and generate a downloadable PDF report for traceability. Non-functionally, the system requires a "zero-scroll" interface enabling rapid data entry under pressure, and robust security including JSON Web Tokens (JWT) and Role-Based Access Control (RBAC).
+
+\subsection{Use Case Diagram}
+The Use Case diagram identifies the interactions between the actors and the system. The \textbf{Operator} can log in, create a new triage record, query major specific criteria using "smart chips," input vital signs (consciousness, breathing, bleeding), and export the generated triage result. The \textbf{Supervisor} inherits the operator's capabilities but is also authorized to view the 24-hour activities dashboard, manage operator accounts across different workspaces, and oversee the global audit logs. The system automates the ESI calculation internally upon submission.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{use_case_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Use Case Diagram Here]}
+\caption{Use Case Diagram of the SAMU Triage System}
+\label{fig:usecase}
+\end{figure}
+
+\subsection{Class Diagram}
+The Conceptual Data Model ensures data integrity and traceability. The core entities include the \textbf{User} class (containing attributes such as full name, specialty, role, and hashed passwords), the \textbf{TriageRecord} class (which stores caller details, medical category, specific symptoms, vital signs, and the output ESI level), and the \textbf{AuditLog} class (which captures all sensitive system actions like login events and profile updates for tracking). The database design reflects relational connections where each TriageRecord is strictly linked to the Operator who performed it.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{class_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Class Diagram Here]}
+\caption{Class Diagram of the System}
+\label{fig:class}
+\end{figure}
+
+\subsection{Sequence Diagram}
+A typical sequence for the triage process begins with operator authentication. Once the operator inputs the patient's data and submits the form, the React frontend sends an asynchronous HTTP POST request to the FastAPI backend. The backend validates the payload structure, applies the ESI prioritization algorithm locally, immediately persists the record into the PostgreSQL database, and responds with the computed ESI level along with a clinical explanation. The UI then displays a modal showing the color-coded priority and offers PDF generation.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{sequence_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Sequence Diagram Here]}
+\caption{Sequence Diagram of the Triage Process}
+\label{fig:sequence}
+\end{figure}
+
+\section{Implementation of the Solution}
+
+\subsection{Development Environment}
+The application was developed in a modern local environment to maintain high control over dependencies. The development utilized Visual Studio Code as the primary Integrated Development Environment (IDE). Node.js and NPM were used to orchestrate the JavaScript frontend ecosystem, while Python 3.10 and pip managed backend packages. For database management, an initially cloud-based setup was migrated to a robust local PostgreSQL instance managed via pgAdmin4, ensuring high availability and zero latency.
+
+\subsection{Technologies Used}
+The architecture relies on a robust and modern stack:
+\begin{itemize}
+    \item \textbf{FastAPI (Python):} Chosen for the backend for its exceptional speed, native async support, and automatic API documentation (Swagger).
+    \item \textbf{React.js and TailwindCSS:} Selected for the frontend to create a highly reactive, component-based user interface. TailwindCSS enabled the rapid creation of a premium, SAMU-branded visual identity and precise grid layouts.
+    \item \textbf{PostgreSQL and SQLAlchemy:} Used to durably store relational data and interact seamlessly with the Python API via an Object-Relational Mapper (ORM).
+\end{itemize}
+
+\subsection{Backend Development and API}
+The backend exposes comprehensive RESTful endpoints organized logically. The \texttt{auth} router handles JWT generation and profile updates. The \texttt{triage} router manages the core ESI algorithm and database insertions. Notably, the triage logic evaluates symptoms across our four defined domains and masks generic vital signs if an acute "specific symptom" is registered. Furthermore, the backend features a robust dashboard router that performs real-time queries to calculate the last 24-hour efficiency metrics (average triage speed, critical life-threatening cases), replacing static estimations with live data.
+
+\subsection{User Interface Development}
+The design philosophy behind the frontend focused exclusively on \textit{cognitive ease} and \textit{action speed}. A "zero-scroll" policy was enforced through a responsive two-column CSS grid. The left column captures context (caller identity and patient location), while the right column handles clinical evaluations combining a responsive domain selector and "Smart Chips." These chips act as interactive badges, allowing operators to select major critical symptoms with a single click rather than typing. 
+
+\clearpage
+
+%% ============================================================
+%% CHAPTER 4
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 4: Results, Analysis and Discussion}
+{\LARGE \bfseries \noindent Chapter 4: Results, Analysis and Discussion}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{System Evaluation}
+
+\subsection{Functional Testing}
+Rigorous functional tests were conducted to validate the core ESI algorithm implementation. Test cases spanned from immediate life threats (e.g., Cardiac arrest yielding ESI Level 1 - Red) to minor consultations (e.g., Simple fever with no distress yielding ESI Level 5 - Blue). Additionally, the system's security features, such as JWT expiration, restricted Supervisor routes, and protection against partial updates (managing 422 errors), were systematically evaluated. All tests successfully confirmed that the system returns the correct prioritization level reliably and prevents unauthorized data access.
+
+\subsection{Usage Scenarios}
+In a simulated scenario mimicking a high-stress medical call, an operator logs in, accesses the triage form, and enters data. If the caller mentions a "Severe trauma," the operator utilizes the Smart Chips to instantly flag the specific symptom in the surgical domain. The system immediately masks the standard vital signs, automating the ESI Level 1 (or 2) decision matrix within milliseconds. The operator terminates the call, clicks to generate the printable PDF summary with SAMU branding, and is immediately ready for the next call. 
+
+\subsection{Analysis of Results}
+The integration of a two-column zero-scroll interface coupled with the interactive chips profoundly reduces the number of structural clicks and data-entry time required per case. Moreover, the dynamic 24-hour dashboard effectively transforms hidden database entries into a live performance-monitoring tool for supervisors, establishing a reliable digital audit trail previously non-existent in paper-based workflows.
+
+\section{Presentation of the Developed System}
+
+\subsection{User Interfaces}
+The application features a premium dark/light SAMU-themed aesthetic. The landing page implements floating micro-animations and secure authentication. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{login_interface.png}
+\framebox(400,200){[PLACEHOLDER: Insert Login Interface Screenshot]}
+\caption{Premium Authentication Interface}
+\label{fig:ui_login}
+\end{figure}
+
+The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized for wide screens. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.9\textwidth]{triage_form.png}
+\framebox(450,250){[PLACEHOLDER: Insert the Zero-Scroll Triage Form Screenshot]}
+\caption{Two-Column Triage Form with Smart Chips}
+\label{fig:ui_triage}
+\end{figure}
+
+\subsection{Functioning of the Triage Engine}
+Upon valid input submission, a large, color-coded modal appears summarizing the priority level, preventing ambiguity. The visual cues (Red, Orange, Yellow, Green, Blue) immediately indicate the necessary urgency. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{esi_result_modal.png}
+\framebox(400,200){[PLACEHOLDER: Insert ESI Result Modal Screenshot]}
+\caption{Automated ESI Result Display}
+\label{fig:ui_result}
+\end{figure}
+
+\subsection{Administration and Historical Logs}
+The Supervisor Dashboard provides actionable intelligence, specifically displaying a dedicated section for "24h Shift Reporting." It highlights optimal efficiency thresholds, total vital emergencies, and the completion rate.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.9\textwidth]{dashboard_admin.png}
+\framebox(450,250){[PLACEHOLDER: Insert Supervisor Dashboard Screenshot]}
+\caption{Supervisor 24-Hour Analytics Dashboard}
+\label{fig:ui_dashboard}
+\end{figure}
+
+\section{Discussion and Perspectives}
+
+\subsection{Critical Analysis of the Results}
+The developed prototype effectively bridges the identified gap between clinical reasoning and operational speed. It successfully implements the ESI algorithm digitally without usurping the operator’s clinical judgment. The migration to a local PostgreSQL ensures absolute data sovereignty for the SAMU. However, a limitation remains regarding the strict nature of rule-based systems: highly atypical clinical presentations not covered strictly by the ESI guidelines may still require manual override, which the current system handles by allowing operators to add contextual notes before generating the PDF.
+
+\subsection*{Chapter Conclusion}
+This chapter detailed the transition from conceptual models to a fully operational digital support system. The utilization of FastAPI and React enabled the construction of a robust, high-performance triage application. Testing verified the integrity of the ESI algorithm and the efficacy of the newly designed "zero-scroll" interface. The system ultimately proves capable of providing structured decision support for prehospital emergency regulation.
+
+\clearpage
+
+%% ============================================================
+%% GENERAL CONCLUSION
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{General Conclusion}
+{\LARGE \bfseries \noindent General Conclusion}
+\vspace{2em}
+\justifying
+
+The fundamental goal of this project was to design, from the ground up, a digital decision-support system to assist prehospital triage within the SAMU of Burkina Faso. Drawing inspiration from the globally recognized Emergency Severity Index (ESI), the project sought to introduce a structured, measurable, and traceable framework to emergency call regulation, all while adhering to the operational speed demanded by such an environment.
+
+The completion of this work yielded a functional, responsive web application entirely adapted to emergency dispatch realities. The technical implementation utilizing FastAPI for the backend and React for the frontend delivered a high-performance system. The migration to a robust local PostgreSQL database secured data persistence, while features like the "zero-scroll" interface and "Smart Chips" dramatically reduced data entry friction. Furthermore, the integration of secure Role-Based Access Control and a dynamic 24-hour supervisor dashboard has established a powerful analytical foundation for EMS administration.
+
+The primary contribution of this thesis lies in the demystification of clinical digitization in resource-sensitive settings. It provides a concrete, locally manageable prototype demonstrating that medical decisions can be effectively supported digitally without relying on opaque artificial intelligence. By formalizing symptoms into the ESI logic, the system effectively mitigates individual subjectivity and fatigue-related errors during crisis regulation.
+
+However, the system bears some limitations. Primarily, its current form operates exclusively within the call center. The triage data is logged and exportable via PDF, but it is not yet directly synchronized with the mobile terminals in SAMU ambulances (SMUR) or receiving hospital emergency departments. Moreover, relying heavily on the initial caller's testimony inherently carries the risk of over-triage or under-triage based on the accuracy of the verbal description.
+
+Future perspectives for this project are highly promising. Direct extensions should include the implementation of WebSockets for real-time notification broadcasting to ambulance crews immediately upon generating an ESI 1 (Red) or ESI 2 (Orange) priority. Additionally, developing a Progressive Web Application (PWA) allowing offline synchronizability could ensure continuous operation during internet outages. Ultimately, connecting this closed triage system to the broader national Electronic Health Record (EHR) database would represent a significant step in completing the digitalization of Burkina Faso's prehospital care continuum.
+
+\vspace{1cm}
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}
+\end{center}
+
+%% ============================================================
+%% PART II
+%% ============================================================
+\part*{Part II: Design and Implementation}
+\addcontentsline{toc}{part}{Part II: Design and Implementation}
+\addtocontents{toc}{\vspace{10pt}}
+
+%% ============================================================
+%% CHAPTER 3
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 3: Modelling and Technical Realization}
+{\LARGE \bfseries \noindent Chapter 3: Modelling and Technical Realization}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{Needs Analysis and UML Modeling}
+
+\subsection{Needs Specifications}
+The specifications translate the conceptual needs identified previously into structural components. Functionally, the system must authenticate users according to two distinct roles: \textbf{Operator} (responsible for conducting patient triage) and \textbf{Supervisor} (responsible for overall monitoring and team management). The system must securely capture the caller's identity, evaluate medical indicators across four main medical domains (General Medicine, Surgery, Gynecology/Obstetrics, and Pediatrics), dynamically compute the ESI level, and generate a downloadable PDF report for traceability. Non-functionally, the system requires a "zero-scroll" interface enabling rapid data entry under pressure, and robust security including JSON Web Tokens (JWT) and Role-Based Access Control (RBAC).
+
+\subsection{Use Case Diagram}
+The Use Case diagram identifies the interactions between the actors and the system. The \textbf{Operator} can log in, create a new triage record, query major specific criteria using "smart chips," input vital signs (consciousness, breathing, bleeding), and export the generated triage result. The \textbf{Supervisor} inherits the operator's capabilities but is also authorized to view the 24-hour activities dashboard, manage operator accounts across different workspaces, and oversee the global audit logs. The system automates the ESI calculation internally upon submission.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{use_case_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Use Case Diagram Here]}
+\caption{Use Case Diagram of the SAMU Triage System}
+\label{fig:usecase}
+\end{figure}
+
+\subsection{Class Diagram}
+The Conceptual Data Model ensures data integrity and traceability. The core entities include the \textbf{User} class (containing attributes such as full name, specialty, role, and hashed passwords), the \textbf{TriageRecord} class (which stores caller details, medical category, specific symptoms, vital signs, and the output ESI level), and the \textbf{AuditLog} class (which captures all sensitive system actions like login events and profile updates for tracking). The database design reflects relational connections where each TriageRecord is strictly linked to the Operator who performed it.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{class_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Class Diagram Here]}
+\caption{Class Diagram of the System}
+\label{fig:class}
+\end{figure}
+
+\subsection{Sequence Diagram}
+A typical sequence for the triage process begins with operator authentication. Once the operator inputs the patient's data and submits the form, the React frontend sends an asynchronous HTTP POST request to the FastAPI backend. The backend validates the payload structure, applies the ESI prioritization algorithm locally, immediately persists the record into the PostgreSQL database, and responds with the computed ESI level along with a clinical explanation. The UI then displays a modal showing the color-coded priority and offers PDF generation.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{sequence_diagram.png}
+\framebox(400,200){[PLACEHOLDER: Insert Sequence Diagram Here]}
+\caption{Sequence Diagram of the Triage Process}
+\label{fig:sequence}
+\end{figure}
+
+\section{Implementation of the Solution}
+
+\subsection{Development Environment}
+The application was developed in a modern local environment to maintain high control over dependencies. The development utilized Visual Studio Code as the primary Integrated Development Environment (IDE). Node.js and NPM were used to orchestrate the JavaScript frontend ecosystem, while Python 3.10 and pip managed backend packages. For database management, an initially cloud-based setup was migrated to a robust local PostgreSQL instance managed via pgAdmin4, ensuring high availability and zero latency.
+
+\subsection{Technologies Used}
+The architecture relies on a robust and modern stack:
+\begin{itemize}
+    \item \textbf{FastAPI (Python):} Chosen for the backend for its exceptional speed, native async support, and automatic API documentation (Swagger).
+    \item \textbf{React.js and TailwindCSS:} Selected for the frontend to create a highly reactive, component-based user interface. TailwindCSS enabled the rapid creation of a premium, SAMU-branded visual identity and precise grid layouts.
+    \item \textbf{PostgreSQL and SQLAlchemy:} Used to durably store relational data and interact seamlessly with the Python API via an Object-Relational Mapper (ORM).
+\end{itemize}
+
+\subsection{Backend Development and API}
+The backend exposes comprehensive RESTful endpoints organized logically. The \texttt{auth} router handles JWT generation and profile updates. The \texttt{triage} router manages the core ESI algorithm and database insertions. Notably, the triage logic evaluates symptoms across our four defined domains and masks generic vital signs if an acute "specific symptom" is registered. Furthermore, the backend features a robust dashboard router that performs real-time queries to calculate the last 24-hour efficiency metrics (average triage speed, critical life-threatening cases), replacing static estimations with live data.
+
+\subsection{User Interface Development}
+The design philosophy behind the frontend focused exclusively on \textit{cognitive ease} and \textit{action speed}. A "zero-scroll" policy was enforced through a responsive two-column CSS grid. The left column captures context (caller identity and patient location), while the right column handles clinical evaluations combining a responsive domain selector and "Smart Chips." These chips act as interactive badges, allowing operators to select major critical symptoms with a single click rather than typing. 
+
+\clearpage
+
+%% ============================================================
+%% CHAPTER 4
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{Chapter 4: Results, Analysis and Discussion}
+{\LARGE \bfseries \noindent Chapter 4: Results, Analysis and Discussion}
+\vspace{2em}
+\renewcommand{\thesection}{\Roman{section}}
+\justifying
+
+\section{System Evaluation}
+
+\subsection{Functional Testing}
+Rigorous functional tests were conducted to validate the core ESI algorithm implementation. Test cases spanned from immediate life threats (e.g., Cardiac arrest yielding ESI Level 1 - Red) to minor consultations (e.g., Simple fever with no distress yielding ESI Level 5 - Blue). Additionally, the system's security features, such as JWT expiration, restricted Supervisor routes, and protection against partial updates (managing 422 errors), were systematically evaluated. All tests successfully confirmed that the system returns the correct prioritization level reliably and prevents unauthorized data access.
+
+\subsection{Usage Scenarios}
+In a simulated scenario mimicking a high-stress medical call, an operator logs in, accesses the triage form, and enters data. If the caller mentions a "Severe trauma," the operator utilizes the Smart Chips to instantly flag the specific symptom in the surgical domain. The system immediately masks the standard vital signs, automating the ESI Level 1 (or 2) decision matrix within milliseconds. The operator terminates the call, clicks to generate the printable PDF summary with SAMU branding, and is immediately ready for the next call. 
+
+\subsection{Analysis of Results}
+The integration of a two-column zero-scroll interface coupled with the interactive chips profoundly reduces the number of structural clicks and data-entry time required per case. Moreover, the dynamic 24-hour dashboard effectively transforms hidden database entries into a live performance-monitoring tool for supervisors, establishing a reliable digital audit trail previously non-existent in paper-based workflows.
+
+\section{Presentation of the Developed System}
+
+\subsection{User Interfaces}
+The application features a premium dark/light SAMU-themed aesthetic. The landing page implements floating micro-animations and secure authentication. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{login_interface.png}
+\framebox(400,200){[PLACEHOLDER: Insert Login Interface Screenshot]}
+\caption{Premium Authentication Interface}
+\label{fig:ui_login}
+\end{figure}
+
+The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized for wide screens. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.9\textwidth]{triage_form.png}
+\framebox(450,250){[PLACEHOLDER: Insert the Zero-Scroll Triage Form Screenshot]}
+\caption{Two-Column Triage Form with Smart Chips}
+\label{fig:ui_triage}
+\end{figure}
+
+\subsection{Functioning of the Triage Engine}
+Upon valid input submission, a large, color-coded modal appears summarizing the priority level, preventing ambiguity. The visual cues (Red, Orange, Yellow, Green, Blue) immediately indicate the necessary urgency. 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{esi_result_modal.png}
+\framebox(400,200){[PLACEHOLDER: Insert ESI Result Modal Screenshot]}
+\caption{Automated ESI Result Display}
+\label{fig:ui_result}
+\end{figure}
+
+\subsection{Administration and Historical Logs}
+The Supervisor Dashboard provides actionable intelligence, specifically displaying a dedicated section for "24h Shift Reporting." It highlights optimal efficiency thresholds, total vital emergencies, and the completion rate.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.9\textwidth]{dashboard_admin.png}
+\framebox(450,250){[PLACEHOLDER: Insert Supervisor Dashboard Screenshot]}
+\caption{Supervisor 24-Hour Analytics Dashboard}
+\label{fig:ui_dashboard}
+\end{figure}
+
+\section{Discussion and Perspectives}
+
+\subsection{Critical Analysis of the Results}
+The developed prototype effectively bridges the identified gap between clinical reasoning and operational speed. It successfully implements the ESI algorithm digitally without usurping the operator’s clinical judgment. The migration to a local PostgreSQL ensures absolute data sovereignty for the SAMU. However, a limitation remains regarding the strict nature of rule-based systems: highly atypical clinical presentations not covered strictly by the ESI guidelines may still require manual override, which the current system handles by allowing operators to add contextual notes before generating the PDF.
+
+\subsection*{Chapter Conclusion}
+This chapter detailed the transition from conceptual models to a fully operational digital support system. The utilization of FastAPI and React enabled the construction of a robust, high-performance triage application. Testing verified the integrity of the ESI algorithm and the efficacy of the newly designed "zero-scroll" interface. The system ultimately proves capable of providing structured decision support for prehospital emergency regulation.
+
+\clearpage
+
+%% ============================================================
+%% GENERAL CONCLUSION
+%% ============================================================
+\newpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{chapter}{General Conclusion}
+{\LARGE \bfseries \noindent General Conclusion}
+\vspace{2em}
+\justifying
+
+The fundamental goal of this project was to design, from the ground up, a digital decision-support system to assist prehospital triage within the SAMU of Burkina Faso. Drawing inspiration from the globally recognized Emergency Severity Index (ESI), the project sought to introduce a structured, measurable, and traceable framework to emergency call regulation, all while adhering to the operational speed demanded by such an environment.
+
+The completion of this work yielded a functional, responsive web application entirely adapted to emergency dispatch realities. The technical implementation utilizing FastAPI for the backend and React for the frontend delivered a high-performance system. The migration to a robust local PostgreSQL database secured data persistence, while features like the "zero-scroll" interface and "Smart Chips" dramatically reduced data entry friction. Furthermore, the integration of secure Role-Based Access Control and a dynamic 24-hour supervisor dashboard has established a powerful analytical foundation for EMS administration.
+
+The primary contribution of this thesis lies in the demystification of clinical digitization in resource-sensitive settings. It provides a concrete, locally manageable prototype demonstrating that medical decisions can be effectively supported digitally without relying on opaque artificial intelligence. By formalizing symptoms into the ESI logic, the system effectively mitigates individual subjectivity and fatigue-related errors during crisis regulation.
+
+However, the system bears some limitations. Primarily, its current form operates exclusively within the call center. The triage data is logged and exportable via PDF, but it is not yet directly synchronized with the mobile terminals in SAMU ambulances (SMUR) or receiving hospital emergency departments. Moreover, relying heavily on the initial caller's testimony inherently carries the risk of over-triage or under-triage based on the accuracy of the verbal description.
+
+Future perspectives for this project are highly promising. Direct extensions should include the implementation of WebSockets for real-time notification broadcasting to ambulance crews immediately upon generating an ESI 1 (Red) or ESI 2 (Orange) priority. Additionally, developing a Progressive Web Application (PWA) allowing offline synchronizability could ensure continuous operation during internet outages. Ultimately, connecting this closed triage system to the broader national Electronic Health Record (EHR) database would represent a significant step in completing the digitalization of Burkina Faso's prehospital care continuum.
+
+\vspace{1cm}
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}
+\end{center}
+
 \bibliographystyle{plain}
 \bibliography{references}
-
 \end{document}
