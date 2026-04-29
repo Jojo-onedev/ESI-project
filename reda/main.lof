@@ -1,15 +1,9 @@
 \babel@toc {english}{}\relax 
 \contentsline {figure}{\numberline {1}{\ignorespaces Use Case Diagram of the SAMU Triage System}}{25}{figure.caption.17}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Class Diagram of the System}}{26}{figure.caption.18}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Sequence Diagram of the Triage Process}}{27}{figure.caption.19}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Premium Authentication Interface}}{30}{figure.caption.20}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Two-Column Triage Form with Smart Chips}}{30}{figure.caption.21}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Automated ESI Result Display}}{31}{figure.caption.22}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Supervisor 24-Hour Analytics Dashboard}}{31}{figure.caption.23}%
-\contentsline {figure}{\numberline {8}{\ignorespaces Use Case Diagram of the SAMU Triage System}}{35}{figure.caption.27}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Class Diagram of the System}}{36}{figure.caption.28}%
-\contentsline {figure}{\numberline {10}{\ignorespaces Sequence Diagram of the Triage Process}}{37}{figure.caption.29}%
-\contentsline {figure}{\numberline {11}{\ignorespaces Premium Authentication Interface}}{40}{figure.caption.30}%
-\contentsline {figure}{\numberline {12}{\ignorespaces Two-Column Triage Form with Smart Chips}}{40}{figure.caption.31}%
-\contentsline {figure}{\numberline {13}{\ignorespaces Automated ESI Result Display}}{41}{figure.caption.32}%
-\contentsline {figure}{\numberline {14}{\ignorespaces Supervisor 24-Hour Analytics Dashboard}}{41}{figure.caption.33}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Class Diagram of the System}}{25}{figure.caption.18}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Sequence Diagram of the AI-Assisted Triage Process}}{26}{figure.caption.19}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Exploratory Data Analysis and Performance Metrics}}{28}{figure.caption.20}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Feature Importance of the Random Forest Model}}{29}{figure.caption.21}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Confusion Matrix of the Random Forest Model (Accuracy: 99.75\%)}}{29}{figure.caption.22}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Two-Column Triage Form with Smart Chips}}{30}{figure.caption.23}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Automated ESI Result Display with AI Confirmation}}{30}{figure.caption.24}%

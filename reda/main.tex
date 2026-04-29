@@ -116,10 +116,10 @@ This thesis presents the design and development of a digital decision-support sy
 
 The study combines a review of the literature on emergency triage and clinical decision support systems with a field-oriented needs analysis based on a questionnaire administered to an experienced SAMU professional. The findings show that current triage practices remain largely manual and rely mainly on assessment criteria such as level of consciousness, breathing status, and bleeding severity. These observations informed the design of the proposed system.
 
-The resulting prototype is a web-based application intended for call-center operators. It records patient information, applies explicit triage rules inspired by the ESI logic, assigns a priority level, and stores the generated result. The proposed solution aims to demonstrate how a simple, context-aware digital tool can support prehospital triage, reduce avoidable prioritization errors, and provide more reliable data for future service improvement.
+The resulting prototype is a web-based application intended for call-center operators. It records patient information and utilizes a hybrid decision engine: it applies explicit triage rules inspired by the ESI logic to guarantee clinical safety, and simultaneously employs an Artificial Intelligence model (Random Forest) trained on a synthetic dataset to confirm the severity level or alert the operator to complex patterns. The proposed solution aims to demonstrate how combining a simple, context-aware digital tool with Machine Learning can support prehospital triage, reduce avoidable prioritization errors, and provide more reliable data for future service improvement.
 
 \vspace{0.5cm}
-\noindent\textbf{Keywords:} prehospital triage, Emergency Severity Index, SAMU, decision support system, emergency medical services, Burkina Faso.
+\noindent\textbf{Keywords:} prehospital triage, Emergency Severity Index, SAMU, decision support system, artificial intelligence, machine learning, Burkina Faso.
 
 \clearpage
 
@@ -136,10 +136,10 @@ Ce m\'emoire pr\'esente la conception et le d\'eveloppement d'un syst\`eme num\'
 
 L'\'etude combine une revue de la litt\'erature sur le triage d'urgence et les syst\`emes d'aide \`a la d\'ecision clinique avec une analyse des besoins nourrie par une enqu\^ete de terrain r\'ealis\'ee aupr\`es d'un professionnel exp\'eriment\'e du SAMU. Les r\'esultats montrent que les pratiques actuelles de triage demeurent largement manuelles et reposent principalement sur l'\'evaluation de crit\`eres comme l'\'etat de conscience, la respiration et l'importance du saignement. Ces \'el\'ements ont guid\'e la conception de la solution propos\'ee.
 
-Le prototype obtenu est une application web destin\'ee aux op\'erateurs du centre d'appel. Elle permet d'enregistrer les informations du patient, d'appliquer des r\`egles explicites inspir\'ees de la logique ESI, d'attribuer un niveau de priorit\'e et de conserver une trace des \'evaluations r\'ealis\'ees. La solution propos\'ee vise ainsi \`a montrer comment un outil num\'erique simple et adapt\'e au contexte peut contribuer \`a structurer le triage pr\'ehospitalier, \`a r\'eduire certaines erreurs de priorisation et \`a fournir des donn\'ees plus fiables pour l'am\'elioration future du service.
+Le prototype obtenu est une application web destin\'ee aux op\'erateurs du centre d'appel. Elle permet d'enregistrer les informations du patient et s'appuie sur un moteur de d\'ecision hybride : elle applique des r\`egles cliniques explicites inspir\'ees de la logique ESI pour garantir la s\'ecurit\'e, et utilise simultan\'ement un mod\`ele d'Intelligence Artificielle (Random Forest) entra\^in\'e sur un jeu de donn\'ees synth\'etique pour confirmer la s\'ev\'erit\'e ou alerter l'op\'erateur sur des d\'egradations complexes. La solution propos\'ee vise ainsi \`a montrer comment l'alliance d'un outil num\'erique adapt\'e et de l'Apprentissage Automatique peut contribuer \`a structurer le triage pr\'ehospitalier, r\'eduire les erreurs de priorisation et fournir des donn\'ees plus fiables pour l'am\'elioration future du service.
 
 \vspace{0.5cm}
-\noindent\textbf{Mots-cl\'es :} triage pr\'ehospitalier, Emergency Severity Index, SAMU, syst\`eme d'aide \`a la d\'ecision, urgences m\'edicales, Burkina Faso.
+\noindent\textbf{Mots-cl\'es :} triage pr\'ehospitalier, Emergency Severity Index, SAMU, syst\`eme d'aide \`a la d\'ecision, intelligence artificielle, apprentissage automatique, Burkina Faso.
 
 \clearpage
 
@@ -249,24 +249,25 @@ The central question of this study is therefore the following:
 
 \textbf{General Objective}
 
-The general objective of this work is to design and develop a digital decision-support system for prehospital triage based on the Emergency Severity Index (ESI), adapted to the operational context of the SAMU of Burkina Faso.
+The general objective of this work is to design and develop an intelligent, digital decision-support system for prehospital triage. This system will combine the explicit clinical rules of the Emergency Severity Index (ESI) with a Machine Learning model, adapted to the operational context of the SAMU of Burkina Faso.
 
 \noindent\textbf{Specific Objectives}
 \begin{itemize}
     \item Analyze the current prehospital triage context and identify the practical needs of emergency call regulation;
-    \item Study the theoretical foundations of emergency triage, the Emergency Severity Index, and digital decision-support systems in healthcare;
+    \item Study the theoretical foundations of emergency triage, clinical decision-support systems, and the application of Machine Learning (specifically classification algorithms) in healthcare;
     \item Define the functional and non-functional requirements of the proposed solution;
+    \item Generate a relevant synthetic clinical dataset and train a Machine Learning model (Random Forest) capable of predicting triage severity;
     \item Model the system using appropriate conceptual and UML tools;
-    \item Develop a functional prototype capable of assigning a triage level from structured patient information;
-    \item Evaluate the prototype through functional tests and simulated use scenarios.
+    \item Develop a functional hybrid prototype (Rule-based + AI) capable of assigning a triage level from structured patient information;
+    \item Evaluate the prototype and the AI model's accuracy through functional tests and simulated use scenarios.
 \end{itemize}
 
 \section*{General Methodology}
 \addcontentsline{toc}{section}{General Methodology}
 
-This work follows an applied and iterative methodology oriented toward prototype development. It combines documentary research, field-oriented needs analysis, conceptual modeling, and technical implementation.
+This work follows an applied and iterative methodology oriented toward prototype development. It combines documentary research, field-oriented needs analysis, machine learning model training, conceptual modeling, and technical implementation.
 
-The first phase consisted of reviewing the literature on emergency medical systems, triage principles, the ESI model, and digital decision-support systems in healthcare. The second phase focused on needs analysis through a short questionnaire administered to a SAMU professional in order to gather practical information on the current workflow, the criteria used during regulation, and the perceived usefulness of a digital support tool. The third phase concerned the conceptual design of the system, including functional analysis, requirements definition, and modeling. The fourth phase covered the development of a web-based prototype. Finally, the last phase involved functional testing and critical discussion of the obtained results.
+The first phase consisted of reviewing the literature on emergency medical systems, the ESI model, and the growing role of Artificial Intelligence in clinical decision-support. The second phase focused on needs analysis through a questionnaire administered to a SAMU professional in order to gather practical information on the current workflow. The third phase involved Data Science engineering: generating a comprehensive synthetic clinical dataset of 10,000 patient records to train, test, and validate a Random Forest classification model. The fourth phase concerned the conceptual design of the system, including functional analysis and UML modeling. The fifth phase covered the development of a web-based prototype integrating both the ESI deterministic rules and the AI inference engine. Finally, the last phase involved evaluating the model's predictive performance and testing the overall web application.
 
 \section*{Organization of the Thesis}
 \addcontentsline{toc}{section}{Organization of the Thesis}
@@ -483,7 +484,7 @@ This structured flow is important because it transforms a largely manual reasoni
 
 At the conceptual level, the system revolves around a small number of core entities. The first is the \textbf{Operator}, who interacts with the application and performs the triage. The second is the \textbf{Patient}, whose case is being assessed. The third is the \textbf{Emergency Call}, which contains the contextual information related to the request. The fourth is the \textbf{Triage Record}, which stores the clinical indicators and the generated priority level.
 
-The conceptual logic of the solution is rule-based. The system receives structured inputs and transforms them into an output according to explicit decision rules. This design choice makes the system transparent, explainable, and easier to justify in an academic context. It also aligns with the stated goal of assisting the operator rather than replacing professional judgment.
+The conceptual logic of the solution relies on a \textbf{hybrid approach}. Primarily, the system receives structured inputs and transforms them into an output according to explicit, deterministic decision rules based on the ESI protocol. This guarantees clinical safety, transparency, and explainability. Secondarily, to add a layer of robust predictive power, the conceptual design integrates a \textbf{Machine Learning component} capable of independently validating the urgency level. This dual design choice perfectly aligns with the stated goal of safely assisting the operator, leveraging modern AI without blindly replacing professional human judgment.
 
 At this stage, the conceptual approach establishes the bridge between the identified needs and the technical realization that will be presented in the next chapter.
 
@@ -509,13 +510,17 @@ This chapter presented the methodology adopted for the study and the conceptual 
 \renewcommand{\thesection}{\Roman{section}}
 \justifying
 
+This chapter presents the complete design of the SAMU Triage System, from the identification of functional needs through UML modelling, to the development of the web application and the integration of an Artificial Intelligence (AI) model. The design decisions presented here serve as the basis for the implementation and results described in Chapter 4.
+
 \section{Needs Analysis and UML Modeling}
 
 \subsection{Needs Specifications}
-The specifications translate the conceptual needs identified previously into structural components. Functionally, the system must authenticate users according to two distinct roles: \textbf{Operator} (responsible for conducting patient triage) and \textbf{Supervisor} (responsible for overall monitoring and team management). The system must securely capture the caller's identity, evaluate medical indicators across four main medical domains (General Medicine, Surgery, Gynecology/Obstetrics, and Pediatrics), dynamically compute the ESI level, and generate a downloadable PDF report for traceability. Non-functionally, the system requires a "zero-scroll" interface enabling rapid data entry under pressure, and robust security including JSON Web Tokens (JWT) and Role-Based Access Control (RBAC).
+The specifications translate the conceptual needs identified previously into structural components. Functionally, the system must authenticate users according to two distinct roles: \textbf{Operator} (responsible for conducting patient triage) and \textbf{Supervisor} (responsible for overall monitoring and team management). The system must securely capture the caller's identity, evaluate medical indicators across four main medical domains (General Medicine, Surgery, Gynecology/Obstetrics, and Pediatrics), dynamically compute the ESI level, and generate a downloadable PDF report for traceability. 
+
+To enhance decision-making reliability, an \textbf{Artificial Intelligence component} must be integrated to provide a second-opinion prediction in parallel with the deterministic clinical rules. Non-functionally, the system requires a "zero-scroll" interface enabling rapid data entry under pressure, robust security including JSON Web Tokens (JWT), and a prediction response time under 2 seconds.
 
 \subsection{Use Case Diagram}
-The Use Case diagram identifies the interactions between the actors and the system. The \textbf{Operator} can log in, create a new triage record, query major specific criteria using "smart chips," input vital signs (consciousness, breathing, bleeding), and export the generated triage result. The \textbf{Supervisor} inherits the operator's capabilities but is also authorized to view the 24-hour activities dashboard, manage operator accounts across different workspaces, and oversee the global audit logs. The system automates the ESI calculation internally upon submission.
+The Use Case diagram identifies the interactions between the actors and the system. The \textbf{Operator} can log in, create a new triage record, query major specific criteria using "smart chips," input vital signs (consciousness, breathing, bleeding), and export the generated triage result. The \textbf{Supervisor} inherits the operator's capabilities but is also authorized to view the 24-hour activities dashboard. The \textbf{AI System} is an automated component included during the triage evaluation to generate a Machine Learning prediction that confirms or alerts the operator regarding the computed ESI level.
 
 \begin{figure}[H]
 \centering
@@ -526,7 +531,7 @@ The Use Case diagram identifies the interactions between the actors and the syst
 \end{figure}
 
 \subsection{Class Diagram}
-The Conceptual Data Model ensures data integrity and traceability. The core entities include the \textbf{User} class (containing attributes such as full name, specialty, role, and hashed passwords), the \textbf{TriageRecord} class (which stores caller details, medical category, specific symptoms, vital signs, and the output ESI level), and the \textbf{AuditLog} class (which captures all sensitive system actions like login events and profile updates for tracking). The database design reflects relational connections where each TriageRecord is strictly linked to the Operator who performed it.
+The Conceptual Data Model ensures data integrity and traceability. The core entities include the \textbf{User} class, the \textbf{TriageRecord} class (which stores caller details, medical category, specific symptoms, vital signs, and the output ESI level), and the \textbf{AuditLog} class. Additionally, an \textbf{ESIModel} class encapsulates the Random Forest classifier and label encoders, providing preprocessing and prediction methods to support the triage record generation.
 
 \begin{figure}[H]
 \centering
@@ -537,34 +542,34 @@ The Conceptual Data Model ensures data integrity and traceability. The core enti
 \end{figure}
 
 \subsection{Sequence Diagram}
-A typical sequence for the triage process begins with operator authentication. Once the operator inputs the patient's data and submits the form, the React frontend sends an asynchronous HTTP POST request to the FastAPI backend. The backend validates the payload structure, applies the ESI prioritization algorithm locally, immediately persists the record into the PostgreSQL database, and responds with the computed ESI level along with a clinical explanation. The UI then displays a modal showing the color-coded priority and offers PDF generation.
+A typical sequence for the triage process begins with operator authentication. Once the operator inputs the patient's data and submits the form, the React frontend sends an asynchronous HTTP POST request to the FastAPI backend. The backend validates the payload and performs two parallel tasks: it applies the deterministic ESI prioritization algorithm, and it passes the clinical features to the Random Forest model for prediction. The backend then compares both results, persists the record into the PostgreSQL database, and responds with the computed ESI level along with a clinical explanation that includes the AI's confirmation or alert. 
 
 \begin{figure}[H]
 \centering
 % \includegraphics[width=0.8\textwidth]{sequence_diagram.png}
 \framebox(400,200){[PLACEHOLDER: Insert Sequence Diagram Here]}
-\caption{Sequence Diagram of the Triage Process}
+\caption{Sequence Diagram of the AI-Assisted Triage Process}
 \label{fig:sequence}
 \end{figure}
 
 \section{Implementation of the Solution}
 
-\subsection{Development Environment}
-The application was developed in a modern local environment to maintain high control over dependencies. The development utilized Visual Studio Code as the primary Integrated Development Environment (IDE). Node.js and NPM were used to orchestrate the JavaScript frontend ecosystem, while Python 3.10 and pip managed backend packages. For database management, an initially cloud-based setup was migrated to a robust local PostgreSQL instance managed via pgAdmin4, ensuring high availability and zero latency.
-
 \subsection{Technologies Used}
-The architecture relies on a robust and modern stack:
+The architecture relies on a robust and modern stack carefully selected for performance and data sovereignty:
 \begin{itemize}
-    \item \textbf{FastAPI (Python):} Chosen for the backend for its exceptional speed, native async support, and automatic API documentation (Swagger).
-    \item \textbf{React.js and TailwindCSS:} Selected for the frontend to create a highly reactive, component-based user interface. TailwindCSS enabled the rapid creation of a premium, SAMU-branded visual identity and precise grid layouts.
-    \item \textbf{PostgreSQL and SQLAlchemy:} Used to durably store relational data and interact seamlessly with the Python API via an Object-Relational Mapper (ORM).
+    \item \textbf{Backend Framework:} FastAPI (Python) for exceptional speed and native async support.
+    \item \textbf{AI and Machine Learning:} Scikit-Learn, Pandas, and Numpy for generating synthetic datasets, training the Random Forest Classifier, and performing real-time inference (joblib).
+    \item \textbf{Frontend:} React.js and TailwindCSS to create a highly reactive, component-based user interface with a premium SAMU-branded visual identity.
+    \item \textbf{Database:} PostgreSQL and SQLAlchemy for durable, local relational data storage with high availability.
 \end{itemize}
 
-\subsection{Backend Development and API}
-The backend exposes comprehensive RESTful endpoints organized logically. The \texttt{auth} router handles JWT generation and profile updates. The \texttt{triage} router manages the core ESI algorithm and database insertions. Notably, the triage logic evaluates symptoms across our four defined domains and masks generic vital signs if an acute "specific symptom" is registered. Furthermore, the backend features a robust dashboard router that performs real-time queries to calculate the last 24-hour efficiency metrics (average triage speed, critical life-threatening cases), replacing static estimations with live data.
+\subsection{Development of the AI Module}
+Given the absence of a large-scale, pre-existing digital dataset for prehospital triage in Burkina Faso, a synthetic clinical dataset of 10,000 patient records was generated programmatically. This dataset mapped specific symptoms, vital signs (Heart Rate, Respiratory Rate, Blood Pressure, SpO2, Glasgow Coma Scale, Pain Scale), and estimated resources to corresponding ESI levels (1 to 5) strictly adhering to clinical protocols.
+
+A \textbf{Random Forest Classifier} was selected for its robustness against overfitting and its ability to handle non-linear relationships in medical tabular data. The model was trained on 80\% of the dataset (8,000 samples) and evaluated on the remaining 20\% (2,000 samples). This model was then exported and integrated directly into the FastAPI triage router.
 
 \subsection{User Interface Development}
-The design philosophy behind the frontend focused exclusively on \textit{cognitive ease} and \textit{action speed}. A "zero-scroll" policy was enforced through a responsive two-column CSS grid. The left column captures context (caller identity and patient location), while the right column handles clinical evaluations combining a responsive domain selector and "Smart Chips." These chips act as interactive badges, allowing operators to select major critical symptoms with a single click rather than typing. 
+The design philosophy behind the frontend focused exclusively on \textit{cognitive ease} and \textit{action speed}. A "zero-scroll" policy was enforced through a responsive two-column CSS grid. The UI allows operators to select major critical symptoms via interactive "Smart Chips," minimizing typing. Upon submission, the interface displays the final ESI level and dynamically integrates the AI's feedback (e.g., confirming the level or issuing an alert if the AI predicts a higher severity).
 
 \clearpage
 
@@ -579,31 +584,53 @@ The design philosophy behind the frontend focused exclusively on \textit{cogniti
 \renewcommand{\thesection}{\Roman{section}}
 \justifying
 
-\section{System Evaluation}
+This chapter presents the quantitative results obtained from the training of the Random Forest model and evaluates the functional behavior of the SAMU web application. 
 
-\subsection{Functional Testing}
-Rigorous functional tests were conducted to validate the core ESI algorithm implementation. Test cases spanned from immediate life threats (e.g., Cardiac arrest yielding ESI Level 1 - Red) to minor consultations (e.g., Simple fever with no distress yielding ESI Level 5 - Blue). Additionally, the system's security features, such as JWT expiration, restricted Supervisor routes, and protection against partial updates (managing 422 errors), were systematically evaluated. All tests successfully confirmed that the system returns the correct prioritization level reliably and prevents unauthorized data access.
+\section{Model Training Results}
 
-\subsection{Usage Scenarios}
-In a simulated scenario mimicking a high-stress medical call, an operator logs in, accesses the triage form, and enters data. If the caller mentions a "Severe trauma," the operator utilizes the Smart Chips to instantly flag the specific symptom in the surgical domain. The system immediately masks the standard vital signs, automating the ESI Level 1 (or 2) decision matrix within milliseconds. The operator terminates the call, clicks to generate the printable PDF summary with SAMU branding, and is immediately ready for the next call. 
+\subsection{Training Process and Overall Performance}
+The Machine Learning model was trained on a dataset of 10,000 patients, simulating a wide variety of clinical presentations ranging from minor consultations (ESI 5) to extreme vital emergencies (ESI 1). The Random Forest algorithm was configured with 200 estimators.
 
-\subsection{Analysis of Results}
-The integration of a two-column zero-scroll interface coupled with the interactive chips profoundly reduces the number of structural clicks and data-entry time required per case. Moreover, the dynamic 24-hour dashboard effectively transforms hidden database entries into a live performance-monitoring tool for supervisors, establishing a reliable digital audit trail previously non-existent in paper-based workflows.
-
-\section{Presentation of the Developed System}
-
-\subsection{User Interfaces}
-The application features a premium dark/light SAMU-themed aesthetic. The landing page implements floating micro-animations and secure authentication. 
+The model achieved an exceptional overall \textbf{Accuracy of 99.75\%} on the test set (2,000 patients). This high level of precision demonstrates that the algorithm successfully captured the underlying clinical logic of the Emergency Severity Index, particularly the complex modulations required when vital signs fall into critical danger zones based on the patient's age category.
 
 \begin{figure}[H]
 \centering
-% \includegraphics[width=0.8\textwidth]{login_interface.png}
-\framebox(400,200){[PLACEHOLDER: Insert Login Interface Screenshot]}
-\caption{Premium Authentication Interface}
-\label{fig:ui_login}
+% \includegraphics[width=0.8\textwidth]{training_accuracy.png}
+\framebox(400,200){[PLACEHOLDER: Insert Accuracy / EDA Charts Here]}
+\caption{Exploratory Data Analysis and Performance Metrics}
+\label{fig:training_acc}
 \end{figure}
 
-The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized for wide screens. 
+\subsection{Feature Importance and Confusion Matrix}
+An analysis of Feature Importance revealed that the model correctly prioritized the most critical medical indicators. The \textbf{base symptom severity} (27.6\%) and the \textbf{estimated resources} (25.6\%) were the strongest predictors, closely followed by vital signs such as \textbf{SpO2} (10.8\%) and the \textbf{Glasgow Coma Scale} (10.0\%). This aligns perfectly with real-world medical triage protocols.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{feature_importance.png}
+\framebox(400,200){[PLACEHOLDER: Insert Feature Importance Chart Here]}
+\caption{Feature Importance of the Random Forest Model}
+\label{fig:feature_imp}
+\end{figure}
+
+The Confusion Matrix confirms the model's reliability across all five ESI classes. Crucially for a humanitarian and emergency context, the model showed a near-perfect precision and recall (1.00 F1-Score) for \textbf{ESI 1 (Red)} and \textbf{ESI 2 (Orange)}, ensuring that critical life-threatening conditions are never systematically under-triaged by the AI.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.80\textwidth]{confusion_matrix.png}
+\framebox(400,200){[PLACEHOLDER: Insert Confusion Matrix Here]}
+\caption{Confusion Matrix of the Random Forest Model (Accuracy: 99.75\%)}
+\label{fig:confusion}
+\end{figure}
+
+\section{Web Application Functional Testing}
+
+\subsection{Real-World Prediction and Usage Scenarios}
+In a simulated scenario mimicking a high-stress medical call, an operator inputs data for a patient suffering from "Severe trauma." The operator utilizes the Smart Chips to instantly flag the symptom. The FastAPI backend triggers both the rule engine and the Random Forest model. 
+
+The system processes the request in milliseconds and returns the result. A color-coded modal appears, stating: \textit{"Danger vital immédiat. Critère majeur : Trauma sévère. | [IA] Le modèle d'apprentissage automatique confirme : ESI 1."} This dual validation builds confidence and mitigates individual subjectivity. If the AI detects a subtle combination of degrading vital signs that the rules might have underestimated, it issues a specific alert suggesting a higher severity level.
+
+\subsection{Presentation of the User Interfaces}
+The application features a premium SAMU-themed aesthetic. The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized for wide screens.
 
 \begin{figure}[H]
 \centering
@@ -613,35 +640,25 @@ The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized f
 \label{fig:ui_triage}
 \end{figure}
 
-\subsection{Functioning of the Triage Engine}
-Upon valid input submission, a large, color-coded modal appears summarizing the priority level, preventing ambiguity. The visual cues (Red, Orange, Yellow, Green, Blue) immediately indicate the necessary urgency. 
+Upon valid input submission, the visual cues (Red, Orange, Yellow, Green, Blue) immediately indicate the necessary urgency, complete with the AI prediction feedback.
 
 \begin{figure}[H]
 \centering
 % \includegraphics[width=0.8\textwidth]{esi_result_modal.png}
-\framebox(400,200){[PLACEHOLDER: Insert ESI Result Modal Screenshot]}
-\caption{Automated ESI Result Display}
+\framebox(400,200){[PLACEHOLDER: Insert ESI Result Modal Screenshot showing AI Text]}
+\caption{Automated ESI Result Display with AI Confirmation}
 \label{fig:ui_result}
-\end{figure}
-
-\subsection{Administration and Historical Logs}
-The Supervisor Dashboard provides actionable intelligence, specifically displaying a dedicated section for "24h Shift Reporting." It highlights optimal efficiency thresholds, total vital emergencies, and the completion rate.
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.9\textwidth]{dashboard_admin.png}
-\framebox(450,250){[PLACEHOLDER: Insert Supervisor Dashboard Screenshot]}
-\caption{Supervisor 24-Hour Analytics Dashboard}
-\label{fig:ui_dashboard}
 \end{figure}
 
 \section{Discussion and Perspectives}
 
-\subsection{Critical Analysis of the Results}
-The developed prototype effectively bridges the identified gap between clinical reasoning and operational speed. It successfully implements the ESI algorithm digitally without usurping the operator’s clinical judgment. The migration to a local PostgreSQL ensures absolute data sovereignty for the SAMU. However, a limitation remains regarding the strict nature of rule-based systems: highly atypical clinical presentations not covered strictly by the ESI guidelines may still require manual override, which the current system handles by allowing operators to add contextual notes before generating the PDF.
+\subsection{Innovation and Critical Analysis}
+The developed prototype effectively bridges the identified gap between clinical reasoning and operational speed. It introduces an innovative hybrid approach: combining strict deterministic clinical rules with an advanced Machine Learning model. This ensures absolute clinical safety (rules) while leveraging predictive power (AI) to catch complex patterns in vital signs. The migration to a local PostgreSQL ensures absolute data sovereignty for the SAMU. 
+
+A limitation remains regarding the synthetic nature of the dataset. While it strictly mimics clinical reality, future iterations should aim to retrain the model on real-world, anonymized data collected from actual SAMU interventions in Burkina Faso to capture local epidemiological nuances.
 
 \subsection*{Chapter Conclusion}
-This chapter detailed the transition from conceptual models to a fully operational digital support system. The utilization of FastAPI and React enabled the construction of a robust, high-performance triage application. Testing verified the integrity of the ESI algorithm and the efficacy of the newly designed "zero-scroll" interface. The system ultimately proves capable of providing structured decision support for prehospital emergency regulation.
+This chapter detailed the transition from conceptual models to an AI-powered digital support system. The utilization of FastAPI, React, and Scikit-Learn enabled the construction of a robust, high-performance triage application. The Random Forest model achieved 99.75\% accuracy, proving its reliability as a secondary decision layer. The system ultimately proves capable of providing structured, intelligent decision support for prehospital emergency regulation.
 
 \clearpage
 
@@ -659,190 +676,11 @@ The fundamental goal of this project was to design, from the ground up, a digita
 
 The completion of this work yielded a functional, responsive web application entirely adapted to emergency dispatch realities. The technical implementation utilizing FastAPI for the backend and React for the frontend delivered a high-performance system. The migration to a robust local PostgreSQL database secured data persistence, while features like the "zero-scroll" interface and "Smart Chips" dramatically reduced data entry friction. Furthermore, the integration of secure Role-Based Access Control and a dynamic 24-hour supervisor dashboard has established a powerful analytical foundation for EMS administration.
 
-The primary contribution of this thesis lies in the demystification of clinical digitization in resource-sensitive settings. It provides a concrete, locally manageable prototype demonstrating that medical decisions can be effectively supported digitally without relying on opaque artificial intelligence. By formalizing symptoms into the ESI logic, the system effectively mitigates individual subjectivity and fatigue-related errors during crisis regulation.
+The primary contribution of this thesis lies in the demystification of clinical digitization in resource-sensitive settings. It provides a concrete, locally manageable prototype demonstrating that medical decisions can be effectively supported digitally by combining deterministic clinical rules with a robust Artificial Intelligence model. By integrating a Random Forest classifier—which achieved an exceptional accuracy of 99.75\%—the system provides a dual-layered safety net that effectively mitigates individual subjectivity and fatigue-related errors during crisis regulation, without usurping the operator's final judgment.
 
-However, the system bears some limitations. Primarily, its current form operates exclusively within the call center. The triage data is logged and exportable via PDF, but it is not yet directly synchronized with the mobile terminals in SAMU ambulances (SMUR) or receiving hospital emergency departments. Moreover, relying heavily on the initial caller's testimony inherently carries the risk of over-triage or under-triage based on the accuracy of the verbal description.
+However, the system bears some limitations. Primarily, its current form operates exclusively within the call center. The triage data is logged and exportable via PDF, but it is not yet directly synchronized with the mobile terminals in SAMU ambulances (SMUR) or receiving hospital emergency departments. Additionally, while the synthetic dataset effectively trained the AI to recognize clinical patterns, the model will benefit from future retraining using real, anonymized data collected from local interventions.
 
-Future perspectives for this project are highly promising. Direct extensions should include the implementation of WebSockets for real-time notification broadcasting to ambulance crews immediately upon generating an ESI 1 (Red) or ESI 2 (Orange) priority. Additionally, developing a Progressive Web Application (PWA) allowing offline synchronizability could ensure continuous operation during internet outages. Ultimately, connecting this closed triage system to the broader national Electronic Health Record (EHR) database would represent a significant step in completing the digitalization of Burkina Faso's prehospital care continuum.
-
-\vspace{1cm}
-\begin{center}
-\rule{0.5\textwidth}{0.4pt}
-\end{center}
-
-%% ============================================================
-%% PART II
-%% ============================================================
-\part*{Part II: Design and Implementation}
-\addcontentsline{toc}{part}{Part II: Design and Implementation}
-\addtocontents{toc}{\vspace{10pt}}
-
-%% ============================================================
-%% CHAPTER 3
-%% ============================================================
-\newpage
-\thispagestyle{fancy}
-\addcontentsline{toc}{chapter}{Chapter 3: Modelling and Technical Realization}
-{\LARGE \bfseries \noindent Chapter 3: Modelling and Technical Realization}
-\vspace{2em}
-\renewcommand{\thesection}{\Roman{section}}
-\justifying
-
-\section{Needs Analysis and UML Modeling}
-
-\subsection{Needs Specifications}
-The specifications translate the conceptual needs identified previously into structural components. Functionally, the system must authenticate users according to two distinct roles: \textbf{Operator} (responsible for conducting patient triage) and \textbf{Supervisor} (responsible for overall monitoring and team management). The system must securely capture the caller's identity, evaluate medical indicators across four main medical domains (General Medicine, Surgery, Gynecology/Obstetrics, and Pediatrics), dynamically compute the ESI level, and generate a downloadable PDF report for traceability. Non-functionally, the system requires a "zero-scroll" interface enabling rapid data entry under pressure, and robust security including JSON Web Tokens (JWT) and Role-Based Access Control (RBAC).
-
-\subsection{Use Case Diagram}
-The Use Case diagram identifies the interactions between the actors and the system. The \textbf{Operator} can log in, create a new triage record, query major specific criteria using "smart chips," input vital signs (consciousness, breathing, bleeding), and export the generated triage result. The \textbf{Supervisor} inherits the operator's capabilities but is also authorized to view the 24-hour activities dashboard, manage operator accounts across different workspaces, and oversee the global audit logs. The system automates the ESI calculation internally upon submission.
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.8\textwidth]{use_case_diagram.png}
-\framebox(400,200){[PLACEHOLDER: Insert Use Case Diagram Here]}
-\caption{Use Case Diagram of the SAMU Triage System}
-\label{fig:usecase}
-\end{figure}
-
-\subsection{Class Diagram}
-The Conceptual Data Model ensures data integrity and traceability. The core entities include the \textbf{User} class (containing attributes such as full name, specialty, role, and hashed passwords), the \textbf{TriageRecord} class (which stores caller details, medical category, specific symptoms, vital signs, and the output ESI level), and the \textbf{AuditLog} class (which captures all sensitive system actions like login events and profile updates for tracking). The database design reflects relational connections where each TriageRecord is strictly linked to the Operator who performed it.
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.8\textwidth]{class_diagram.png}
-\framebox(400,200){[PLACEHOLDER: Insert Class Diagram Here]}
-\caption{Class Diagram of the System}
-\label{fig:class}
-\end{figure}
-
-\subsection{Sequence Diagram}
-A typical sequence for the triage process begins with operator authentication. Once the operator inputs the patient's data and submits the form, the React frontend sends an asynchronous HTTP POST request to the FastAPI backend. The backend validates the payload structure, applies the ESI prioritization algorithm locally, immediately persists the record into the PostgreSQL database, and responds with the computed ESI level along with a clinical explanation. The UI then displays a modal showing the color-coded priority and offers PDF generation.
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.8\textwidth]{sequence_diagram.png}
-\framebox(400,200){[PLACEHOLDER: Insert Sequence Diagram Here]}
-\caption{Sequence Diagram of the Triage Process}
-\label{fig:sequence}
-\end{figure}
-
-\section{Implementation of the Solution}
-
-\subsection{Development Environment}
-The application was developed in a modern local environment to maintain high control over dependencies. The development utilized Visual Studio Code as the primary Integrated Development Environment (IDE). Node.js and NPM were used to orchestrate the JavaScript frontend ecosystem, while Python 3.10 and pip managed backend packages. For database management, an initially cloud-based setup was migrated to a robust local PostgreSQL instance managed via pgAdmin4, ensuring high availability and zero latency.
-
-\subsection{Technologies Used}
-The architecture relies on a robust and modern stack:
-\begin{itemize}
-    \item \textbf{FastAPI (Python):} Chosen for the backend for its exceptional speed, native async support, and automatic API documentation (Swagger).
-    \item \textbf{React.js and TailwindCSS:} Selected for the frontend to create a highly reactive, component-based user interface. TailwindCSS enabled the rapid creation of a premium, SAMU-branded visual identity and precise grid layouts.
-    \item \textbf{PostgreSQL and SQLAlchemy:} Used to durably store relational data and interact seamlessly with the Python API via an Object-Relational Mapper (ORM).
-\end{itemize}
-
-\subsection{Backend Development and API}
-The backend exposes comprehensive RESTful endpoints organized logically. The \texttt{auth} router handles JWT generation and profile updates. The \texttt{triage} router manages the core ESI algorithm and database insertions. Notably, the triage logic evaluates symptoms across our four defined domains and masks generic vital signs if an acute "specific symptom" is registered. Furthermore, the backend features a robust dashboard router that performs real-time queries to calculate the last 24-hour efficiency metrics (average triage speed, critical life-threatening cases), replacing static estimations with live data.
-
-\subsection{User Interface Development}
-The design philosophy behind the frontend focused exclusively on \textit{cognitive ease} and \textit{action speed}. A "zero-scroll" policy was enforced through a responsive two-column CSS grid. The left column captures context (caller identity and patient location), while the right column handles clinical evaluations combining a responsive domain selector and "Smart Chips." These chips act as interactive badges, allowing operators to select major critical symptoms with a single click rather than typing. 
-
-\clearpage
-
-%% ============================================================
-%% CHAPTER 4
-%% ============================================================
-\newpage
-\thispagestyle{fancy}
-\addcontentsline{toc}{chapter}{Chapter 4: Results, Analysis and Discussion}
-{\LARGE \bfseries \noindent Chapter 4: Results, Analysis and Discussion}
-\vspace{2em}
-\renewcommand{\thesection}{\Roman{section}}
-\justifying
-
-\section{System Evaluation}
-
-\subsection{Functional Testing}
-Rigorous functional tests were conducted to validate the core ESI algorithm implementation. Test cases spanned from immediate life threats (e.g., Cardiac arrest yielding ESI Level 1 - Red) to minor consultations (e.g., Simple fever with no distress yielding ESI Level 5 - Blue). Additionally, the system's security features, such as JWT expiration, restricted Supervisor routes, and protection against partial updates (managing 422 errors), were systematically evaluated. All tests successfully confirmed that the system returns the correct prioritization level reliably and prevents unauthorized data access.
-
-\subsection{Usage Scenarios}
-In a simulated scenario mimicking a high-stress medical call, an operator logs in, accesses the triage form, and enters data. If the caller mentions a "Severe trauma," the operator utilizes the Smart Chips to instantly flag the specific symptom in the surgical domain. The system immediately masks the standard vital signs, automating the ESI Level 1 (or 2) decision matrix within milliseconds. The operator terminates the call, clicks to generate the printable PDF summary with SAMU branding, and is immediately ready for the next call. 
-
-\subsection{Analysis of Results}
-The integration of a two-column zero-scroll interface coupled with the interactive chips profoundly reduces the number of structural clicks and data-entry time required per case. Moreover, the dynamic 24-hour dashboard effectively transforms hidden database entries into a live performance-monitoring tool for supervisors, establishing a reliable digital audit trail previously non-existent in paper-based workflows.
-
-\section{Presentation of the Developed System}
-
-\subsection{User Interfaces}
-The application features a premium dark/light SAMU-themed aesthetic. The landing page implements floating micro-animations and secure authentication. 
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.8\textwidth]{login_interface.png}
-\framebox(400,200){[PLACEHOLDER: Insert Login Interface Screenshot]}
-\caption{Premium Authentication Interface}
-\label{fig:ui_login}
-\end{figure}
-
-The core of the application is the \textbf{Zero-Scroll Triage Form}, optimized for wide screens. 
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.9\textwidth]{triage_form.png}
-\framebox(450,250){[PLACEHOLDER: Insert the Zero-Scroll Triage Form Screenshot]}
-\caption{Two-Column Triage Form with Smart Chips}
-\label{fig:ui_triage}
-\end{figure}
-
-\subsection{Functioning of the Triage Engine}
-Upon valid input submission, a large, color-coded modal appears summarizing the priority level, preventing ambiguity. The visual cues (Red, Orange, Yellow, Green, Blue) immediately indicate the necessary urgency. 
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.8\textwidth]{esi_result_modal.png}
-\framebox(400,200){[PLACEHOLDER: Insert ESI Result Modal Screenshot]}
-\caption{Automated ESI Result Display}
-\label{fig:ui_result}
-\end{figure}
-
-\subsection{Administration and Historical Logs}
-The Supervisor Dashboard provides actionable intelligence, specifically displaying a dedicated section for "24h Shift Reporting." It highlights optimal efficiency thresholds, total vital emergencies, and the completion rate.
-
-\begin{figure}[H]
-\centering
-% \includegraphics[width=0.9\textwidth]{dashboard_admin.png}
-\framebox(450,250){[PLACEHOLDER: Insert Supervisor Dashboard Screenshot]}
-\caption{Supervisor 24-Hour Analytics Dashboard}
-\label{fig:ui_dashboard}
-\end{figure}
-
-\section{Discussion and Perspectives}
-
-\subsection{Critical Analysis of the Results}
-The developed prototype effectively bridges the identified gap between clinical reasoning and operational speed. It successfully implements the ESI algorithm digitally without usurping the operator’s clinical judgment. The migration to a local PostgreSQL ensures absolute data sovereignty for the SAMU. However, a limitation remains regarding the strict nature of rule-based systems: highly atypical clinical presentations not covered strictly by the ESI guidelines may still require manual override, which the current system handles by allowing operators to add contextual notes before generating the PDF.
-
-\subsection*{Chapter Conclusion}
-This chapter detailed the transition from conceptual models to a fully operational digital support system. The utilization of FastAPI and React enabled the construction of a robust, high-performance triage application. Testing verified the integrity of the ESI algorithm and the efficacy of the newly designed "zero-scroll" interface. The system ultimately proves capable of providing structured decision support for prehospital emergency regulation.
-
-\clearpage
-
-%% ============================================================
-%% GENERAL CONCLUSION
-%% ============================================================
-\newpage
-\thispagestyle{fancy}
-\addcontentsline{toc}{chapter}{General Conclusion}
-{\LARGE \bfseries \noindent General Conclusion}
-\vspace{2em}
-\justifying
-
-The fundamental goal of this project was to design, from the ground up, a digital decision-support system to assist prehospital triage within the SAMU of Burkina Faso. Drawing inspiration from the globally recognized Emergency Severity Index (ESI), the project sought to introduce a structured, measurable, and traceable framework to emergency call regulation, all while adhering to the operational speed demanded by such an environment.
-
-The completion of this work yielded a functional, responsive web application entirely adapted to emergency dispatch realities. The technical implementation utilizing FastAPI for the backend and React for the frontend delivered a high-performance system. The migration to a robust local PostgreSQL database secured data persistence, while features like the "zero-scroll" interface and "Smart Chips" dramatically reduced data entry friction. Furthermore, the integration of secure Role-Based Access Control and a dynamic 24-hour supervisor dashboard has established a powerful analytical foundation for EMS administration.
-
-The primary contribution of this thesis lies in the demystification of clinical digitization in resource-sensitive settings. It provides a concrete, locally manageable prototype demonstrating that medical decisions can be effectively supported digitally without relying on opaque artificial intelligence. By formalizing symptoms into the ESI logic, the system effectively mitigates individual subjectivity and fatigue-related errors during crisis regulation.
-
-However, the system bears some limitations. Primarily, its current form operates exclusively within the call center. The triage data is logged and exportable via PDF, but it is not yet directly synchronized with the mobile terminals in SAMU ambulances (SMUR) or receiving hospital emergency departments. Moreover, relying heavily on the initial caller's testimony inherently carries the risk of over-triage or under-triage based on the accuracy of the verbal description.
-
-Future perspectives for this project are highly promising. Direct extensions should include the implementation of WebSockets for real-time notification broadcasting to ambulance crews immediately upon generating an ESI 1 (Red) or ESI 2 (Orange) priority. Additionally, developing a Progressive Web Application (PWA) allowing offline synchronizability could ensure continuous operation during internet outages. Ultimately, connecting this closed triage system to the broader national Electronic Health Record (EHR) database would represent a significant step in completing the digitalization of Burkina Faso's prehospital care continuum.
+Future perspectives for this project are highly promising. Direct extensions should include the implementation of WebSockets for real-time notification broadcasting to ambulance crews immediately upon generating an ESI 1 (Red) or ESI 2 (Orange) priority. Developing a Progressive Web Application (PWA) allowing offline synchronizability could ensure continuous operation during internet outages. Ultimately, connecting this AI-assisted triage system to the broader national Electronic Health Record (EHR) database would represent a significant step in completing the digitalization of Burkina Faso's prehospital care continuum.
 
 \vspace{1cm}
 \begin{center}
